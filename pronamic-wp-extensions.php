@@ -175,12 +175,30 @@ function pronamic_wp_extensison_template_redirect() {
 
 		$slug = filter_input( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
 
-		var_dump( $module );
-		var_dump( $method );
-		var_dump( $version );
-		var_dump( $slug );
+		$plugins = get_posts( array(
+			'name'        => $slug,
+			'post_type'   => 'pronamic_plugin',
+			'post_status' => 'publish',
+			'numberposts' => 1
+		) );
 
-		exit;
+		$plugin = array_shift( $plugins );
+
+		if ( $plugin ) {
+			$plugin_info = new stdClass();
+			$plugin_info->name          = get_the_title( $plugin );
+			$plugin_info->slug          = $plugin->post_name;;
+			$plugin_info->version       = get_post_meta( $plugin->ID, '_pronamic_extension_stable_version', true );
+			$plugin_info->download_link = sprintf( 'http://themes.pronamic.nl/plugins/%s/%s', $plugin_info->slug, $plugin_info->version );
+			
+			header('Content-Type: application/json');
+			
+			echo json_encode( $plugin_info );
+			
+			exit;
+		} else {
+			exit;
+		}
 	}
 }
 
