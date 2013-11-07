@@ -10,6 +10,13 @@ License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2
 Network: true
 */
 
+include "src/Pronamic/Extension/Findable.php";
+include "src/Pronamic/Extension/Extendable.php";
+include "src/Pronamic/Extension/Plugin.php";
+include "src/Pronamic/Extension/Finder.php";
+
+
+
 // @see https://github.com/WordPress/WordPress/blob/a8ef13972cccf91bfa9ed30a65c8e61a2f2c7977/wp-includes/update.php#L96
 
 function pronamic_wp_extensions_init() {
@@ -257,27 +264,13 @@ function pronamic_wp_extensison_template_redirect() {
 			if ( $method == 'info' ) {
 				$slug = filter_input( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
 		
-				$plugins = get_posts( array(
-					'name'        => $slug,
-					'post_type'   => 'pronamic_plugin',
-					'post_status' => 'publish',
-					'numberposts' => 1
-				) );
+                $find = new Pronamic_Extension_Finder( new Pronamic_Extension_Plugin() );
+                $plugin = $find->by_slug( $slug );
 		
-				$plugin = array_shift( $plugins );
-		
-				if ( $plugin ) {
-					$plugin_info = new stdClass();
-					$plugin_info->name          = get_the_title( $plugin );
-					$plugin_info->slug          = $plugin->post_name;;
-					$plugin_info->version       = get_post_meta( $plugin->ID, '_pronamic_extension_stable_version', true );
-					$plugin_info->download_link = sprintf( 'http://themes.pronamic.nl/plugins/%s/%s', $plugin_info->slug, $plugin_info->version );
+				if ( false !== $plugin ) {
+					$plugin_info = $plugin->get_info();
 					
-					header('Content-Type: application/json');
-					
-					echo json_encode( $plugin_info );
-					
-					exit;
+					wp_send_json( $plugin_info );
 				} else {
 					exit;
 				}
