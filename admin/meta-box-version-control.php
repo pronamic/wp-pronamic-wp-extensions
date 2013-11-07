@@ -17,18 +17,26 @@ wp_nonce_field( 'pronamic_wp_extension_save_post', 'pronamic_wp_extensions_nonce
 		</tr>
 		<tr>
 			<th scope="row">
-				<label for="pronamic_extension_github_url"><?php _e( 'GitHub URL', 'pronamic_companies' ); ?></label>
+				<label for="_pronamic_extension_github_user"><?php _e( 'GitHub', 'pronamic_companies' ); ?></label>
 			</th>
 			<td>
-				<input id="pronamic_extension_github_url" name="_pronamic_extension_github_url" value="<?php echo esc_attr( get_post_meta( $post->ID, '_pronamic_extension_github_url', true ) ); ?>" type="text" size="25" class="regular-text" />
+				https://github.com/
+				<input id="_pronamic_extension_github_user" name="_pronamic_extension_github_user" value="<?php echo esc_attr( get_post_meta( $post->ID, '_pronamic_extension_github_user', true ) ); ?>" type="text" size="25" class="regular-text" />
+				/
+				<input id="_pronamic_extension_github_repo" name="_pronamic_extension_github_repo" value="<?php echo esc_attr( get_post_meta( $post->ID, '_pronamic_extension_github_repo', true ) ); ?>" type="text" size="25" class="regular-text" />
+				/
 			</td>
 		</tr>
 		<tr>
 			<th scope="row">
-				<label for="pronamic_extension_bitbucket_url"><?php _e( 'BitBucket URL', 'pronamic_companies' ); ?></label>
+				<label for="_pronamic_extension_bitbucket_user"><?php _e( 'BitBucket', 'pronamic_companies' ); ?></label>
 			</th>
 			<td>
-				<input id="pronamic_extension_bitbucket_url" name="_pronamic_extension_bitbucket_url" value="<?php echo esc_attr( get_post_meta( $post->ID, '_pronamic_extension_bitbucket_url', true ) ); ?>" type="text" size="25" class="regular-text" />
+				https://bitbucket.org/
+				<input id="_pronamic_extension_bitbucket_user" name="_pronamic_extension_bitbucket_user" value="<?php echo esc_attr( get_post_meta( $post->ID, '_pronamic_extension_bitbucket_user', true ) ); ?>" type="text" size="25" class="regular-text" />
+				/
+				<input id="_pronamic_extension_bitbucket_repo" name="_pronamic_extension_bitbucket_repo" value="<?php echo esc_attr( get_post_meta( $post->ID, '_pronamic_extension_bitbucket_repo', true ) ); ?>" type="text" size="25" class="regular-text" />
+				/
 			</td>
 		</tr>
 	</tbody>

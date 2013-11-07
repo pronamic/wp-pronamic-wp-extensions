@@ -35,8 +35,7 @@ function pronamic_wp_extensions_init() {
 		'query_var' => true,
 		'capability_type' => 'post',
 		'has_archive' => true,
-		'rewrite' => array( 'slug' => $slug ),
-		'menu_icon' => plugins_url( 'admin/icons/company.png', __FILE__ ),
+		'rewrite' => array( 'slug' => 'plugins' ),
 		'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'custom-fields' )
 	) );
 
@@ -62,8 +61,7 @@ function pronamic_wp_extensions_init() {
 		'query_var' => true,
 		'capability_type' => 'post',
 		'has_archive' => true,
-		'rewrite' => array( 'slug' => $slug ),
-		'menu_icon' => plugins_url( 'admin/icons/company.png', __FILE__ ),
+		'rewrite' => array( 'slug' => 'themes' ),
 		'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'custom-fields' )
 	) );
 }
@@ -120,8 +118,10 @@ function pronamic_wp_extensions_save_post( $post_id, $post ) {
 	// Save data
 	$data = filter_input_array( INPUT_POST, array(
 		'_pronamic_extension_stable_version' => FILTER_SANITIZE_STRING,
-		'_pronamic_extension_github_url'     => FILTER_VALIDATE_URL,
-		'_pronamic_extension_bitbucket_url'  => FILTER_VALIDATE_URL,
+		'_pronamic_extension_github_user'    => FILTER_SANITIZE_STRING,
+		'_pronamic_extension_github_repo'    => FILTER_SANITIZE_STRING,
+		'_pronamic_extension_bitbucket_user' => FILTER_SANITIZE_STRING,
+		'_pronamic_extension_bitbucket_repo' => FILTER_SANITIZE_STRING,
 	) );
 
 	foreach ( $data as $key => $value ) {
@@ -173,34 +173,140 @@ function pronamic_wp_extensison_template_redirect() {
 		$method = get_query_var( 'pronamic_wp_extensions_api_method' );
 		$version = get_query_var( 'pronamic_wp_extensions_api_version' );
 
-		$slug = filter_input( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
+		// /api/plugins/info/1.0/
+		if ( $method == 'info' ) {
+			$slug = filter_input( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
+	
+			$plugins = get_posts( array(
+				'name'        => $slug,
+				'post_type'   => 'pronamic_plugin',
+				'post_status' => 'publish',
+				'numberposts' => 1
+			) );
+	
+			$plugin = array_shift( $plugins );
+	
+			if ( $plugin ) {
+				$plugin_info = new stdClass();
+				$plugin_info->name          = get_the_title( $plugin );
+				$plugin_info->slug          = $plugin->post_name;;
+				$plugin_info->version       = get_post_meta( $plugin->ID, '_pronamic_extension_stable_version', true );
+				$plugin_info->download_link = sprintf( 'http://themes.pronamic.nl/plugins/%s/%s', $plugin_info->slug, $plugin_info->version );
+				
+				header('Content-Type: application/json');
+				
+				echo json_encode( $plugin_info );
+				
+				exit;
+			} else {
+				exit;
+			}
+		}
 
-		$plugins = get_posts( array(
-			'name'        => $slug,
-			'post_type'   => 'pronamic_plugin',
-			'post_status' => 'publish',
-			'numberposts' => 1
-		) );
+		// /api/plugins/update-check/1.0/
+		if ( $method == 'update-check' ) {
+			if ( isset( $_POST['plugins'] ) ) {
+				$json = filter_input( INPUT_POST, 'plugins', FILTER_UNSAFE_RAW );
 
-		$plugin = array_shift( $plugins );
+				$plugins = json_decode( $json, true );
 
-		if ( $plugin ) {
-			$plugin_info = new stdClass();
-			$plugin_info->name          = get_the_title( $plugin );
-			$plugin_info->slug          = $plugin->post_name;;
-			$plugin_info->version       = get_post_meta( $plugin->ID, '_pronamic_extension_stable_version', true );
-			$plugin_info->download_link = sprintf( 'http://themes.pronamic.nl/plugins/%s/%s', $plugin_info->slug, $plugin_info->version );
-			
-			header('Content-Type: application/json');
-			
-			echo json_encode( $plugin_info );
-			
-			exit;
-		} else {
+				if ( is_array( $plugins ) ) {
+					global $wpdb;
+
+					$titles = array();
+					foreach ( $plugins as $file => $plugin ) {
+						$titles[$file] = $plugin['Name'];
+					}
+
+					$plugin_updates = array();
+
+					if ( ! empty( $titles ) ) {
+						$plugin_posts = get_posts( array(
+							'post_type'        => 'pronamic_plugin',
+							'nopaging'         => true,  
+							'post_title__in'   => $titles,
+							'suppress_filters' => false,
+						) );
+						
+						$plugin_names = array();
+						foreach ( $plugin_posts as $post ) {
+							$plugin_names[$post->post_title] = $post;
+						}
+
+						/*
+						 * Plugin array values
+						 * - Name
+						 * - PluginURI
+						 * - Version
+						 * - Description
+						 * - Author
+						 * - AuthorURI
+						 * - TextDomain
+						 * - DomainPath
+						 * - Network
+						 * - Title
+						 * - AuthorName
+						 */
+						foreach ( $plugins as $file => $plugin ) {
+							if ( isset( $plugin_names[$plugin['Name']] ) ) {
+								$post = $plugin_names[$plugin['Name']];
+
+								$stable_version  = get_post_meta( $post->ID, '_pronamic_extension_stable_version', true );
+								$current_version = $plugin['Version'];
+								
+								if ( version_compare( $stable_version, $current_version, '>' ) ) {
+									$result              = new stdClass();
+									$result->id          = $post->ID;
+									$result->slug        = $post->post_name;
+									$result->new_version = $version; 
+									// $result->upgrade_notice = '';
+									$result->url         = get_permalink( $post );
+									$result->package     = get_permalink( $post );
+	
+									$plugin_updates[$file] = $result;
+								}
+							}
+						}
+					}
+				
+					header('Content-Type: application/json');
+					
+					$result = array(
+						'plugins' => $plugin_updates
+					);
+
+					echo json_encode( $result );
+					
+					exit;
+				}
+			}
+		
 			exit;
 		}
 	}
 }
 
 add_action( 'template_redirect', 'pronamic_wp_extensison_template_redirect' );
+
+function themeslug_query_vars( $qvars ) {
+	array_push( $qvars, 'post_title__in' );
+	return $qvars;
+
+}
+add_filter( 'query_vars', 'themeslug_query_vars' , 10, 1 );
+
+function pronamic_wp_extensions_posts_where( $where, $query ) {
+	$titles = $query->get( 'post_title__in' );
+
+	if ( is_array( $titles ) && ! empty ( $titles )  ) {
+		// @see https://github.com/WordPress/WordPress/blob/3.7/wp-includes/post.php#L3806
+		$post_titles = implode( "', '", esc_sql( $titles ) );
+
+		$where .= " AND post_title IN ('$post_titles')";
+	}
+
+	return $where;
+}
+
+add_filter( 'posts_where', 'pronamic_wp_extensions_posts_where', 10, 2 );
 
