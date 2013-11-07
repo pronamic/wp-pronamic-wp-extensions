@@ -258,7 +258,7 @@ function pronamic_wp_extensison_template_redirect() {
 									$result              = new stdClass();
 									$result->id          = $post->ID;
 									$result->slug        = $post->post_name;
-									$result->new_version = $version; 
+									$result->new_version = $stable_version; 
 									// $result->upgrade_notice = '';
 									$result->url         = get_permalink( $post );
 									$result->package     = get_permalink( $post );
