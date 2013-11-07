@@ -6,33 +6,24 @@
  * @package Extension
  * @subpackage Plugin
  */
-class Pronamic_Extension_Plugin extends Pronamic_Extension_Extendable {
+class Pronamic_Extension_Plugin extends Pronamic_Extension_Extendable implements Pronamic_Extension_Findable {
+
+    /**
+     * Used as part of the Pronamic_Extension_Findable 
+     * interface.  Required to be used in the
+     * Pronamic_Extension_Finder
+     * 
+     * @access public
+     * @return string
+     */
+    public function get_post_type() {
+        return 'pronamic_plugin';
+    }
     
     public static function get_instance( $id ) {
         if ( $result = get_post( $id ) ) {
             return new Pronamic_Extension_Plugin( $result );
         }
-        
-        return false;
-    }
-    
-    /**
-     * Get a Pronamic_Extension_Plugin by a plugins slug.
-     * 
-     * @access public
-     * @param string $slug
-     * @return \Pronamic_Extension_Plugin|boolean
-     */
-    public static function get_by_slug( $slug ) {
-        $slug_query = new WP_Query( array(
-            'name' => $slug,
-            'posts_per_page' => 1,
-            'post_type' => 'pronamic_plugin',
-            'ignore_sticky_posts' => true
-        ) );
-        
-        if ( $slug_query->have_posts() )
-            return new Pronamic_Extension_Plugin( $slug_query->post );
         
         return false;
     }
