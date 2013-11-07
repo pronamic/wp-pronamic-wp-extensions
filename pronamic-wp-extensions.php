@@ -222,7 +222,7 @@ function pronamic_wp_extensison_template_redirect() {
 								$post = $theme_names[$theme['Name']];
 				
 								$stable_version  = get_post_meta( $post->ID, '_pronamic_extension_stable_version', true );
-								$current_version = $plugin['Version'];
+								$current_version = $theme['Version'];
 									
 								if ( version_compare( $stable_version, $current_version, '>' ) ) {
 									$result              = new stdClass();
