@@ -173,115 +173,196 @@ function pronamic_wp_extensison_template_redirect() {
 		$method = get_query_var( 'pronamic_wp_extensions_api_method' );
 		$version = get_query_var( 'pronamic_wp_extensions_api_version' );
 
-		// /api/plugins/info/1.0/
-		if ( $method == 'info' ) {
-			$slug = filter_input( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
-	
-			$plugins = get_posts( array(
-				'name'        => $slug,
-				'post_type'   => 'pronamic_plugin',
-				'post_status' => 'publish',
-				'numberposts' => 1
-			) );
-	
-			$plugin = array_shift( $plugins );
-	
-			if ( $plugin ) {
-				$plugin_info = new stdClass();
-				$plugin_info->name          = get_the_title( $plugin );
-				$plugin_info->slug          = $plugin->post_name;;
-				$plugin_info->version       = get_post_meta( $plugin->ID, '_pronamic_extension_stable_version', true );
-				$plugin_info->download_link = sprintf( 'http://themes.pronamic.nl/plugins/%s/%s', $plugin_info->slug, $plugin_info->version );
+		if ( $module == 'themes' ) {
+			// /api/themes/update-check/1.0/
+			if ( $method == 'update-check' ) {
+				$json = filter_input( INPUT_POST, 'themes', FILTER_UNSAFE_RAW );
 				
-				header('Content-Type: application/json');
-				
-				echo json_encode( $plugin_info );
-				
-				exit;
-			} else {
-				exit;
-			}
-		}
+				$themes = json_decode( $json, true );
 
-		// /api/plugins/update-check/1.0/
-		if ( $method == 'update-check' ) {
-			if ( isset( $_POST['plugins'] ) ) {
-				$json = filter_input( INPUT_POST, 'plugins', FILTER_UNSAFE_RAW );
-
-				$plugins = json_decode( $json, true );
-
-				if ( is_array( $plugins ) ) {
+				if ( is_array( $themes ) ) {
 					global $wpdb;
-
+				
 					$titles = array();
-					foreach ( $plugins as $file => $plugin ) {
-						$titles[$file] = $plugin['Name'];
+					foreach ( $themes as $file => $theme ) {
+						$titles[$file] = $theme['Title'];
 					}
 
-					$plugin_updates = array();
-
+					$theme_updates = array();
+				
 					if ( ! empty( $titles ) ) {
-						$plugin_posts = get_posts( array(
-							'post_type'        => 'pronamic_plugin',
-							'nopaging'         => true,  
+						$theme_posts = get_posts( array(
+							'post_type'        => 'pronamic_theme',
+							'nopaging'         => true,
 							'post_title__in'   => $titles,
 							'suppress_filters' => false,
 						) );
-						
-						$plugin_names = array();
-						foreach ( $plugin_posts as $post ) {
-							$plugin_names[$post->post_title] = $post;
+							
+						$theme_names = array();
+						foreach ( $theme_posts as $post ) {
+							$theme_names[$post->post_title] = $post;
 						}
-
+				
 						/*
-						 * Plugin array values
-						 * - Name
-						 * - PluginURI
-						 * - Version
-						 * - Description
-						 * - Author
-						 * - AuthorURI
-						 * - TextDomain
-						 * - DomainPath
-						 * - Network
-						 * - Title
-						 * - AuthorName
-						 */
-						foreach ( $plugins as $file => $plugin ) {
-							if ( isset( $plugin_names[$plugin['Name']] ) ) {
-								$post = $plugin_names[$plugin['Name']];
-
+						 * Theme array values
+						* - Name
+						* - PluginURI
+						* - Version
+						* - Description
+						* - Author
+						* - AuthorURI
+						* - TextDomain
+						* - DomainPath
+						* - Network
+						* - Title
+						* - AuthorName
+						*/
+						foreach ( $themes as $file => $theme ) {
+							if ( isset( $theme_names[$theme['Name']] ) ) {
+								$post = $theme_names[$theme['Name']];
+				
 								$stable_version  = get_post_meta( $post->ID, '_pronamic_extension_stable_version', true );
 								$current_version = $plugin['Version'];
-								
+									
 								if ( version_compare( $stable_version, $current_version, '>' ) ) {
 									$result              = new stdClass();
 									$result->id          = $post->ID;
 									$result->slug        = $post->post_name;
-									$result->new_version = $stable_version; 
+									$result->new_version = $stable_version;
 									// $result->upgrade_notice = '';
 									$result->url         = get_permalink( $post );
 									$result->package     = get_permalink( $post );
-	
-									$plugin_updates[$file] = $result;
+				
+									$theme_updates[$file] = $result;
 								}
 							}
 						}
 					}
-				
+						
 					header('Content-Type: application/json');
-					
+				
 					$result = array(
-						'plugins' => $plugin_updates
+						'themes' => $theme_updates
 					);
-
+				
 					echo json_encode( $result );
-					
+				
 					exit;
 				}
 			}
+		}
+
+		if ( $module == 'plugins' ) {
+			// /api/plugins/info/1.0/
+			if ( $method == 'info' ) {
+				$slug = filter_input( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
 		
-			exit;
+				$plugins = get_posts( array(
+					'name'        => $slug,
+					'post_type'   => 'pronamic_plugin',
+					'post_status' => 'publish',
+					'numberposts' => 1
+				) );
+		
+				$plugin = array_shift( $plugins );
+		
+				if ( $plugin ) {
+					$plugin_info = new stdClass();
+					$plugin_info->name          = get_the_title( $plugin );
+					$plugin_info->slug          = $plugin->post_name;;
+					$plugin_info->version       = get_post_meta( $plugin->ID, '_pronamic_extension_stable_version', true );
+					$plugin_info->download_link = sprintf( 'http://themes.pronamic.nl/plugins/%s/%s', $plugin_info->slug, $plugin_info->version );
+					
+					header('Content-Type: application/json');
+					
+					echo json_encode( $plugin_info );
+					
+					exit;
+				} else {
+					exit;
+				}
+			}
+	
+			// /api/plugins/update-check/1.0/
+			if ( $method == 'update-check' ) {
+				if ( isset( $_POST['plugins'] ) ) {
+					$json = filter_input( INPUT_POST, 'plugins', FILTER_UNSAFE_RAW );
+	
+					$plugins = json_decode( $json, true );
+	
+					if ( is_array( $plugins ) ) {
+						global $wpdb;
+	
+						$titles = array();
+						foreach ( $plugins as $file => $plugin ) {
+							$titles[$file] = $plugin['Name'];
+						}
+	
+						$plugin_updates = array();
+	
+						if ( ! empty( $titles ) ) {
+							$plugin_posts = get_posts( array(
+								'post_type'        => 'pronamic_plugin',
+								'nopaging'         => true,  
+								'post_title__in'   => $titles,
+								'suppress_filters' => false,
+							) );
+							
+							$plugin_names = array();
+							foreach ( $plugin_posts as $post ) {
+								$plugin_names[$post->post_title] = $post;
+							}
+	
+							/*
+							 * Plugin array values
+							 * - Name
+							 * - PluginURI
+							 * - Version
+							 * - Description
+							 * - Author
+							 * - AuthorURI
+							 * - TextDomain
+							 * - DomainPath
+							 * - Network
+							 * - Title
+							 * - AuthorName
+							 */
+							foreach ( $plugins as $file => $plugin ) {
+								if ( isset( $plugin_names[$plugin['Name']] ) ) {
+									$post = $plugin_names[$plugin['Name']];
+	
+									$stable_version  = get_post_meta( $post->ID, '_pronamic_extension_stable_version', true );
+									$current_version = $plugin['Version'];
+									
+									if ( version_compare( $stable_version, $current_version, '>' ) ) {
+										$result              = new stdClass();
+										$result->id          = $post->ID;
+										$result->slug        = $post->post_name;
+										$result->new_version = $stable_version; 
+										// $result->upgrade_notice = '';
+										$result->url         = get_permalink( $post );
+										$result->package     = get_permalink( $post );
+		
+										$plugin_updates[$file] = $result;
+									}
+								}
+							}
+						}
+					
+						header('Content-Type: application/json');
+						
+						$result = array(
+							'plugins' => $plugin_updates
+						);
+	
+						echo json_encode( $result );
+						
+						exit;
+					}
+				}
+			
+				exit;
+			}
 		}
 	}
 }
