@@ -60,7 +60,7 @@ class Pronamic_WP_Extension_Plugin extends Pronamic_WP_Extension_Extension imple
         $plugin_info->version       = $this->get_version();
         $plugin_info->download_link = $this->generate_download_link();
         
-        return json_encode( $plugin_info );
+        return $plugin_info;
     }
     
     /**
