@@ -11,8 +11,8 @@ Network: true
 */
 
 include 'src/Pronamic/WP/Extensions/Findable.php';
-include 'src/Pronamic/WP/Extensions/Extension.php';
-include 'src/Pronamic/WP/Extensions/Plugin.php';
+include 'src/Pronamic/WP/Extensions/ExtensionInfo.php';
+include 'src/Pronamic/WP/Extensions/PluginInfo.php';
 include 'src/Pronamic/WP/Extensions/Finder.php';
 
 
@@ -264,7 +264,7 @@ function pronamic_wp_extensison_template_redirect() {
 			if ( $method == 'info' ) {
 				$slug = filter_input( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
 		
-                $find = new Pronamic_WP_Extensions_Finder( new Pronamic_WP_Extensions_Plugin() );
+                $find = new Pronamic_WP_Extensions_Finder( new Pronamic_WP_Extensions_PluginInfo() );
                 $plugin = $find->by_slug( $slug );
 		
 				if ( false !== $plugin ) {

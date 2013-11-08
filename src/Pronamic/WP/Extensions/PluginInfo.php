@@ -6,7 +6,7 @@
  * @package Extension
  * @subpackage Plugin
  */
-class Pronamic_WP_Extensions_Plugin extends Pronamic_WP_Extensions_Extension implements Pronamic_WP_Extensions_Findable {
+class Pronamic_WP_Extensions_PluginInfo extends Pronamic_WP_Extensions_ExtensionInfo implements Pronamic_WP_Extensions_Findable {
 
     /**
      * Used as part of the Pronamic_Extension_Findable 
