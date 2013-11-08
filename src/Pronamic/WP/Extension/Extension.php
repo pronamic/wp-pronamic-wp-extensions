@@ -1,6 +1,6 @@
 <?php
 
-abstract class Pronamic_Extension_Extendable {
+abstract class Pronamic_WP_Extension_Extension {
     
     private $ID;
     

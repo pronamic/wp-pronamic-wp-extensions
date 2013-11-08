@@ -1,10 +1,10 @@
 <?php
 
-class Pronamic_Extension_Finder {
+class Pronamic_WP_Extension_Finder {
     
     private $findable;
     
-    public function __construct( Pronamic_Extension_Findable $findable ) {
+    public function __construct( Pronamic_WP_Extension_Findable $findable ) {
         $this->findable = $findable;
     }
     
