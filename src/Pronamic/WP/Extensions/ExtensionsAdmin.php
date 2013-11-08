@@ -27,9 +27,86 @@ class Pronamic_WP_Extensions_ExtensionsAdmin {
 	private function __construct( Pronamic_WP_Extensions_ExtensionsPlugin $plugin ) {
 		$this->plugin = $plugin;
 
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
 		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
+	}
+
+	//////////////////////////////////////////////////
+
+	/**
+	 * Admin initialize
+	 */
+	public function admin_init() {
+		// Settings - General
+		add_settings_section(
+			'pronamic_wp_extensions_general', // id
+			__( 'General', 'pronamic_ideal' ), // title
+			'__return_false', // callback
+			'pronamic_wp_extensions' // page
+		);
+                
+		add_settings_field(
+			'pronamic_wp_plugins_path', // id
+			__( 'Plugins Path', 'pronamic_ideal' ), // title
+			array( $this, 'input_path' ), // callback
+			'pronamic_wp_extensions', // page
+			'pronamic_wp_extensions_general', // section
+			array( 'label_for' => 'pronamic_wp_plugins_path' ) // args
+		);
+                
+		add_settings_field(
+			'pronamic_wp_themes_path', // id
+			__( 'Themes Path', 'pronamic_ideal' ), // title
+			array( $this, 'input_path' ), // callback
+			'pronamic_wp_extensions', // page
+			'pronamic_wp_extensions_general', // section
+			array( 'label_for' => 'pronamic_wp_themes_path' ) // args
+		);
+                
+		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_plugins_path' );
+		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_themes_path' );
+	}
+
+	public function input_path( $args ) {
+		echo ABSPATH;
+		
+		$name = $args['label_for'];
+
+		printf(
+			'<input name="%s" id="%s" type="text" class="%s" value="%s" />',
+			esc_attr( $name ),
+			esc_attr( $name ),
+			esc_attr( 'regular-text code' ),
+			esc_attr( get_option( $name ) )
+		);
+		
+		echo '/';
+	}
+
+	//////////////////////////////////////////////////
+
+	/**
+	 * Admin menu
+	 */
+	public function admin_menu() {
+		add_options_page(
+			__( 'Pronamic Extensions', 'wpe' ),
+			__( 'Pronamic Extensions', 'wpe' ),
+			'manage_options',
+			'pronamic_wp_extensions',
+			array( $this, 'page_options' )
+		);
+	}
+	
+	/**
+	 * Page options
+	 */
+	public function page_options() {
+		$this->plugin->display( 'admin/page-options.php' );
 	}
 
 	//////////////////////////////////////////////////
