@@ -22,7 +22,7 @@ class Pronamic_WP_Extensions_PluginInfo extends Pronamic_WP_Extensions_Extension
     
     public static function get_instance( $id ) {
         if ( $result = get_post( $id ) ) {
-            return new Pronamic_Extension_Plugin( $result );
+            return new Pronamic_WP_Extensions_PluginInfo( $result );
         }
         
         return false;
