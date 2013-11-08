@@ -133,16 +133,12 @@ class Pronamic_WP_Extensions_ExtensionsApi {
 								}
 							}
 						}
-							
-						header('Content-Type: application/json');
-					
+
 						$result = array(
 							'themes' => $theme_updates
 						);
 					
-						echo json_encode( $result );
-					
-						exit;
+						wp_send_json( $result );
 					}
 				}
 			}
@@ -229,16 +225,12 @@ class Pronamic_WP_Extensions_ExtensionsApi {
 									}
 								}
 							}
-						
-							header('Content-Type: application/json');
-							
+
 							$result = array(
 								'plugins' => $plugin_updates
 							);
 		
-							echo json_encode( $result );
-							
-							exit;
+							wp_send_json( $result );
 						}
 					}
 				
