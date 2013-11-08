@@ -10,10 +10,10 @@ License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2
 Network: true
 */
 
-include "src/Pronamic/WP/Extension/Findable.php";
-include "src/Pronamic/WP/Extension/Extension.php";
-include "src/Pronamic/WP/Extension/Plugin.php";
-include "src/Pronamic/WP/Extension/Finder.php";
+include 'src/Pronamic/WP/Extension/Findable.php';
+include 'src/Pronamic/WP/Extension/Extension.php';
+include 'src/Pronamic/WP/Extension/Plugin.php';
+include 'src/Pronamic/WP/Extension/Finder.php';
 
 
 

@@ -10,10 +10,10 @@ class Pronamic_WP_Extension_Finder {
     
     public function by_slug( $slug ) {
         $slug_query = new WP_Query( array(
-            'post_type' => $this->findable->get_post_type(),
+            'post_type'           => $this->findable->get_post_type(),
             'ignore_sticky_posts' => true,
-            'posts_per_page' => 1,
-            'name' => $slug
+            'posts_per_page'      => 1,
+            'name'                => $slug,
         ) );
         
         if ( $slug_query->have_posts() )
