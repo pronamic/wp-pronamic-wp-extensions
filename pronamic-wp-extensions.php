@@ -10,10 +10,10 @@ License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2
 Network: true
 */
 
-include "src/Pronamic/Extension/Findable.php";
-include "src/Pronamic/Extension/Extendable.php";
-include "src/Pronamic/Extension/Plugin.php";
-include "src/Pronamic/Extension/Finder.php";
+include "src/Pronamic/WP/Extension/Findable.php";
+include "src/Pronamic/WP/Extension/Extension.php";
+include "src/Pronamic/WP/Extension/Plugin.php";
+include "src/Pronamic/WP/Extension/Finder.php";
 
 
 
@@ -264,7 +264,7 @@ function pronamic_wp_extensison_template_redirect() {
 			if ( $method == 'info' ) {
 				$slug = filter_input( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
 		
-                $find = new Pronamic_Extension_Finder( new Pronamic_Extension_Plugin() );
+                $find = new Pronamic_WP_Extension_Finder( new Pronamic_WP_Extension_Plugin() );
                 $plugin = $find->by_slug( $slug );
 		
 				if ( false !== $plugin ) {
