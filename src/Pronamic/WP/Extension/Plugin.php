@@ -45,7 +45,7 @@ class Pronamic_WP_Extension_Plugin extends Pronamic_WP_Extension_Extension imple
      * Returns with the required info about this entity
      * 
      * @access public
-     * @return json
+     * @return \stdClass
      */
     public function get_info() {        
         // Get the current entity
