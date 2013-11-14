@@ -9,7 +9,7 @@ wp_nonce_field( 'pronamic_wp_extension_save_post', 'pronamic_wp_extensions_nonce
 	<tbody>
 		<tr>
 			<th scope="row">
-				<label for="pronamic_extension_stable_version"><?php _e( 'Stable Version', 'pronamic_companies' ); ?></label>
+				<label for="pronamic_extension_stable_version"><?php _e( 'Stable Version', 'pronamic_wp_extensions' ); ?></label>
 			</th>
 			<td>
 				<input id="pronamic_extension_stable_version" name="_pronamic_extension_stable_version" value="<?php echo esc_attr( get_post_meta( $post->ID, '_pronamic_extension_stable_version', true ) ); ?>" type="text" size="25" class="regular-text" />
@@ -17,7 +17,7 @@ wp_nonce_field( 'pronamic_wp_extension_save_post', 'pronamic_wp_extensions_nonce
 		</tr>
 		<tr>
 			<th scope="row">
-				<label for="_pronamic_extension_github_user"><?php _e( 'GitHub', 'pronamic_companies' ); ?></label>
+				<label for="_pronamic_extension_github_user"><?php _e( 'GitHub', 'pronamic_wp_extensions' ); ?></label>
 			</th>
 			<td>
 				https://github.com/
@@ -29,7 +29,7 @@ wp_nonce_field( 'pronamic_wp_extension_save_post', 'pronamic_wp_extensions_nonce
 		</tr>
 		<tr>
 			<th scope="row">
-				<label for="_pronamic_extension_bitbucket_user"><?php _e( 'BitBucket', 'pronamic_companies' ); ?></label>
+				<label for="_pronamic_extension_bitbucket_user"><?php _e( 'Bitbucket', 'pronamic_wp_extensions' ); ?></label>
 			</th>
 			<td>
 				https://bitbucket.org/
