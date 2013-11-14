@@ -1,12 +1,12 @@
 <?php
 
-class Pronamic_WP_Extensions_ExtensionsPlugin {
+class Pronamic_WP_ExtensionsPlugin_Plugin {
 	/**
 	 * Instance of this class.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @var Pronamic_WP_Extensions_ExtensionsPlugin
+	 * @var Pronamic_WP_ExtensionsPlugin_Plugin
 	 */
 	protected static $instance = null;
 
@@ -22,7 +22,7 @@ class Pronamic_WP_Extensions_ExtensionsPlugin {
 	/**
 	 * Extensions API
 	 * 
-	 * @var Pronamic_WP_Extensions_ExtensionsApi
+	 * @var Pronamic_WP_ExtensionsPlugin_Api
 	 */
 	public $api;
 
@@ -41,11 +41,11 @@ class Pronamic_WP_Extensions_ExtensionsPlugin {
 		add_filter( 'posts_where', array( $this, 'posts_where' ), 10, 2 );
 
 		// API
-		$this->api = Pronamic_WP_Extensions_ExtensionsApi::get_instance();
+		$this->api = Pronamic_WP_ExtensionsPlugin_Api::get_instance();
 		
 		// Admin
 		if ( is_admin() ) {
-			Pronamic_WP_Extensions_ExtensionsAdmin::get_instance( $this );
+			Pronamic_WP_ExtensionsPlugin_Admin::get_instance( $this );
 		}
 	}
 

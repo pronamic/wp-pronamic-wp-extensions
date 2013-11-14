@@ -1,6 +1,6 @@
 <?php
 
-class Pronamic_WP_Extensions_ExtensionsApi {
+class Pronamic_WP_ExtensionsPlugin_Api {
 	/**
 	 * Instance of this class.
 	 *
@@ -148,7 +148,7 @@ class Pronamic_WP_Extensions_ExtensionsApi {
 				if ( $method == 'info' ) {
 					$slug = filter_input( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
 			
-	                $find = new Pronamic_WP_Extensions_Finder( new Pronamic_WP_Extensions_PluginInfo() );
+	                $find = new Pronamic_WP_ExtensionsPlugin_Finder( new Pronamic_WP_ExtensionsPlugin_PluginInfo() );
 	                $plugin = $find->by_slug( $slug );
 			
 					if ( false !== $plugin ) {

@@ -6,7 +6,7 @@
  * @package Extension
  * @subpackage Plugin
  */
-class Pronamic_WP_Extensions_PluginInfo extends Pronamic_WP_Extensions_ExtensionInfo implements Pronamic_WP_Extensions_Findable {
+class Pronamic_WP_ExtensionsPlugin_PluginInfo extends Pronamic_WP_ExtensionsPlugin_ExtensionInfo implements Pronamic_WP_ExtensionsPlugin_Findable {
 
     /**
      * Used as part of the Pronamic_Extension_Findable 
@@ -22,7 +22,7 @@ class Pronamic_WP_Extensions_PluginInfo extends Pronamic_WP_Extensions_Extension
     
     public static function get_instance( $id ) {
         if ( $result = get_post( $id ) ) {
-            return new Pronamic_WP_Extensions_PluginInfo( $result );
+            return new Pronamic_WP_ExtensionsPlugin_PluginInfo( $result );
         }
         
         return false;
@@ -32,9 +32,9 @@ class Pronamic_WP_Extensions_PluginInfo extends Pronamic_WP_Extensions_Extension
      * See the overiding DocBlock
      * 
      * @access public
-     * @param \WP_Post $result The WP_Post object that represents this entity
+     * @param WP_Post $result The WP_Post object that represents this entity
      */
-    public function populate( \WP_Post $result ) {
+    public function populate( WP_Post $result ) {
         $this->set_ID( $result->ID );
         $this->set_post_object( $result );
         
@@ -68,7 +68,7 @@ class Pronamic_WP_Extensions_PluginInfo extends Pronamic_WP_Extensions_Extension
      * when requesting to update check.
      * 
      * @access public
-     * @return \stdClass
+     * @return stdClass
      */
     public function get_update_info() {
         // Get the current entity
@@ -118,7 +118,6 @@ class Pronamic_WP_Extensions_PluginInfo extends Pronamic_WP_Extensions_Extension
      * @return bool
      */
     public function has_update( $version_check ) {
-        return ( bool ) version_compare( $this->get_version(), $version_check, '>' );
+        return version_compare( $this->get_version(), $version_check, '>' );
     }
-
 }

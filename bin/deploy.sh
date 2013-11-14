@@ -3,9 +3,13 @@
 # chmod +x ./PronamicUpdater.sh
 
 if [ $# -lt 3 ]; then
-	echo 'usage: ./PronamicUpdater.sh https://bitbucket.org/Pronamic/wp-pronamic-updater-test remcotolsma pronamic-updater-test 1.0.0'
+	echo 'usage: ./deploy.sh https://bitbucket.org/Pronamic/wp-pronamic-updater-test remcotolsma pronamic-updater-test 1.0.0'
 	exit
 fi
+
+function pause() {
+   read -p "$*"
+}
 
 repoUrl=$1
 username=$2
@@ -23,28 +27,28 @@ tempZipFile=$(mktemp -t $slug)
 
 echo "Temp ZIP file: $tempZipFile"
 
-read -p "Press [Enter] key to continue..."
+pause "Press [Enter] key to continue..."
 
 # Temp dir
 tempDir=$(mktemp -d -t $slug)
 
 echo "Temp dir: $tempDir"
 
-read -p "Press [Enter] key to continue..."
+pause "Press [Enter] key to continue..."
 
 # Download URL
 downloadUrl="$repoUrl/get/$version.zip"
 
 echo "Download URL $downloadUrl"
 
-read -p "Press [Enter] key to continue..."
+pause "Press [Enter] key to continue..."
 
 # CURL commando
 curlCmd="curl --digest --user $username $downloadUrl -o $tempZipFile"
 
 echo "CURL Command: $curlCmd"
 
-read -p "Press [Enter] key to continue..."
+pause "Press [Enter] key to continue..."
 
 # Download file
 $($curlCmd)
@@ -63,21 +67,21 @@ unknownDir=*
 
 echo "Unknown Dir: $unknownDir"
 
-read -p "Press [Enter] key to continue..."
+pause "Press [Enter] key to continue..."
 
 # New dir
 newDir=$slug
 
 echo "New Dir: $newDir"
 
-read -p "Press [Enter] key to continue..."
+pause "Press [Enter] key to continue..."
 
 # New ZIP
 newZip="$slug.$version.zip"
 
 echo "New ZIP: $newZip"
 
-read -p "Press [Enter] key to continue..."
+pause "Press [Enter] key to continue..."
 
 # Rename dir
 mv $unknownDir $newDir
@@ -86,7 +90,7 @@ mv $unknownDir $newDir
 zip -r $newZip $newDir
 
 # Upload
-curl -v -T $newZip ftp://localhost/public_html/plugins/$slug/$slug.$version.zip
+curl -v -T $newZip ftp://themespr:spahAsW7hawrUsAc@themes.pronamic.nl/domains/themes.pronamic.nl/public_html/plugins/$slug/$slug.$version.zip
 
 # Remove temp dir
 rm -r $tempDir
@@ -98,7 +102,15 @@ rm -r $tempDir
 # curl --digest https://bitbucket.org/Pronamic/gravityforms/get/1.7.8.zip -o $zipFile
 # curl https://github.com/pronamic/wp-pronamic-ideal/archive/2.0.6.zip -o $zipFile
 # see https://help.github.com/articles/downloading-files-from-the-command-line
-# curl -H "Authorization: token 1234" -L -o foo.tar.gz \
+# curl -H "Authorization: token 5046ca3b31e0020efae4d5e7a17cbf35322ce934" -L -o foo.tar.gz \
 #	https://github.com/pronamic/wp-pronamic-ideal/archive/2.0.6.zip
 # zipUrl="$repoUrl/archive"
 # curl -L -o download.zip https://github.com/pronamic/wp-pronamic-ideal/archive/2.0.6.zip
+
+
+
+
+# curl -v -T Pronamic-gravityforms-42773f75ad7a.zip ftp://themespr:spahAsW7hawrUsAc@themes.pronamic.nl/domains/themes.pronamic.nl/public_html/plugins/gravityforms/Pronamic-gravityforms-42773f75ad7a.zip
+# curl -v -T $newZip ftp://themespr:spahAsW7hawrUsAc@themes.pronamic.nl/domains/themes.pronamic.nl/public_html/plugins/$slug/$slug.$version.zip
+
+# rm $newZip

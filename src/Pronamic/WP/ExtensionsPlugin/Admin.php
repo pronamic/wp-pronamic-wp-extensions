@@ -1,6 +1,6 @@
 <?php
 
-class Pronamic_WP_Extensions_ExtensionsAdmin {
+class Pronamic_WP_ExtensionsPlugin_Admin {
 	/**
 	 * Instance of this class.
 	 *
@@ -15,7 +15,7 @@ class Pronamic_WP_Extensions_ExtensionsAdmin {
 	/**
 	 * Extensions plugin
 	 * 
-	 * @var Pronamic_WP_Extensions_ExtensionsPlugin
+	 * @var Pronamic_WP_ExtensionsPlugin_Plugin
 	 */
 	private $plugin;
 
@@ -24,7 +24,7 @@ class Pronamic_WP_Extensions_ExtensionsAdmin {
 	/**
 	 * Constructs and initialize Pronamic WordPress Extensions admin
 	 */
-	private function __construct( Pronamic_WP_Extensions_ExtensionsPlugin $plugin ) {
+	private function __construct( Pronamic_WP_ExtensionsPlugin_Plugin $plugin ) {
 		$this->plugin = $plugin;
 
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
@@ -196,7 +196,7 @@ class Pronamic_WP_Extensions_ExtensionsAdmin {
 	 *
 	 * @return object A single instance of this class.
 	 */
-	public static function get_instance( Pronamic_WP_Extensions_ExtensionsPlugin $plugin ) {
+	public static function get_instance( Pronamic_WP_ExtensionsPlugin_Plugin $plugin ) {
 		// If the single instance hasn't been set, set it now.
 		if ( null == self::$instance ) {
 			self::$instance = new self( $plugin );

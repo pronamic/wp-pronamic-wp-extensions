@@ -5,7 +5,7 @@
  * Entity be findable in the Pronamic_Extension_Finder.
  * 
  */
-interface Pronamic_WP_Extensions_Findable {
+interface Pronamic_WP_ExtensionsPlugin_Findable {
     
     /**
      * Used in the findable to find the post
