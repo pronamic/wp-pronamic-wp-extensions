@@ -13,7 +13,7 @@ if ( empty( $downloads ) ) : ?>
 	</p>
 
 <?php else : ?>
-	
+
 	<table>
 		<thead>
 			<tr>
@@ -21,11 +21,11 @@ if ( empty( $downloads ) ) : ?>
 				<th scope="col"><?php _e( 'URL', 'pronamic_wp_extensions' ); ?></th>
 			</tr>
 		</thead>
-	
+
 		<tbody>
-			
+
 			<?php foreach ( $downloads as $download ) : ?>
-			
+
 				<tr>
 					<?php 
 
@@ -41,9 +41,9 @@ if ( empty( $downloads ) ) : ?>
 						</a>
 					</td>
 				</tr>
-	
+
 			<?php endforeach; ?>
-	
+
 		</tbody>
 	</table>
 
