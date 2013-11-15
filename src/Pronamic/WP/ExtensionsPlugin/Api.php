@@ -148,8 +148,9 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 				if ( $method == 'info' ) {
 					$slug = filter_input( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
 			
-	                $find = new Pronamic_WP_ExtensionsPlugin_Finder( new Pronamic_WP_ExtensionsPlugin_PluginInfo() );
-	                $plugin = $find->by_slug( $slug );
+	                $finder = new Pronamic_WP_ExtensionsPlugin_Finder();
+
+	                $plugin = $finder->by_slug( $slug, 'pronamic_plugin' );
 			
 					if ( false !== $plugin ) {
 						$plugin_info = $plugin->get_info();

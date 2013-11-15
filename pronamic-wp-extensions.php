@@ -17,7 +17,6 @@ require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/ExtensionInfo.php';
 require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/Admin.php';
 require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/Api.php';
 require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/Plugin.php';
-require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/PluginInfo.php';
 require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/Finder.php';
 
 /**

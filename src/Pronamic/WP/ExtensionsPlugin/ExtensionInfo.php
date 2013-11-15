@@ -1,59 +1,178 @@
 <?php
 
-abstract class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
-    
-    private $ID;
-    
+class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
+	/**
+	 * Post
+	 * 
+	 * @var WP_Post
+	 */
     private $post;
     
+    /**
+     * Extension version
+     * 
+     * @var string
+     */
     private $version;
-    
-    public function __construct( WP_Post $post = null ) {
-        if ( $post )
-            $this->populate( $post );
-    }
+
+	//////////////////////////////////////////////////
     
     /**
-     * Overide this method to load all related data
-     * that belongs to your Extension class.
+     * Constructs and initialize an extension info object
      * 
-     * It is required you call set_ID() and set_post_object()
-     * from inside the function.
-     * 
-     * This cant be done in the constructor in case of
-     * usage of directly calling ->populate() and other 
-     * parts of the code requiring the set ID
-     * and post objecct
+     * @param WP_Post $post
+     */
+    public function __construct( WP_Post $post ) {
+    	$this->post = $post;
+    	
+    	$this->version = get_post_meta( $post->ID, '_pronamic_extension_stable_version', true );
+    }
+
+	//////////////////////////////////////////////////
+    
+    /**
+     * Returns with the required info about this entity
      * 
      * @access public
-     * @param WP_Post $result | The WP_Post object that represents this entity
+     * @return \stdClass
      */
-    public abstract function populate( WP_Post $result );
-    
-    public function set_ID( $ID ) {
-        $this->ID = $ID;
-        return $this;
+    public function get_info() {        
+        // Standard class to hold the required response props
+        $info = new stdClass();
+        
+        // Fill the class
+        $info->name          = $this->post->post_title;
+        $info->slug          = $this->post->post_name;
+        $info->version       = $this->get_version();
+        $info->download_link = $this->get_download_link();
+        
+        return $info;
     }
+
+	//////////////////////////////////////////////////
     
-    public function get_ID() {
-        return $this->ID;
+    /**
+     * Returns with the required info for updating
+     * when requesting to update check.
+     * 
+     * @access public
+     * @return stdClass
+     */
+    public function get_update_info() {
+        $result = new stdClass();
+        
+        // Fill the class
+        $result->id          = $this->post->ID;
+        $result->slug        = $this->post->post_name;
+        $result->new_version = $this->get_version();
+        $result->url         = get_permalink( $this->post );
+        $result->package     = $this->get_download_link();
+        
+        return $result;
     }
+
+	//////////////////////////////////////////////////
     
-    public function set_post_object( WP_Post $post ) {
-        $this->post = $post;
-        return $this;
+    /**
+     * Returns a full URL to download the passed in version.
+     * If no version is passed in, will use the latest version.
+     * 
+     * @todo Require changing the download_url to use a setting, so you can place anywhere
+     * 
+     * @access public
+     * @param string $version | The version string for the download
+     * @return string
+     */
+    public function get_download_link( $version = null ) {
+        // If no version supplied, get the latest
+        if ( null === $version )
+            $version = $this->get_version();
+
+        $url = home_url( $this->get_downloads_path() . '/' . $this->post->post_name . '.' . $version . '.zip' );
+
+        return $url;
     }
+
+	//////////////////////////////////////////////////
     
-    public function get_post_object() {
-        return $this->post;
+    /**
+     * Used to determine if this plugin instance has an update
+     * or not.
+     * 
+     * @access public
+     * @param string $version_check | A version string to compare
+     * @return bool
+     */
+    public function has_update( $version_check ) {
+        return version_compare( $this->get_version(), $version_check, '>' );
     }
-    
-    public function set_version( $version ) {
-        $this->version = $version;
-        return $this;
-    }
-    
+
+	//////////////////////////////////////////////////
+
+    /**
+     * Get version
+     * 
+     * @return string
+     */
     public function get_version() {
         return $this->version;
+    }
+
+	//////////////////////////////////////////////////
+
+    /**
+     * Get downloads path
+     * 
+     * @return string
+     */
+    public function get_downloads_path() {
+		$path = false;
+
+		switch ( $this->post->post_type ) {
+			case 'pronamic_plugin':
+				$path = get_option( 'pronamic_wp_plugins_path' );
+
+				break;
+			case 'pronamic_theme':
+				$path = get_option( 'pronamic_wp_themes_path' );
+
+				break;
+		}
+
+		$path = $path . '/' . $this->post->post_name;
+
+		return $path;
+	}
+
+	//////////////////////////////////////////////////
+
+    /**
+     * Get downloads
+     * 
+     * @return array
+     */
+    public function get_downloads() {
+    	$download = array();
+
+		$downloads_path = $this->get_downloads_path();
+
+    	$glob_pattern = ABSPATH . DIRECTORY_SEPARATOR . $downloads_path . DIRECTORY_SEPARATOR . '*.zip';
+
+    	$glob = glob( $glob_pattern );
+
+    	$files = $glob == false ? array() : $glob;
+
+    	$file_versions = array();
+
+    	foreach ( $files as $file ) {
+    		$file_versions[] = basename( $file );
+    	}
+
+    	// @see https://github.com/afragen/github-updater/blob/1.7.4/classes/class-theme-updater.php
+    	usort( $file_versions, 'version_compare' );
+
+    	$downloads = $file_versions;
+
+    	return $downloads;
     }
 }

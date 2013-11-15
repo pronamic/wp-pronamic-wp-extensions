@@ -199,6 +199,15 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'normal',
 				'high'
 			);
+	
+			add_meta_box(
+				'pronamic_extension_downloads',
+				__( 'Downloads', 'pronamic_wp_extensions' ),
+				array( $this, 'meta_box_extension_downloads' ),
+				$screen,
+				'normal',
+				'high'
+			);
 		}
 	}
 
@@ -214,6 +223,13 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	 */
 	function meta_box_extension_deploy() {
 		$this->plugin->display( 'admin/meta-box-deploy.php' );
+	}
+	
+	/**
+	 * Meta box for downloads
+	 */
+	function meta_box_extension_downloads() {
+		$this->plugin->display( 'admin/meta-box-downloads.php' );
 	}
 
 	//////////////////////////////////////////////////
@@ -293,31 +309,57 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				$tmpfname = wp_tempnam( $download_url );
 			
 				$response = wp_remote_get( $download_url, array( 'timeout' => 300, 'stream' => true, 'filename' => $tmpfname ) );
-			
-				var_dump( $response );
+
+				if ( is_wp_error( $response ) ) {
+					unlink( $tmpfname );
+					
+					var_dump( $response );
+
+					exit;
+				}
+
+				if ( 200 != wp_remote_retrieve_response_code( $response ) ) {
+					unlink( $tmpfname );
+					
+					var_dump( $response );
+					
+					exit;
+				}
 			
 				$zip = new ZipArchive();
 			
 				$result = $zip->open( $tmpfname );
-			
-				$renamed = false;
-			
+					
 				if ( $result === true ) {
-					$renamed = $zip->renameIndex( 0, $post->post_name . '/' );
-			
+					$old_dir = $zip->getNameIndex( 0 );
+					$new_dir = $post->post_name . '/';
+
+					$i = 0;
+					while ( $item_name = $zip->getNameIndex( $i ) ) {					
+						$new_name = str_replace( $old_dir, $new_dir, $item_name );
+
+						$zip->renameIndex( $i, $new_name );
+
+						$i++;
+					}
+
 					$zip->close();
 				} else {
 					echo 'failed, code:' . $res;
 				}
-			
-				if ( $renamed ) {
-					$moved = rename( $tmpfname, $deploy_file );
-			
-					var_dump( $moved );
-				}
+
+				$moved = rename( $tmpfname, $deploy_file );
+				
+				$url = add_query_arg( array(
+					'post'     => $post_id,
+					'action'   => 'edit',
+					'deployed' => $moved ? 'true' : 'false',
+				) );
+				
+				wp_redirect( $url );
+				
+				exit;
 			}
-			
-			exit;
 		}
 	}
 
