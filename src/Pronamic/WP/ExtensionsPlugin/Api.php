@@ -115,8 +115,10 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 							foreach ( $themes as $file => $theme ) {
 								if ( isset( $theme_names[$theme['Name']] ) ) {
 									$post = $theme_names[$theme['Name']];
+									
+									$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $post );
 					
-									$stable_version  = get_post_meta( $post->ID, '_pronamic_extension_stable_version', true );
+									$stable_version  = $extension->get_version();
 									$current_version = $theme['Version'];
 										
 									if ( version_compare( $stable_version, $current_version, '>' ) ) {
@@ -126,7 +128,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 										$result->new_version = $stable_version;
 										// $result->upgrade_notice = '';
 										$result->url         = get_permalink( $post );
-										$result->package     = get_permalink( $post );
+										$result->package     = $extension->get_download_link();
 					
 										$theme_updates[$file] = $result;
 									}
@@ -208,8 +210,10 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 								foreach ( $plugins as $file => $plugin ) {
 									if ( isset( $plugin_names[$plugin['Name']] ) ) {
 										$post = $plugin_names[$plugin['Name']];
+									
+										$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $post );
 		
-										$stable_version  = get_post_meta( $post->ID, '_pronamic_extension_stable_version', true );
+										$stable_version  = $extension->get_version();
 										$current_version = $plugin['Version'];
 										
 										if ( version_compare( $stable_version, $current_version, '>' ) ) {
@@ -219,7 +223,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 											$result->new_version = $stable_version; 
 											// $result->upgrade_notice = '';
 											$result->url         = get_permalink( $post );
-											$result->package     = get_permalink( $post );
+											$result->package     = $extension->get_download_link();
 			
 											$plugin_updates[$file] = $result;
 										}
