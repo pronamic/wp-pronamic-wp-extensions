@@ -32,7 +32,10 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
-		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_extension_meta_version' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_extension_meta_github' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_extension_meta_bitbucket' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_extension_meta_wp_org' ), 10, 2 );
 
 		add_action( 'admin_init', array( $this, 'maybe_deploy' ) );
 	}
@@ -190,6 +193,33 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'normal',
 				'high'
 			);
+
+			add_meta_box(
+				'pronamic_extension_github',
+				__( 'GitHub', 'pronamic_wp_extensions' ),
+				array( $this, 'meta_box_extension_github' ),
+				$screen,
+				'normal',
+				'high'
+			);
+
+			add_meta_box(
+				'pronamic_extension_bitbucket',
+				__( 'Bitbucket', 'pronamic_wp_extensions' ),
+				array( $this, 'meta_box_extension_bitbucket' ),
+				$screen,
+				'normal',
+				'high'
+			);
+
+			add_meta_box(
+				'pronamic_extension_wp_org',
+				__( 'WordPress.org', 'pronamic_wp_extensions' ),
+				array( $this, 'meta_box_extension_wp_org' ),
+				$screen,
+				'normal',
+				'high'
+			);
 	
 			add_meta_box(
 				'pronamic_extension_deploy',
@@ -217,7 +247,28 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	function meta_box_extension_version_control() {
 		$this->plugin->display( 'admin/meta-box-version-control.php' );
 	}
-	
+
+	/**
+	 * Meta box for GitHub
+	 */
+	function meta_box_extension_github() {
+		$this->plugin->display( 'admin/meta-box-github.php' );
+	}
+
+	/**
+	 * Meta box for Bitbucket
+	 */
+	function meta_box_extension_bitbucket() {
+		$this->plugin->display( 'admin/meta-box-bitbucket.php' );
+	}
+
+	/**
+	 * Meta box for WordPress.org
+	 */
+	function meta_box_extension_wp_org() {
+		$this->plugin->display( 'admin/meta-box-wp-org.php' );
+	}
+
 	/**
 	 * Meta box for deploy
 	 */
@@ -235,36 +286,86 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	//////////////////////////////////////////////////
 
 	/**
+	 * Can save
+	 * 
+	 * @param string $nonce
+	 * @param string $action
+	 * @param string $post_id
+	 * @return boolean
+	 */
+	private function can_save( $post_id, $nonce, $action ) {
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+			return false;
+		
+		if ( ! filter_has_var( INPUT_POST, $nonce ) )
+			return false;
+		
+		if ( ! wp_verify_nonce( filter_input( INPUT_POST, $nonce, FILTER_SANITIZE_STRING ), $action ) )
+			return false;
+		
+		if ( ! current_user_can( 'edit_post', $post_id ) )
+			return false;
+
+		return true;
+	}
+	
+	private function save_extension_meta( $post_id, $definition ) {
+		// Save data
+		$data = filter_input_array( INPUT_POST, $definition );
+		
+		foreach ( $data as $key => $value ) {
+			if ( empty( $value ) ) {
+				delete_post_meta( $post_id, $key );
+			} else {
+				update_post_meta( $post_id, $key, $value );
+			}
+		}
+	}
+
+	//////////////////////////////////////////////////
+
+	/**
 	 * Save post
 	 * 
 	 * @param string $post_id
 	 * @param WP_Post $post
 	 */
-	public function save_post( $post_id, $post ) {
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+	public function save_extension_meta_version( $post_id, $post ) {
+		if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_version_nonce', 'pronamic_wp_extension_save_meta_version' ) )
 			return;
 	
-		if ( ! isset( $_POST['pronamic_wp_extensions_nonce'] ) )
-			return;
-	
-		if ( ! wp_verify_nonce( $_POST['pronamic_wp_extensions_nonce'], 'pronamic_wp_extension_save_post' ) )
-			return;
-	
-		if ( ! current_user_can( 'edit_post', $post->ID ) )
-			return;
-	
-		// Save data
-		$data = filter_input_array( INPUT_POST, array(
+		$this->save_extension_meta( $post_id, array(
 			'_pronamic_extension_stable_version' => FILTER_SANITIZE_STRING,
-			'_pronamic_extension_github_user'    => FILTER_SANITIZE_STRING,
-			'_pronamic_extension_github_repo'    => FILTER_SANITIZE_STRING,
+		) );
+	}
+
+	public function save_extension_meta_github( $post_id, $post ) {
+		if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_github_nonce', 'pronamic_wp_extension_save_meta_github' ) )
+			return;
+	
+		$this->save_extension_meta( $post_id, array(
+			'_pronamic_extension_github_user' => FILTER_SANITIZE_STRING,
+			'_pronamic_extension_github_repo' => FILTER_SANITIZE_STRING,
+		) );
+	}
+
+	public function save_extension_meta_bitbucket( $post_id, $post ) {
+		if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_bitbucket_nonce', 'pronamic_wp_extension_save_meta_bitbucket' ) )
+			return;
+	
+		$this->save_extension_meta( $post_id, array(
 			'_pronamic_extension_bitbucket_user' => FILTER_SANITIZE_STRING,
 			'_pronamic_extension_bitbucket_repo' => FILTER_SANITIZE_STRING,
 		) );
+	}
 
-		foreach ( $data as $key => $value ) {
-			update_post_meta( $post_id, $key, $value );
-		}
+	public function save_extension_meta_wp_org( $post_id, $post ) {
+		if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_wp_org_nonce', 'pronamic_wp_extension_save_meta_wp_org' ) )
+			return;
+	
+		$this->save_extension_meta( $post_id, array(
+			'_pronamic_extension_wp_org_slug' => FILTER_SANITIZE_STRING,
+		) );
 	}
 
 	//////////////////////////////////////////////////
