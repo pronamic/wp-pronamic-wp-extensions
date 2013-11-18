@@ -186,9 +186,9 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 
 		foreach ( $screens as $screen ) {
 			add_meta_box(
-				'pronamic_extension_version_control',
-				__( 'Version Control', 'pronamic_wp_extensions' ),
-				array( $this, 'meta_box_extension_version_control' ),
+				'pronamic_extension_version',
+				__( 'Version', 'pronamic_wp_extensions' ),
+				array( $this, 'pronamic_extension_version' ),
 				$screen,
 				'normal',
 				'high'
@@ -244,8 +244,8 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	/**
 	 * Meta box for version control
 	 */
-	function meta_box_extension_version_control() {
-		$this->plugin->display( 'admin/meta-box-version-control.php' );
+	function pronamic_extension_version() {
+		$this->plugin->display( 'admin/meta-box-version.php' );
 	}
 
 	/**

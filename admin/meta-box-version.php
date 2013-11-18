@@ -2,7 +2,7 @@
 
 global $post;
 
-wp_nonce_field( 'pronamic_wp_extension_save_post', 'pronamic_wp_extensions_nonce' );
+wp_nonce_field( 'pronamic_wp_extension_save_meta_version', 'pronamic_wp_extensions_meta_version_nonce' );
 
 ?>
 <table class="form-table">
