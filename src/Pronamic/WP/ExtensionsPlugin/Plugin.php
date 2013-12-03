@@ -137,7 +137,9 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 	 * 
 	 * @param string $file
 	 */
-	public function display( $file ) {
+	public function display( $file, array $args = array() ) {
+		extract( $args );
+
 		include plugin_dir_path( $this->file ) . $file; 
 	}
 

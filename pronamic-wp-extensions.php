@@ -22,4 +22,6 @@ require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/Finder.php';
 /**
  * Bootstrap
  */
-Pronamic_WP_ExtensionsPlugin_Plugin::get_instance( __FILE__ );
+global $pronamic_wp_extensions_plugin;
+
+$pronamic_wp_extensions_plugin = Pronamic_WP_ExtensionsPlugin_Plugin::get_instance( __FILE__ );
