@@ -71,6 +71,18 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			'pronamic_wp_extensions_general', // section
 			array( 'label_for' => 'pronamic_wp_themes_path' ) // args
 		);
+                
+		add_settings_field(
+			'pronamic_wp_ignore', // id
+			__( 'Ignore', 'pronamic_wp_extensions' ), // title
+			array( $this, 'input_textarea' ), // callback
+			'pronamic_wp_extensions', // page
+			'pronamic_wp_extensions_general', // section
+			array(
+				'label_for'   => 'pronamic_wp_ignore',
+				'description' => sprintf( 'For example: <pre>%s</pre>', file_get_contents( plugin_dir_path( $this->plugin->file ) . '/admin/ignore.txt' ) ),
+			) // args
+		);
 
 		// Settings - Bitbucket
 		add_settings_section(
@@ -107,12 +119,13 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		// Register
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_plugins_path' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_themes_path' );
+		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_ignore', array( $this, 'lines_to_array' ) );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_bitbucket_username' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_bitbucket_password' );
 	}
 
 	/**
-	 * Input path
+	 * Input text
 	 * 
 	 * @param array $args
 	 */
@@ -134,6 +147,41 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	}
 
 	/**
+	 * Input text
+	 * 
+	 * @param array $args
+	 */
+	public function input_textarea( $args ) {
+		$name = $args['label_for'];
+		
+		$classes = array();
+		if ( isset( $args['classes'] ) ) {
+			$classes = $args['classes'];
+		}
+
+		$value = get_option( $name );
+
+		if ( is_array( $value ) ) {
+			$value = implode( "\r\n", $value );
+		}
+
+		printf(
+			'<textarea name="%s" id="%s" class="%s" rows="10" cols="60">%s</textarea>',
+			esc_attr( $name ),
+			esc_attr( $name ),
+			esc_attr( implode( ' ', $classes ) ),
+			esc_textarea( $value )
+		);
+
+		if ( isset( $args['description'] ) ) {
+			printf(
+				'<span class="description"><br />%s</span>',
+				$args['description']
+			);
+		}
+	}
+
+	/**
 	 * Input path
 	 * 
 	 * @param array $args
@@ -152,6 +200,12 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		);
 		
 		echo '/';
+	}
+
+	public function lines_to_array( $value ) {
+		$value = explode( "\r\n", $value );
+
+		return $value;
 	}
 
 	//////////////////////////////////////////////////
