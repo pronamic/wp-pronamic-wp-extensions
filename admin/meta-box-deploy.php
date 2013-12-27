@@ -50,13 +50,21 @@ $deploy_file = $deploy_path . DIRECTORY_SEPARATOR . $post->post_name . '.' . $ve
 	</tbody>
 </table>
 
-<?php
+<p>
+	<?php 
+	
+	$url = add_query_arg( array( 
+		'page'        => 'pronamic_wp_extensions_deploy',
+		'url'         => $download_url,
+		'zip_dir_new' => $post->post_name,
+		'filename'    => $deploy_file,
+	), admin_url( 'admin.php' ) );
 
-submit_button(
-	__( 'Deploy', 'pronamic_wp_extensions' ),
-	'secondary',
-	'pronamic_extension_deploy'
-);
-
-?>
-<div class="clear"></div>
+	printf(
+		'<a href="%s">%s</a>',
+		esc_attr( $url ),
+		esc_html__( 'Deploy', '' )
+	);
+	
+	?>
+</p>
