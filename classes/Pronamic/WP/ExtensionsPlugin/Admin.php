@@ -203,7 +203,9 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	}
 
 	public function lines_to_array( $value ) {
-		$value = explode( "\r\n", $value );
+		if ( is_string( $value ) ) {
+			$value = explode( "\r\n", $value );
+		}
 
 		return $value;
 	}
