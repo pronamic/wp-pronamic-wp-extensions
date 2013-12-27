@@ -17,15 +17,40 @@ switch ( $post->post_type ) {
 		break;
 }
 
-$download_url = sprintf(
-	'https://%s:%s@bitbucket.org/%s/%s/get/%s.zip',
-	get_option( 'pronamic_wp_bitbucket_username' ),
-	get_option( 'pronamic_wp_bitbucket_password' ),
-	get_post_meta( $post->ID, '_pronamic_extension_bitbucket_user', true ),
-	get_post_meta( $post->ID, '_pronamic_extension_bitbucket_repo', true ),
+// GitHub
+$github_user = get_post_meta( $post->ID, '_pronamic_extension_github_user', true );
+$github_repo = get_post_meta( $post->ID, '_pronamic_extension_github_repo', true );
+
+$github_url = sprintf(
+	'https://github.com/%s/%s/archive/%s.zip',
+	$github_user,
+	$github_repo,
 	$version
 );
 
+// Bitbucket
+$bitbucket_user = get_post_meta( $post->ID, '_pronamic_extension_bitbucket_user', true );
+$bitbucket_repo = get_post_meta( $post->ID, '_pronamic_extension_bitbucket_repo', true );
+
+$bitbucket_url = sprintf(
+	'https://%s:%s@bitbucket.org/%s/%s/get/%s.zip',
+	get_option( 'pronamic_wp_bitbucket_username' ),
+	get_option( 'pronamic_wp_bitbucket_password' ),
+	$bitbucket_user,
+	$bitbucket_repo,
+	$version
+);
+
+// Download
+$download_url = '';
+
+if ( ! empty( $github_repo ) ) {
+	$download_url = $github_url;
+} elseif ( ! empty( $github_repo ) ) {
+	$download_url = $github_url;
+}
+
+// File
 $deploy_file = $deploy_path . DIRECTORY_SEPARATOR . $post->post_name . '.' . $version . '.zip';
 
 ?>
