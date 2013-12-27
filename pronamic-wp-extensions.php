@@ -12,12 +12,12 @@ Network: true
 
 $dir = dirname( __FILE__ );
 
-require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/Findable.php';
-require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/ExtensionInfo.php';
-require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/Admin.php';
-require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/Api.php';
-require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/Plugin.php';
-require_once $dir . '/src/Pronamic/WP/ExtensionsPlugin/Finder.php';
+require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/Findable.php';
+require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/ExtensionInfo.php';
+require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/Admin.php';
+require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/Api.php';
+require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/Plugin.php';
+require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/Finder.php';
 
 /**
  * Bootstrap
