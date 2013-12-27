@@ -46,8 +46,8 @@ $download_url = '';
 
 if ( ! empty( $github_repo ) ) {
 	$download_url = $github_url;
-} elseif ( ! empty( $github_repo ) ) {
-	$download_url = $github_url;
+} elseif ( ! empty( $bitbucket_url ) ) {
+	$download_url = $bitbucket_url;
 }
 
 // File
