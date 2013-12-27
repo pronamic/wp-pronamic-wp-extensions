@@ -8,6 +8,7 @@ if ( $_SERVER['REQUEST_METHOD'] === 'GET' ) {
 $deploy = new stdClass();
 $deploy->url               = filter_input( $type, 'url', FILTER_SANITIZE_STRING );
 $deploy->download_filename = filter_input( $type, 'download_filename', FILTER_SANITIZE_STRING );
+$deploy->zip_open          = false;
 $deploy->zip_dir           = filter_input( $type, 'zip_dir', FILTER_SANITIZE_STRING );
 $deploy->zip_dir_new       = filter_input( $type, 'zip_dir_new', FILTER_SANITIZE_STRING );
 $deploy->downloaded        = filter_input( $type, 'downloaded', FILTER_VALIDATE_BOOLEAN );
@@ -15,7 +16,7 @@ $deploy->ignore            = explode( "\r\n", filter_input( $type, 'ignore', FIL
 $deploy->reindexed         = filter_input( $type, 'reindexed', FILTER_VALIDATE_BOOLEAN );
 $deploy->filename          = filter_input( $type, 'filename', FILTER_SANITIZE_STRING ); 
 
-if ( ! filter_has_var( $input, 'ignore' ) ) {
+if ( ! filter_has_var( $type, 'ignore' ) ) {
 	$value = get_option( 'pronamic_wp_ignore' );
 	
 	if ( is_array( $value ) ) {
@@ -173,7 +174,7 @@ if ( filter_has_var( INPUT_POST, 'reindex' ) ) {
 		}
 	}
 	
-	if ( $message ) {
+	if ( isset( $message ) ) {
 		$class = '';
 		$text  = '';
 
