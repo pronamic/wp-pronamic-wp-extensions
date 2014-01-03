@@ -33,6 +33,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
 		add_action( 'save_post', array( $this, 'save_extension_meta_version' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_extension_meta_sale' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_github' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_bitbucket' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_wp_org' ), 10, 2 );
@@ -266,6 +267,15 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			);
 
 			add_meta_box(
+				'pronamic_extension_sale',
+				__( 'Sale', 'pronamic_wp_extensions' ),
+				array( $this, 'meta_box_extension_sale' ),
+				$screen,
+				'normal',
+				'high'
+			);
+
+			add_meta_box(
 				'pronamic_extension_github',
 				__( 'GitHub', 'pronamic_wp_extensions' ),
 				array( $this, 'meta_box_extension_github' ),
@@ -291,7 +301,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'normal',
 				'high'
 			);
-	
+
 			add_meta_box(
 				'pronamic_extension_deploy',
 				__( 'Deploy', 'pronamic_wp_extensions' ),
@@ -317,6 +327,13 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	 */
 	function pronamic_extension_version() {
 		$this->plugin->display( 'admin/meta-box-version.php' );
+	}
+
+	/**
+	 * Meta box for sale
+	 */
+	function meta_box_extension_sale() {
+		$this->plugin->display( 'admin/meta-box-sale.php' );
 	}
 
 	/**
@@ -407,6 +424,17 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	
 		$this->save_extension_meta( $post_id, array(
 			'_pronamic_extension_stable_version' => FILTER_SANITIZE_STRING,
+		) );
+	}
+
+	public function save_extension_meta_sale( $post_id, $post ) {
+		if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_sale_nonce', 'pronamic_wp_extension_save_meta_sale' ) )
+			return;
+	
+		$this->save_extension_meta( $post_id, array(
+			'_pronamic_extension_price'       => FILTER_SANITIZE_STRING,
+			'_pronamic_extension_total_sales' => FILTER_SANITIZE_STRING,
+			'_pronamic_extension_buy_url'     => FILTER_SANITIZE_STRING,
 		) );
 	}
 

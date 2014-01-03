@@ -79,7 +79,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'rewrite'            => array( 'slug' => 'plugins' ),
-			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'custom-fields' ),
+			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields' ),
 		) );
 	
 		register_post_type( 'pronamic_theme', array(
@@ -105,8 +105,53 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'rewrite'            => array( 'slug' => 'themes' ),
-			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'custom-fields' ),
+			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields' ),
 		) );
+		
+		// Taxonomies
+		register_taxonomy( 'pronamic_plugin_category', 'pronamic_plugin',
+			array(
+				'hierarchical' => true,
+				'labels'       => array(
+					'name'              => _x( 'Plugin Category', 'category general name', 'pronamic_wp_extensions' ),
+					'singular_name'     => _x( 'Plugin Category', 'category singular name', 'pronamic_wp_extensions' ),
+					'search_items'      => __( 'Search Plugin Categories', 'pronamic_wp_extensions' ),
+					'all_items'         => __( 'All Plugin Categories', 'pronamic_wp_extensions' ),
+					'parent_item'       => __( 'Parent Plugin Category', 'pronamic_wp_extensions' ),
+					'parent_item_colon' => __( 'Parent Plugin Category:', 'pronamic_wp_extensions' ),
+					'edit_item'         => __( 'Edit Plugin Category', 'pronamic_wp_extensions' ),
+					'update_item'       => __( 'Update Plugin Category', 'pronamic_wp_extensions' ),
+					'add_new_item'      => __( 'Add New Plugin Category', 'pronamic_wp_extensions' ),
+					'new_item_name'     => __( 'New Plugin Category Name', 'pronamic_wp_extensions' ),
+					'menu_name'         => __( 'Categories', 'pronamic_wp_extensions' ),
+				),
+				'show_ui'      => true,
+				'query_var'    => true,
+				'rewrite'      => array( 'slug' => _x( 'plugin-category', 'slug', 'pronamic_wp_extensions' ) ),
+			)
+        );
+
+		register_taxonomy( 'pronamic_theme_category', 'pronamic_theme',
+			array(
+				'hierarchical' => true,
+				'labels'       => array(
+					'name'              => _x( 'Theme Category', 'category general name', 'pronamic_wp_extensions' ),
+					'singular_name'     => _x( 'Theme Category', 'category singular name', 'pronamic_wp_extensions' ),
+					'search_items'      => __( 'Search Theme Categories', 'pronamic_wp_extensions' ),
+					'all_items'         => __( 'All Theme Categories', 'pronamic_wp_extensions' ),
+					'parent_item'       => __( 'Parent Theme Category', 'pronamic_wp_extensions' ),
+					'parent_item_colon' => __( 'Parent Theme Category:', 'pronamic_wp_extensions' ),
+					'edit_item'         => __( 'Edit Theme Category', 'pronamic_wp_extensions' ),
+					'update_item'       => __( 'Update Theme Category', 'pronamic_wp_extensions' ),
+					'add_new_item'      => __( 'Add New Theme Category', 'pronamic_wp_extensions' ),
+					'new_item_name'     => __( 'New Theme Category Name', 'pronamic_wp_extensions' ),
+					'menu_name'         => __( 'Categories', 'pronamic_wp_extensions' ),
+				),
+				'show_ui'      => true,
+				'query_var'    => true,
+				'rewrite'      => array( 'slug' => _x( 'theme-category', 'slug', 'pronamic_wp_extensions' ) ),
+			)
+        );
 	}
 
 	//////////////////////////////////////////////////
