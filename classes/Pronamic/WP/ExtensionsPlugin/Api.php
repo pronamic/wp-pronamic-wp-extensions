@@ -28,7 +28,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	/**
 	 * Initialize
 	 */
-	public function init() {	
+	public function init() {
 		// Rewrite rules
 		// @see http://wordpress.stackexchange.com/questions/5413/need-help-with-add-rewrite-rule
 		add_rewrite_rule(
@@ -47,6 +47,8 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	 * Query vars
 	 * 
 	 * @param array $query_vars
+     *
+     * @return array $query_vars
 	 */
 	public function query_vars( $query_vars ) {
 		$query_vars[] = 'pronamic_wp_extensions_api';
@@ -64,19 +66,23 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 		$is_api = get_query_var( 'pronamic_wp_extensions_api' );
 
 		if ( $is_api ) {
-			$module = get_query_var( 'pronamic_wp_extensions_api_module' );
-			$method = get_query_var( 'pronamic_wp_extensions_api_method' );
+			$module  = get_query_var( 'pronamic_wp_extensions_api_module' );
+			$method  = get_query_var( 'pronamic_wp_extensions_api_method' );
 			$version = get_query_var( 'pronamic_wp_extensions_api_version' );
 
 			switch( $module ) {
 				case 'themes':
-					$result = $this->themes_api( $method );
+					$this->themes_api( $method );
 
 					break;
 				case 'plugins':
-					$result = $this->plugins_api( $method );
+					$this->plugins_api( $method );
 					
 					break;
+                case 'licenses':
+                    $this->licenses_api( $method );
+
+                    break;
 			}
 			
 			wp_send_json_error();
@@ -91,9 +97,13 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	public function themes_api( $method ) {
 		switch( $method ) {
 			case 'info':
-				return $this->themes_api_info();
+				$this->themes_api_info();
+
+                break;
 			case 'update-check':
-				return $this->themes_api_update_check();
+				$this->themes_api_update_check();
+
+                break;
 		}
 	}
 	
@@ -108,8 +118,6 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 			$themes = json_decode( $json, true );
 		
 			if ( is_array( $themes ) ) {
-				global $wpdb;
-			
 				$titles = array();
 				foreach ( $themes as $file => $theme ) {
 					$titles[$file] = $theme['Title'];
@@ -191,9 +199,13 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	public function plugins_api( $method ) {
 		switch( $method ) {
 			case 'info':
-				return $this->plugins_api_info();
+				$this->plugins_api_info();
+
+                break;
 			case 'update-check':
-				return $this->plugins_api_update_check();
+				$this->plugins_api_update_check();
+
+                break;
 		}
 	}
 	
@@ -218,8 +230,6 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 			$plugins = json_decode( $json, true );
 
 			if ( is_array( $plugins ) ) {
-				global $wpdb;
-
 				$titles = array();
 				foreach ( $plugins as $file => $plugin ) {
 					$titles[$file] = $plugin['Name'];
@@ -293,7 +303,58 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 			}
 		}
 	}
-	
+
+    //////////////////////////////////////////////////
+    // Licenses API
+    //////////////////////////////////////////////////
+
+    /**
+     * The license API
+     *
+     * @param $method
+     */
+    public function licenses_api( $method ) {
+        switch( $method ) {
+            case 'activate_license':
+                $this->licenses_api_activate_license();
+                break;
+            case 'deactivate_license':
+                $this->licenses_api_deactivate_license();
+                break;
+            case 'check_license':
+                $this->licenses_api_check_license();
+        }
+    }
+
+    /**
+     * Checks if a license key is correct for a certain plugin., then sets the license key as activated.
+     *
+     * TODO Implement
+     */
+    public function licenses_api_activate_license() {
+
+        wp_send_json( array( 'success' => true ) );
+    }
+
+    /**
+     * Sets the passed license key as deactivated.
+     *
+     * TODO Implement
+     */
+    public function licenses_api_deactivate_license() {
+
+        wp_send_json( array( 'success' => true ) );
+    }
+
+    /**
+     * Checks if a license key is still valid.
+     *
+     * TODO Implement
+     */
+    public function licenses_api_check_license() {
+
+        wp_send_json( array( 'success' => true ) );
+    }
 
 	//////////////////////////////////////////////////
 
