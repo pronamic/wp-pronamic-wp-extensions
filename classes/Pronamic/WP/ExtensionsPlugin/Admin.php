@@ -37,6 +37,8 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		add_action( 'save_post', array( $this, 'save_extension_meta_github' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_bitbucket' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_wp_org' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_extension_meta_license_period' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_extension_meta_license_status' ), 10, 2 );
 
 		add_action( 'admin_init', array( $this, 'maybe_deploy' ) );
 	}
@@ -117,7 +119,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			) // args
 		);
 
-		// Register
+        // Register
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_plugins_path' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_themes_path' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_ignore', array( $this, 'lines_to_array' ) );
@@ -320,56 +322,88 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'high'
 			);
 		}
+
+        add_meta_box(
+            'pronamic_license_license_period',
+            __( 'License Key', 'pronamic_wp_extensions' ),
+            array( $this, 'pronamic_license_license_period' ),
+            'pronamic_license',
+            'normal',
+            'high'
+        );
+
+        add_meta_box(
+            'pronamic_license_active_sites',
+            __( 'Active Sites', 'pronamic_wp_extensions' ),
+            array( $this, 'pronamic_license_active_sites' ),
+            'pronamic_license',
+            'normal',
+            'high'
+        );
 	}
 
-	/**
+    /**
 	 * Meta box for version control
 	 */
-	function pronamic_extension_version() {
+    public function pronamic_extension_version() {
 		$this->plugin->display( 'admin/meta-box-version.php' );
 	}
 
 	/**
 	 * Meta box for sale
 	 */
-	function meta_box_extension_sale() {
+    public function meta_box_extension_sale() {
 		$this->plugin->display( 'admin/meta-box-sale.php' );
 	}
 
 	/**
 	 * Meta box for GitHub
 	 */
-	function meta_box_extension_github() {
+    public function meta_box_extension_github() {
 		$this->plugin->display( 'admin/meta-box-github.php' );
 	}
 
 	/**
 	 * Meta box for Bitbucket
 	 */
-	function meta_box_extension_bitbucket() {
+    public function meta_box_extension_bitbucket() {
 		$this->plugin->display( 'admin/meta-box-bitbucket.php' );
 	}
 
 	/**
 	 * Meta box for WordPress.org
 	 */
-	function meta_box_extension_wp_org() {
+    public function meta_box_extension_wp_org() {
 		$this->plugin->display( 'admin/meta-box-wp-org.php' );
 	}
 
 	/**
 	 * Meta box for deploy
 	 */
-	function meta_box_extension_deploy() {
+    public function meta_box_extension_deploy() {
 		$this->plugin->display( 'admin/meta-box-deploy.php' );
 	}
 	
 	/**
 	 * Meta box for downloads
 	 */
-	function meta_box_extension_downloads() {
+    public function meta_box_extension_downloads() {
 		$this->plugin->display( 'admin/meta-box-downloads.php' );
 	}
+
+    /**
+     * Meta box for license key
+     */
+    public function pronamic_license_license_period() {
+        $this->plugin->display( 'admin/meta-box-license-period.php' );
+    }
+
+    /**
+     * Meta box for license status
+     */
+    public function pronamic_license_active_sites() {
+        $this->plugin->display( 'admin/meta-box-license-active-sites.php' );
+    }
 
 	//////////////////////////////////////////////////
 
@@ -468,6 +502,25 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		) );
 	}
 
+    public function save_extension_meta_license_period( $post_id, $post ) {
+        if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_license_period_nonce', 'pronamic_wp_extension_save_meta_license_period' ) )
+            return;
+
+        $this->save_extension_meta( $post_id, array(
+            '_pronamic_extensions_license_start_date' => FILTER_SANITIZE_STRING,
+            '_pronamic_extensions_license_end_date'   => FILTER_SANITIZE_STRING,
+        ) );
+    }
+
+    public function save_extension_meta_license_status( $post_id, $post ) {
+        if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_license_status_nonce', 'pronamic_wp_extension_save_meta_license_status' ) )
+            return;
+
+        $this->save_extension_meta( $post_id, array(
+            '_pronamic_extensions_license_status' => FILTER_SANITIZE_STRING,
+        ) );
+    }
+
 	//////////////////////////////////////////////////
 
 	/**
@@ -546,7 +599,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 
 					$zip->close();
 				} else {
-					echo 'failed, code:' . $res;
+					echo 'failed, code:' . $result;
 				}
 
 				$moved = rename( $tmpfname, $deploy_file );
