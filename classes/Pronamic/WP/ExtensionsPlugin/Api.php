@@ -48,11 +48,11 @@ class Pronamic_WP_ExtensionsPlugin_Api {
     const LICENSE_KEY_EXPIRED = '005';
 
     /**
-     * Error code 006: License code not activated.
+     * Error code 006: License key not active.
      *
      * @const string
      */
-    const LICENSE_KEY_NOT_ACTIVATED = '006';
+    const LICENSE_KEY_NOT_ACTIVE = '006';
 
     /**
      * Error code 007: License code already activated.
@@ -62,25 +62,39 @@ class Pronamic_WP_ExtensionsPlugin_Api {
     const LICENSE_KEY_ALREADY_ACTIVATED = '007';
 
     /**
-     * Error code 008: License key does not exist.
+     * Error code 008: License code already activated.
      *
      * @const string
      */
-    const INVALID_LICENSE_KEY = '008';
+    const LICENSE_KEY_COULD_NOT_BE_ACTIVATED = '008';
 
     /**
-     * Error code 009: Product slug invalid.
+     * Error code 009: License code already activated.
      *
      * @const string
      */
-    const INVALID_PRODUCT_SLUG = '009';
+    const LICENSE_KEY_COULD_NOT_BE_DEACTIVATED = '009';
 
     /**
-     * Error code 010: Product type invalid.
+     * Error code 010: License key does not exist.
      *
      * @const string
      */
-    const INVALID_PRODUCT_TYPE = '010';
+    const INVALID_LICENSE_KEY = '010';
+
+    /**
+     * Error code 011: Product slug invalid.
+     *
+     * @const string
+     */
+    const INVALID_PRODUCT_SLUG = '011';
+
+    /**
+     * Error code 012: Product type invalid.
+     *
+     * @const string
+     */
+    const INVALID_PRODUCT_TYPE = '012';
 
     //////////////////////////////////////////////////
 
@@ -440,7 +454,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
             $license_end_date   = get_post_meta( $license->ID, '_pronamic_extensions_license_end_date'    , true );
 
             if ( strtotime( $license_start_date ) > time() ||
-                strtotime( $license_end_date )   < time() ) {
+                 strtotime( $license_end_date )   < time() ) {
 
                 wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_EXPIRED ) );
             }
@@ -474,7 +488,13 @@ class Pronamic_WP_ExtensionsPlugin_Api {
                         wp_send_json( array( 'success' => false, 'error_code' => self::INVALID_PRODUCT_TYPE ) );
                     }
 
-                    wp_send_json( array( 'success' => true ) );
+                    $active_sites[ $site ] = array( 'activation_date' => date( 'Y-m-d h:i:s' ) );
+
+                    if ( update_post_meta( $license->ID, '_pronamic_extensions_license_active_sites', $active_sites ) ) {
+                        wp_send_json( array( 'success' => true ) );
+                    } else {
+                        wp_send_json( array( 'success' => true, 'error_code' => self::LICENSE_KEY_COULD_NOT_BE_ACTIVATED ) );
+                    }
                 }
             }
         }
@@ -484,12 +504,50 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
     /**
      * Sets the passed license key as deactivated.
-     *
-     * TODO Implement
      */
     public function licenses_api_deactivate() {
 
-        wp_send_json( array( 'success' => true ) );
+        $license_key = filter_input( INPUT_POST, 'license_key', FILTER_SANITIZE_STRING );
+        $site        = filter_input( INPUT_POST, 'site'       , FILTER_VALIDATE_URL );
+
+        if ( strlen( $license_key ) <= 0 ) {
+            wp_send_json( array( 'success' => false, 'error_code' => self::NO_LICENSE_KEY ) );
+        }
+
+        if ( ! isset( $site ) ) {
+            wp_send_json( array( 'success' => false, 'error_code' => self::NO_SITE_URL ) );
+        }
+
+        $license_query = new WP_Query( array(
+            'post_type'      => 'pronamic_license',
+            's'              => $license_key,
+            'posts_per_page' => 1,
+        ) );
+
+        // Check if any licenses were found
+        if ( $license_query->have_posts() ) {
+
+            $license = $license_query->next_post();
+
+            $active_sites = get_post_meta( $license->ID, '_pronamic_extensions_license_active_sites', true );
+
+            if ( is_array( $active_sites ) &&
+                 array_key_exists( $site, $active_sites ) ) {
+
+                unset( $active_sites[ $site ] );
+
+                // Remove site from active sites
+                if ( update_post_meta( $license->ID, '_pronamic_extensions_license_active_sites', $active_sites ) ) {
+                    wp_send_json( array( 'success' => true ) );
+                } else {
+                    wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_COULD_NOT_BE_DEACTIVATED ) );
+                }
+            }
+
+            wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_NOT_ACTIVE ) );
+        }
+
+        wp_send_json( array( 'success' => false, 'error_code' => self::INVALID_LICENSE_KEY ) );
     }
 
     /**
@@ -532,7 +590,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
             if ( ! is_array( $active_sites ) ||
                  ! array_key_exists( $site, $active_sites ) ) {
 
-                wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_NOT_ACTIVATED ) );
+                wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_NOT_ACTIVE ) );
             }
 
             wp_send_json( array( 'success' => true ) );
