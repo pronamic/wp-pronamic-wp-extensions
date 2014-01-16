@@ -340,6 +340,15 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
             'normal',
             'high'
         );
+
+        add_meta_box(
+            'pronamic_license_product',
+            __( 'Product', 'pronamic_wp_extensions' ),
+            array( $this, 'pronamic_license_product' ),
+            'pronamic_license',
+            'normal',
+            'high'
+        );
 	}
 
     /**
@@ -403,6 +412,13 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
      */
     public function pronamic_license_active_sites() {
         $this->plugin->display( 'admin/meta-box-license-active-sites.php' );
+    }
+
+    /**
+     * Meta box for product reference
+     */
+    public function pronamic_license_product() {
+        $this->plugin->display( 'admin/meta-box-license-product.php' );
     }
 
 	//////////////////////////////////////////////////
