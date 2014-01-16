@@ -131,7 +131,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
             'capability_type'    => 'post',
             'has_archive'        => true,
             'rewrite'            => array( 'slug' => 'licenses' ),
-            'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields' ),
+            'supports'           => array( 'title' ),
         ) );
 		
 		// Taxonomies
