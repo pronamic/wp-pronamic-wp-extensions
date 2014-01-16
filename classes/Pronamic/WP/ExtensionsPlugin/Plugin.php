@@ -40,6 +40,9 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 
 		add_filter( 'posts_where', array( $this, 'posts_where' ), 10, 2 );
 
+        // License
+        $this->api = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this );
+
 		// API
 		$this->api = Pronamic_WP_ExtensionsPlugin_Api::get_instance();
 		
@@ -107,32 +110,6 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'rewrite'            => array( 'slug' => 'themes' ),
 			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields' ),
 		) );
-
-        register_post_type( 'pronamic_license', array(
-            'labels'             => array(
-                'name'               => _x( 'Licenses', 'post type general name', 'pronamic_wp_extensions' ),
-                'singular_name'      => _x( 'License', 'post type singular name', 'pronamic_wp_extensions' ),
-                'add_new'            => _x( 'Add New', 'plugin', 'pronamic_wp_extensions' ),
-                'add_new_item'       => __( 'Add New License', 'pronamic_wp_extensions' ),
-                'edit_item'          => __( 'Edit License', 'pronamic_wp_extensions' ),
-                'new_item'           => __( 'New License', 'pronamic_wp_extensions' ),
-                'view_item'          => __( 'View License', 'pronamic_wp_extensions' ),
-                'search_items'       => __( 'Search Licenses', 'pronamic_wp_extensions' ),
-                'not_found'          => __( 'No licenses found', 'pronamic_wp_extensions' ),
-                'not_found_in_trash' => __( 'No licenses found in Trash', 'pronamic_wp_extensions' ),
-                'parent_item_colon'  => __( 'Parent License:', 'pronamic_wp_extensions' ),
-                'menu_name'          => __( 'Licenses', 'pronamic_wp_extensions' )
-            ),
-            'public'             => false,
-            'publicly_queryable' => false,
-            'show_ui'            => true,
-            'show_in_menu'       => true,
-            'query_var'          => true,
-            'capability_type'    => 'post',
-            'has_archive'        => true,
-            'rewrite'            => array( 'slug' => 'licenses' ),
-            'supports'           => array( 'title' ),
-        ) );
 		
 		// Taxonomies
 		register_taxonomy( 'pronamic_plugin_category', 'pronamic_plugin',

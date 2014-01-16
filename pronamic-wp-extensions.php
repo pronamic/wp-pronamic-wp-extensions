@@ -18,6 +18,7 @@ require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/Admin.php';
 require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/Api.php';
 require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/Plugin.php';
 require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/Finder.php';
+require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/License.php';
 
 /**
  * Bootstrap
