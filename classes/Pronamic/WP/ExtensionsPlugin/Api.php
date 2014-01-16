@@ -453,8 +453,8 @@ class Pronamic_WP_ExtensionsPlugin_Api {
             $license_start_date = get_post_meta( $license->ID, '_pronamic_extensions_license_start_date'  , true );
             $license_end_date   = get_post_meta( $license->ID, '_pronamic_extensions_license_end_date'    , true );
 
-            if ( strtotime( $license_start_date ) > time() ||
-                 strtotime( $license_end_date )   < time() ) {
+            if ( strtotime( $license_start_date ) >= time() ||
+                 strtotime( $license_end_date )   <= time() ) {
 
                 wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_EXPIRED ) );
             }
@@ -581,8 +581,8 @@ class Pronamic_WP_ExtensionsPlugin_Api {
             $license_start_date = get_post_meta( $license->ID, '_pronamic_extensions_license_start_date'  , true );
             $license_end_date   = get_post_meta( $license->ID, '_pronamic_extensions_license_end_date'    , true );
 
-            if ( strtotime( $license_start_date ) > time() ||
-                 strtotime( $license_end_date )   < time() ) {
+            if ( strtotime( $license_start_date ) >= time() ||
+                 strtotime( $license_end_date )   <= time() ) {
 
                 wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_EXPIRED ) );
             }
