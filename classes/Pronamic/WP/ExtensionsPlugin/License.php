@@ -27,9 +27,9 @@ class Pronamic_WP_ExtensionsPlugin_License {
     /**
      * License post type
      *
-     * @var string
+     * @const string
      */
-    public $post_type = 'pronamic_license';
+    const POST_TYPE = 'pronamic_license';
 
     //////////////////////////////////////////////////
 
@@ -45,6 +45,8 @@ class Pronamic_WP_ExtensionsPlugin_License {
         add_action( 'init', array( $this, 'init' ) );
 
         add_filter( 'default_title', array( $this, 'maybe_generate_license_key' ) );
+
+        add_action( 'woocommerce_order_status_processing', array( $this, 'generate_licenses_for_woocommerce_products' ) );
     }
 
     //////////////////////////////////////////////////
@@ -54,7 +56,7 @@ class Pronamic_WP_ExtensionsPlugin_License {
      */
     public function init() {
 
-        register_post_type( $this->post_type, array(
+        register_post_type( self::POST_TYPE, array(
             'labels'             => array(
                 'name'               => _x( 'Licenses', 'post type general name', 'pronamic_wp_extensions' ),
                 'singular_name'      => _x( 'License', 'post type singular name', 'pronamic_wp_extensions' ),
@@ -109,34 +111,12 @@ class Pronamic_WP_ExtensionsPlugin_License {
             wp_insert_term(
                 __( 'License Key', 'pronamic_wp_extensions' ),
                 'product_licensing',
-                array( 'slug' => _x( 'license-key', 'slug', 'pronamic_wp_extensions' ) )
+                array( 'slug' => 'license-key' )
             );
         }
     }
 
     //////////////////////////////////////////////////
-
-    /**
-     * Filters the title of a new license to be a uniquely generated license key
-     *
-     * @param string $title
-     *
-     * @return string $title
-     */
-    public function maybe_generate_license_key( $title ) {
-
-        if ( ! function_exists( 'get_current_screen' ) ) {
-            return $title;
-        }
-
-        $current_screen = get_current_screen();
-
-        if ( $current_screen->post_type === $this->post_type ) {
-            return $this->generate_license_key();
-        }
-
-        return $title;
-    }
 
     /**
      * Generate a v4 UUID.
@@ -168,6 +148,106 @@ class Pronamic_WP_ExtensionsPlugin_License {
             mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
         );
     }
+
+    /**
+     * Filters the title of a new license to be a uniquely generated license key
+     *
+     * @param string $title
+     *
+     * @return string $title
+     */
+    public function maybe_generate_license_key( $title ) {
+
+        if ( ! function_exists( 'get_current_screen' ) ) {
+            return $title;
+        }
+
+        $current_screen = get_current_screen();
+
+        if ( $current_screen->post_type === self::POST_TYPE ) {
+            return $this->generate_license_key();
+        }
+
+        return $title;
+    }
+
+    /**
+     * Called when a WooCommerce order gets its status updated.
+     *
+     * @param int $order_id
+     */
+    public function generate_licenses_for_woocommerce_products( $order_id ) {
+
+        if ( ! class_exists( 'WC_Order' ) ) {
+            return;
+        }
+
+        $order = new WC_Order( $order_id );
+
+        $products = $order->get_items();
+
+        // An empty array will make WP_Query drop the 'post__in' variable, -1 will make sure no products are retrieved when there are no product IDs
+        $product_ids = array( -1 );
+
+        foreach ( $products as $product ) {
+
+            $product_ids[] = $product['product_id'];
+        }
+
+        // Get all products that have the license key term
+        $licensed_products_query = new WP_Query( array(
+            'post_type' => 'product',
+            'post__in'  => $product_ids,
+            'tax_query' => array(
+                array(
+                    'taxonomy' => 'product_licensing',
+                    'field'    => 'slug',
+                    'terms'    => 'license-key',
+                )
+            ),
+        ) );
+
+        $license_ids = array();
+
+        // Loop through licensed products, generating licenses
+        while ( $licensed_products_query->have_posts() ) {
+
+            $licensed_product = $licensed_products_query->next_post();
+
+            $extension_id = get_post_meta( $licensed_product->ID, 'extension_id', true );
+
+            $license_id = wp_insert_post( array(
+                'post_title'  => $this->generate_license_key(),
+                'post_status' => 'publish',
+                'post_type'   => self::POST_TYPE,
+                'post_parent' => $extension_id,
+            ) );
+
+            if ( ! is_wp_error( $license_id ) ) {
+                $license_ids[] = $license_id;
+            }
+        }
+
+        // Get the current user to add license IDs to
+        $current_user = wp_get_current_user();
+
+        if ( $current_user instanceof WP_User ) {
+
+            $current_license_ids = get_user_meta( $current_user->ID, '_pronamic_extensions_license_keys', true );
+
+            if ( is_string( $current_license_ids ) ) {
+                $current_license_ids = array();
+            }
+
+            $license_ids = array_merge( $current_license_ids, $license_ids );
+
+            update_user_meta( $current_user->ID, '_pronamic_extensions_license_keys', $license_ids );
+        }
+    }
+
+    //////////////////////////////////////////////////
+
+
 
     //////////////////////////////////////////////////
 
