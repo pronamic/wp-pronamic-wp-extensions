@@ -44,7 +44,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
         $this->api = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this );
 
 		// API
-		$this->api = Pronamic_WP_ExtensionsPlugin_Api::get_instance();
+		$this->api = Pronamic_WP_ExtensionsPlugin_Api::get_instance( $this );
 		
 		// Admin
 		if ( is_admin() ) {

@@ -34,6 +34,29 @@ class Pronamic_WP_ExtensionsPlugin_License {
     //////////////////////////////////////////////////
 
     /**
+     * Active sites meta key
+     *
+     * @const string
+     */
+    const ACTIVE_SITES_META_KEY = '_pronamic_extensions_license_active_sites';
+
+    /**
+     * Start date meta key
+     *
+     * @const string
+     */
+    const START_DATE_META_KEY = '_pronamic_extensions_license_start_date';
+
+    /**
+     * End date meta key
+     *
+     * @const string
+     */
+    const END_DATE_META_KEY = '_pronamic_extensions_license_end_date';
+
+    //////////////////////////////////////////////////
+
+    /**
      * Constructor
      *
      * @param Pronamic_WP_ExtensionsPlugin_Plugin $plugin
@@ -42,11 +65,15 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
         $this->plugin = $plugin;
 
+        // Actions
         add_action( 'init', array( $this, 'init' ) );
 
-        add_filter( 'default_title', array( $this, 'maybe_generate_license_key' ) );
+        add_action( 'edit_user_profile', array( $this, 'add_license_keys_to_user_profile' ) );
 
         add_action( 'woocommerce_order_status_processing', array( $this, 'generate_licenses_for_woocommerce_products' ) );
+
+        // Filters
+        add_filter( 'default_title', array( $this, 'maybe_generate_license_key' ) );
     }
 
     //////////////////////////////////////////////////
@@ -118,6 +145,13 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
     //////////////////////////////////////////////////
 
+    public function add_license_keys_to_user_profile() {
+
+        $this->plugin->display( 'admin/user-profile-license-keys.php' );
+    }
+
+    //////////////////////////////////////////////////
+
     /**
      * Generate a v4 UUID.
      *
@@ -171,6 +205,8 @@ class Pronamic_WP_ExtensionsPlugin_License {
         return $title;
     }
 
+    //////////////////////////////////////////////////
+
     /**
      * Called when a WooCommerce order gets its status updated.
      *
@@ -223,6 +259,9 @@ class Pronamic_WP_ExtensionsPlugin_License {
                 'post_parent' => $extension_id,
             ) );
 
+            $this->set_start_date( $license_id, date( 'Y-m-d h:i:s' ) );
+            $this->set_end_date( $license_id, date( 'Y-m-d h:i:s', strtotime( '+ 1 year' ) ) );
+
             if ( ! is_wp_error( $license_id ) ) {
                 $license_ids[] = $license_id;
             }
@@ -256,7 +295,7 @@ class Pronamic_WP_ExtensionsPlugin_License {
      */
     public function get_active_sites( $license_id ) {
 
-        $active_sites = get_post_meta( $license_id, '_pronamic_extensions_license_active_sites', true );
+        $active_sites = get_post_meta( $license_id, self::ACTIVE_SITES_META_KEY, true );
 
         if ( is_array( $active_sites ) ) {
             return $active_sites;
@@ -264,6 +303,53 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
         return array();
     }
+
+    /**
+     * Add a site to the list of active sites
+     *
+     * @param int    $license_id
+     * @param string $site
+     * @param string $activation_date (optional, defaults to the current date)
+     * @param mixed  $active_sites    (optional, defaults to getting the currently active sites from the database)
+     *
+     * @return bool $success
+     */
+    public function add_active_site( $license_id, $site, $activation_date = null, $active_sites = null ) {
+
+        if ( ! is_array( $active_sites ) ) {
+            $active_sites = $this->get_active_sites( $license_id );
+        }
+
+        if ( ! isset( $activation_date ) || strlen( $activation_date ) <= 0 ) {
+            $activation_date = date( 'Y-m-d h:i:s' );
+        }
+
+        $active_sites[ $site ] = array( 'activation_date' => $activation_date );
+
+        return update_post_meta( $license_id, self::ACTIVE_SITES_META_KEY, $active_sites );
+    }
+
+    /**
+     * Remove a site to the list of active sites
+     *
+     * @param int    $license_id
+     * @param string $site
+     * @param mixed  $active_sites (optional, defaults to getting the currently active sites from the database)
+     *
+     * @return bool $success
+     */
+    public function remove_active_site( $license_id, $site, $active_sites = null ) {
+
+        if ( ! is_array( $active_sites ) ) {
+            $active_sites = $this->get_active_sites( $license_id );
+        }
+
+        unset( $active_sites[ $site ] );
+
+        return update_post_meta( $license_id, self::ACTIVE_SITES_META_KEY, $active_sites );
+    }
+
+    //////////////////////////////////////////////////
 
     /**
      * Get the start date of the license.
@@ -274,7 +360,7 @@ class Pronamic_WP_ExtensionsPlugin_License {
      */
     public function get_start_date( $license_id ) {
 
-        $start_date = get_post_meta( $license_id, '_pronamic_extensions_license_start_date', true );
+        $start_date = get_post_meta( $license_id, self::START_DATE_META_KEY, true );
 
         if ( strlen( $start_date ) > 0 ) {
             return $start_date;
@@ -282,6 +368,21 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
         return date( 'Y-m-d h:i:s' );
     }
+
+    /**
+     * Set the start date of the license.
+     *
+     * @param int    $license_id
+     * @param string $start_date
+     *
+     * @return bool $success
+     */
+    public function set_start_date( $license_id, $start_date ) {
+
+        return update_post_meta( $license_id, self::START_DATE_META_KEY, $start_date );
+    }
+
+    //////////////////////////////////////////////////
 
     /**
      * Get the end date of the license.
@@ -299,6 +400,19 @@ class Pronamic_WP_ExtensionsPlugin_License {
         }
 
         return date( 'Y-m-d h:i:s' );
+    }
+
+    /**
+     * Set the end date of the license.
+     *
+     * @param int    $license_id
+     * @param string $end_date
+     *
+     * @return bool $success
+     */
+    public function set_end_date( $license_id, $end_date ) {
+
+        return update_post_meta( $license_id, self::END_DATE_META_KEY, $end_date );
     }
 
     //////////////////////////////////////////////////

@@ -472,8 +472,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
                 wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_EXPIRED ) );
             }
 
-            if ( is_array( $active_sites ) &&
-                 array_key_exists( $site, $active_sites ) ) {
+            if ( array_key_exists( $site, $active_sites ) ) {
 
                 // Exit with success early as the license has already been activated
                 wp_send_json( array( 'success' => true, 'error_code' => self::LICENSE_KEY_ALREADY_ACTIVATED ) );
@@ -501,9 +500,8 @@ class Pronamic_WP_ExtensionsPlugin_Api {
                         wp_send_json( array( 'success' => false, 'error_code' => self::INVALID_PRODUCT_TYPE ) );
                     }
 
-                    $active_sites[ $site ] = array( 'activation_date' => date( 'Y-m-d h:i:s' ) );
-
-                    if ( update_post_meta( $license->ID, '_pronamic_extensions_license_active_sites', $active_sites ) ) {
+                    // Update active posts
+                    if ( Pronamic_WP_ExtensionsPlugin_License::get_instance( $this->plugin )->add_active_site( $license->ID, $site, null, $active_sites ) ) {
                         wp_send_json( array( 'success' => true ) );
                     } else {
                         wp_send_json( array( 'success' => true, 'error_code' => self::LICENSE_KEY_COULD_NOT_BE_ACTIVATED ) );
@@ -544,13 +542,10 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
             $active_sites = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this->plugin )->get_active_sites( $license->ID );
 
-            if ( is_array( $active_sites ) &&
-                 array_key_exists( $site, $active_sites ) ) {
-
-                unset( $active_sites[ $site ] );
+            if ( array_key_exists( $site, $active_sites ) ) {
 
                 // Remove site from active sites
-                if ( update_post_meta( $license->ID, '_pronamic_extensions_license_active_sites', $active_sites ) ) {
+                if ( Pronamic_WP_ExtensionsPlugin_License::get_instance( $this->plugin )->remove_active_site( $license->ID, $site ) ) {
                     wp_send_json( array( 'success' => true ) );
                 } else {
                     wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_COULD_NOT_BE_DEACTIVATED ) );
@@ -600,8 +595,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
                 wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_EXPIRED ) );
             }
 
-            if ( ! is_array( $active_sites ) ||
-                 ! array_key_exists( $site, $active_sites ) ) {
+            if ( ! array_key_exists( $site, $active_sites ) ) {
 
                 wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_NOT_ACTIVE ) );
             }
