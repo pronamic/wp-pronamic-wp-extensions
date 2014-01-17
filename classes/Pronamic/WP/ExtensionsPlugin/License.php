@@ -16,7 +16,7 @@ class Pronamic_WP_ExtensionsPlugin_License {
     //////////////////////////////////////////////////
 
     /**
-     * Extensions plugin
+     * Extensions plugin.
      *
      * @var Pronamic_WP_ExtensionsPlugin_Plugin
      */
@@ -25,7 +25,7 @@ class Pronamic_WP_ExtensionsPlugin_License {
     //////////////////////////////////////////////////
 
     /**
-     * License post type
+     * License post type.
      *
      * @const string
      */
@@ -34,30 +34,37 @@ class Pronamic_WP_ExtensionsPlugin_License {
     //////////////////////////////////////////////////
 
     /**
-     * Active sites meta key
+     * Active sites meta key.
      *
      * @const string
      */
     const ACTIVE_SITES_META_KEY = '_pronamic_extensions_license_active_sites';
 
     /**
-     * Start date meta key
+     * Start date meta key.
      *
      * @const string
      */
     const START_DATE_META_KEY = '_pronamic_extensions_license_start_date';
 
     /**
-     * End date meta key
+     * End date meta key.
      *
      * @const string
      */
     const END_DATE_META_KEY = '_pronamic_extensions_license_end_date';
 
+    /**
+     * License IDs user meta key.
+     *
+     * @const string
+     */
+    const LICENSE_IDS_USER_META_KEY = '_pronamic_extensions_license_keys';
+
     //////////////////////////////////////////////////
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param Pronamic_WP_ExtensionsPlugin_Plugin $plugin
      */
@@ -69,6 +76,7 @@ class Pronamic_WP_ExtensionsPlugin_License {
         add_action( 'init', array( $this, 'init' ) );
 
         add_action( 'edit_user_profile', array( $this, 'add_license_keys_to_user_profile' ) );
+        add_action( 'show_user_profile', array( $this, 'add_license_keys_to_user_profile' ) );
 
         add_action( 'woocommerce_order_status_processing', array( $this, 'generate_licenses_for_woocommerce_products' ) );
 
@@ -79,7 +87,7 @@ class Pronamic_WP_ExtensionsPlugin_License {
     //////////////////////////////////////////////////
 
     /**
-     * Initialize
+     * Initialize.
      */
     public function init() {
 
@@ -145,9 +153,14 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
     //////////////////////////////////////////////////
 
-    public function add_license_keys_to_user_profile() {
+    /**
+     * Adds the user's license keys to the user profile page.
+     *
+     * @param WP_User $user
+     */
+    public function add_license_keys_to_user_profile( WP_User $user ) {
 
-        $this->plugin->display( 'admin/user-profile-license-keys.php' );
+        $this->plugin->display( 'admin/user-profile-license-keys.php', array( 'user' => $user ) );
     }
 
     //////////////////////////////////////////////////
@@ -272,15 +285,8 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
         if ( $current_user instanceof WP_User ) {
 
-            $current_license_ids = get_user_meta( $current_user->ID, '_pronamic_extensions_license_keys', true );
-
-            if ( ! is_array( $current_license_ids ) ) {
-                $current_license_ids = array();
-            }
-
-            $license_ids = array_merge( $current_license_ids, $license_ids );
-
-            update_user_meta( $current_user->ID, '_pronamic_extensions_license_keys', $license_ids );
+            // TODO Perhaps it's a good idea to log when storing the license IDs fails.
+            $this->add_user_license_ids( $current_user->ID, $license_ids );
         }
     }
 
@@ -413,6 +419,53 @@ class Pronamic_WP_ExtensionsPlugin_License {
     public function set_end_date( $license_id, $end_date ) {
 
         return update_post_meta( $license_id, self::END_DATE_META_KEY, $end_date );
+    }
+
+    //////////////////////////////////////////////////
+
+    /**
+     * Get all license IDs assigned to the passed user.
+     *
+     * @param int $user_id
+     *
+     * @return array $license_ids
+     */
+    public function get_user_license_ids( $user_id ) {
+
+        $license_ids = get_user_meta( $user_id, self::LICENSE_IDS_USER_META_KEY, true );
+
+        if ( is_array( $license_ids ) ) {
+            return $license_ids;
+        }
+
+        return array();
+    }
+
+    /**
+     * Adds the passed license ID or IDs to the current array of license IDs.
+     *
+     * @param int   $user_id
+     * @param mixed $license_ids
+     *
+     * @return bool $success
+     */
+    public function add_user_license_ids( $user_id, $license_ids ) {
+
+        // Make sure $license_ids is an array
+        if ( ! is_array( $license_ids ) ) {
+
+            if ( is_numeric( $license_ids ) ) {
+                $license_ids = array( $license_ids );
+            } else {
+                return false;
+            }
+        }
+
+        $current_license_ids = $this->get_user_license_ids( $user_id );
+
+        $license_ids = array_merge( $current_license_ids, $license_ids );
+
+        return update_user_meta( $user_id, self::LICENSE_IDS_USER_META_KEY, $license_ids );
     }
 
     //////////////////////////////////////////////////
