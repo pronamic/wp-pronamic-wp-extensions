@@ -78,7 +78,8 @@ class Pronamic_WP_ExtensionsPlugin_License {
         add_action( 'edit_user_profile', array( $this, 'add_license_keys_to_user_profile' ) );
         add_action( 'show_user_profile', array( $this, 'add_license_keys_to_user_profile' ) );
 
-        add_action( 'woocommerce_order_status_processing', array( $this, 'generate_licenses_for_woocommerce_products' ) );
+        add_action( 'woocommerce_order_status_pending_to_processing', array( $this, 'generate_licenses_for_woocommerce_products' ) );
+        add_action( 'woocommerce_order_status_pending_to_complete', array( $this, 'generate_licenses_for_woocommerce_products' ) );
 
         // Filters
         add_filter( 'default_title', array( $this, 'maybe_generate_license_key' ) );

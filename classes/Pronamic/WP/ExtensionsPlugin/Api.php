@@ -552,7 +552,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
                 }
             }
 
-            wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_NOT_ACTIVE ) );
+            wp_send_json( array( 'success' => true, 'error_code' => self::LICENSE_KEY_NOT_ACTIVE ) );
         }
 
         wp_send_json( array( 'success' => false, 'error_code' => self::INVALID_LICENSE_KEY ) );
