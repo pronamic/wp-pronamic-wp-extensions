@@ -13,6 +13,15 @@ class Pronamic_WP_ExtensionsPlugin_Api {
     //////////////////////////////////////////////////
 
     /**
+     * Extensions plugin
+     *
+     * @var Pronamic_WP_ExtensionsPlugin_Plugin
+     */
+    private $plugin;
+
+    //////////////////////////////////////////////////
+
+    /**
      * Error code 001: No license key provided.
      *
      * @const string
@@ -100,8 +109,12 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
     /**
 	 * Constructs and initialize Pronamic WordPress Extensions API object
+     *
+     * @param Pronamic_WP_ExtensionsPlugin_Plugin $plugin
 	 */
-	private function __construct() {
+	private function __construct( Pronamic_WP_ExtensionsPlugin_Plugin $plugin ) {
+        $this->plugin = $plugin;
+
 		add_action( 'init', array( $this, 'init' ) );
 		
 		add_action( 'query_vars', array( $this, 'query_vars' ) );
@@ -449,9 +462,9 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
             $license = $license_query->next_post();
 
-            $active_sites       = get_post_meta( $license->ID, '_pronamic_extensions_license_active_sites', true );
-            $license_start_date = get_post_meta( $license->ID, '_pronamic_extensions_license_start_date'  , true );
-            $license_end_date   = get_post_meta( $license->ID, '_pronamic_extensions_license_end_date'    , true );
+            $active_sites       = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this->plugin )->get_active_sites( $license->ID );
+            $license_start_date = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this->plugin )->get_start_date( $license->ID );
+            $license_end_date   = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this->plugin )->get_end_date( $license->ID );
 
             if ( strtotime( $license_start_date ) >= time() ||
                  strtotime( $license_end_date )   <= time() ) {
@@ -529,7 +542,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
             $license = $license_query->next_post();
 
-            $active_sites = get_post_meta( $license->ID, '_pronamic_extensions_license_active_sites', true );
+            $active_sites = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this->plugin )->get_active_sites( $license->ID );
 
             if ( is_array( $active_sites ) &&
                  array_key_exists( $site, $active_sites ) ) {
@@ -577,9 +590,9 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
             $license = $license_query->next_post();
 
-            $active_sites       = get_post_meta( $license->ID, '_pronamic_extensions_license_active_sites', true );
-            $license_start_date = get_post_meta( $license->ID, '_pronamic_extensions_license_start_date'  , true );
-            $license_end_date   = get_post_meta( $license->ID, '_pronamic_extensions_license_end_date'    , true );
+            $active_sites       = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this->plugin )->get_active_sites( $license->ID );
+            $license_start_date = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this->plugin )->get_start_date( $license->ID );
+            $license_end_date   = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this->plugin )->get_end_date( $license->ID );
 
             if ( strtotime( $license_start_date ) >= time() ||
                  strtotime( $license_end_date )   <= time() ) {
@@ -606,12 +619,14 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	 *
 	 * @since 1.0.0
 	 *
+     * @param Pronamic_WP_ExtensionsPlugin_Plugin $plugin
+     *
 	 * @return object A single instance of this class.
 	 */
-	public static function get_instance() {
+	public static function get_instance( Pronamic_WP_ExtensionsPlugin_Plugin $plugin ) {
 		// If the single instance hasn't been set, set it now.
 		if ( null == self::$instance ) {
-			self::$instance = new self();
+			self::$instance = new self( $plugin );
 		}
 	
 		return self::$instance;

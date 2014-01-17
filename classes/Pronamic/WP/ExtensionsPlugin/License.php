@@ -235,7 +235,7 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
             $current_license_ids = get_user_meta( $current_user->ID, '_pronamic_extensions_license_keys', true );
 
-            if ( is_string( $current_license_ids ) ) {
+            if ( ! is_array( $current_license_ids ) ) {
                 $current_license_ids = array();
             }
 
@@ -247,7 +247,59 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
     //////////////////////////////////////////////////
 
+    /**
+     * Get an array of sites that are currently using this license key.
+     *
+     * @param int $license_id
+     *
+     * @return array $active_sites
+     */
+    public function get_active_sites( $license_id ) {
 
+        $active_sites = get_post_meta( $license_id, '_pronamic_extensions_license_active_sites', true );
+
+        if ( is_array( $active_sites ) ) {
+            return $active_sites;
+        }
+
+        return array();
+    }
+
+    /**
+     * Get the start date of the license.
+     *
+     * @param int $license_id
+     *
+     * @return string $start_date
+     */
+    public function get_start_date( $license_id ) {
+
+        $start_date = get_post_meta( $license_id, '_pronamic_extensions_license_start_date', true );
+
+        if ( strlen( $start_date ) > 0 ) {
+            return $start_date;
+        }
+
+        return date( 'Y-m-d h:i:s' );
+    }
+
+    /**
+     * Get the end date of the license.
+     *
+     * @param int $license_id
+     *
+     * @return string $end_date
+     */
+    public function get_end_date( $license_id ) {
+
+        $end_date = get_post_meta( $license_id, '_pronamic_extensions_license_end_date', true );
+
+        if ( strlen( $end_date ) > 0 ) {
+            return $end_date;
+        }
+
+        return date( 'Y-m-d h:i:s' );
+    }
 
     //////////////////////////////////////////////////
 
