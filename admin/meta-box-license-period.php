@@ -4,16 +4,8 @@ global $post;
 
 wp_nonce_field( 'pronamic_wp_extension_save_meta_license_period', 'pronamic_wp_extensions_meta_license_period_nonce' );
 
-$start_date = esc_attr( get_post_meta( $post->ID, '_pronamic_extensions_license_start_date', true ) );
-$end_date   = esc_attr( get_post_meta( $post->ID, '_pronamic_extensions_license_end_date'  , true ) );
-
-if ( strlen( $start_date ) <= 0 ) {
-    $start_date = date( 'Y-m-d h:i:s' );
-}
-
-if ( strlen( $end_date ) <= 0 ) {
-    $end_date = date( 'Y-m-d h:i:s', strtotime( '+ 1 year' ) );
-}
+$start_date = esc_attr( Pronamic_WP_ExtensionsPlugin_License::get_start_date( $post->ID ) );
+$end_date   = esc_attr( Pronamic_WP_ExtensionsPlugin_License::get_end_date( $post->ID ) );
 
 ?>
 <table class="form-table">

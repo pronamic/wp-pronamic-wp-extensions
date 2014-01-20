@@ -41,7 +41,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 		add_filter( 'posts_where', array( $this, 'posts_where' ), 10, 2 );
 
         // License
-        $this->api = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this );
+        $this->api = Pronamic_WP_ExtensionsPlugin_LicensePostType::get_instance( $this );
 
 		// API
 		$this->api = Pronamic_WP_ExtensionsPlugin_Api::get_instance( $this );

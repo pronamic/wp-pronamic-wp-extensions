@@ -4,11 +4,7 @@ global $post;
 
 wp_nonce_field( 'pronamic_wp_extension_save_meta_license_status', 'pronamic_wp_extensions_meta_license_status_nonce' );
 
-$active_sites = get_post_meta( $post->ID, '_pronamic_extensions_license_active_sites', true );
-
-if ( ! is_array( $active_sites ) ) {
-    $active_sites = array();
-}
+$active_sites = Pronamic_WP_ExtensionsPlugin_License::get_active_sites( $post->ID );
 
 $i = 0;
 
@@ -37,10 +33,10 @@ $i = 0;
                 <?php echo $i; ?>
             </td>
             <td>
-                <a href="<?php echo htmlspecialchars( $site ); ?>" target="_blank"><?php echo htmlspecialchars( $site ); ?></a>
+                <a href="<?php echo esc_attr( $site ); ?>" target="_blank"><?php echo esc_attr( $site ); ?></a>
             </td>
             <td>
-                <?php echo isset( $site_data['activation_date'] ) ? htmlspecialchars( $site_data['activation_date'] ) : ''; ?>
+                <?php echo isset( $site_data['activation_date'] ) ? esc_attr( $site_data['activation_date'] ) : ''; ?>
             </td>
             <td>
                 Delete

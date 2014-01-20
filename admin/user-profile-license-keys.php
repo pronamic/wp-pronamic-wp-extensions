@@ -2,14 +2,15 @@
 
 <?php
 
-$license_keys = Pronamic_WP_ExtensionsPlugin_License::get_instance( $this )->get_user_license_ids( $user->ID );
+$license_keys = Pronamic_WP_ExtensionsPlugin_License::get_user_license_ids( $user->ID );
 
 // Make sure that 'post__in' isn't removed by WP_Query because it's empty
 $license_keys[] = -1;
 
 $license_query = new WP_Query( array(
-    'post_type' => Pronamic_WP_ExtensionsPlugin_License::POST_TYPE,
-    'post__in'  => $license_keys
+    'post_type'      => Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
+    'post__in'       => $license_keys,
+    'posts_per_page' => -1,
 ) );
 
 ?>
