@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Class Pronamic_WP_ExtensionsPlugin_Api
+ *
+ * TODO Implement receiving multiple requests in a single request on the extensions API.
+ */
 class Pronamic_WP_ExtensionsPlugin_Api {
 	/**
 	 * Instance of this class.
