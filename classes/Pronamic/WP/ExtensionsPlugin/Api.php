@@ -449,22 +449,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
      */
     public function licenses_api_activate() {
 
-//        $license_key  = filter_input( INPUT_POST, 'license_key' , FILTER_SANITIZE_STRING );
-//        $slug         = filter_input( INPUT_POST, 'slug'        , FILTER_SANITIZE_STRING );
-//        $product_type = filter_input( INPUT_POST, 'product_type', FILTER_SANITIZE_STRING );
-        $site         = filter_input( INPUT_POST, 'site'        , FILTER_VALIDATE_URL );
-
-//        if ( strlen( $license_key ) <= 0 ) {
-//            wp_send_json( array( 'success' => false, 'error_code' => self::NO_LICENSE_KEY ) );
-//        }
-//
-//        if ( strlen( $slug ) <= 0 ) {
-//            wp_send_json( array( 'success' => false, 'error_code' => self::NO_SLUG ) );
-//        }
-//
-//        if ( strlen( $product_type ) <= 0 ) {
-//            wp_send_json( array( 'success' => false, 'error_code' => self::NO_PRODUCT_TYPE ) );
-//        }
+        $site = filter_input( INPUT_POST, 'site', FILTER_VALIDATE_URL );
 
         if ( ! isset( $site ) ) {
             wp_send_json( array( 'success' => false, 'error_code' => self::NO_SITE_URL ) );
@@ -477,7 +462,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
         $data = json_decode( stripcslashes( $_POST['data'] ) );
 
         if ( json_last_error() !== JSON_ERROR_NONE ||
-            ! is_array( $data->extensions ) ) {
+             ! is_array( $data->extensions ) ) {
             wp_send_json( array( 'success' => false, 'error_code' => self::JSON_ERROR ) );
         }
 
@@ -485,20 +470,33 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
         foreach ( $data->extensions as $extension ) {
 
+            if ( ! is_object( $extension ) ||
+                 ! isset( $extension->license_key ) ||
+                 ! isset( $extension->slug ) ||
+                 ! isset( $extension->product_type ) ) {
+                continue;
+            }
+
             $license_key  = $extension->license_key;
             $slug         = $extension->slug;
             $product_type = $extension->product_type;
 
             if ( strlen( $license_key ) <= 0 ) {
                 $result[ $license_key ] = array( 'success' => false, 'error_code' => self::NO_LICENSE_KEY );
+
+                continue;
             }
 
             if ( strlen( $slug ) <= 0 ) {
                 $result[ $license_key ] = array( 'success' => false, 'error_code' => self::NO_SLUG );
+
+                continue;
             }
 
             if ( strlen( $product_type ) <= 0 ) {
                 $result[ $license_key ] = array( 'success' => false, 'error_code' => self::NO_PRODUCT_TYPE );
+
+                continue;
             }
 
             $license_query = new WP_Query( array(
@@ -520,12 +518,16 @@ class Pronamic_WP_ExtensionsPlugin_Api {
                      strtotime( $license_end_date )   <= time() ) {
 
                     $result[ $license_key ] = array( 'success' => false, 'error_code' => self::LICENSE_KEY_EXPIRED );
+
+                    continue;
                 }
 
                 if ( array_key_exists( $site, $active_sites ) ) {
 
                     // Exit with success early as the license has already been activated
                     $result[ $license_key ] = array( 'success' => true, 'error_code' => self::LICENSE_KEY_ALREADY_ACTIVATED );
+
+                    continue;
                 }
 
                 // The post parent of a license is the product
@@ -542,19 +544,27 @@ class Pronamic_WP_ExtensionsPlugin_Api {
                         if ( $original_slug !== $slug ) {
 
                             $result[ $license_key ] = array( 'success' => false, 'error_code' => self::INVALID_PRODUCT_SLUG );
+
+                            continue;
                         }
 
                         // Check if the license key is used for the correct product type
                         if ( $product_type !== $product->post_type ) {
 
                             $result[ $license_key ] = array( 'success' => false, 'error_code' => self::INVALID_PRODUCT_TYPE );
+
+                            continue;
                         }
 
                         // Update active posts
                         if ( Pronamic_WP_ExtensionsPlugin_License::add_active_site( $license->ID, $site, null, $active_sites ) ) {
                             $result[ $license_key ] = array( 'success' => true );
+
+                            continue;
                         } else {
                             $result[ $license_key ] = array( 'success' => false, 'error_code' => self::LICENSE_KEY_COULD_NOT_BE_ACTIVATED );
+
+                            continue;
                         }
                     }
                 }
@@ -571,44 +581,76 @@ class Pronamic_WP_ExtensionsPlugin_Api {
      */
     public function licenses_api_deactivate() {
 
-        $license_key = filter_input( INPUT_POST, 'license_key', FILTER_SANITIZE_STRING );
-        $site        = filter_input( INPUT_POST, 'site'       , FILTER_VALIDATE_URL );
-
-        if ( strlen( $license_key ) <= 0 ) {
-            wp_send_json( array( 'success' => false, 'error_code' => self::NO_LICENSE_KEY ) );
-        }
+        $site = filter_input( INPUT_POST, 'site', FILTER_VALIDATE_URL );
 
         if ( ! isset( $site ) ) {
             wp_send_json( array( 'success' => false, 'error_code' => self::NO_SITE_URL ) );
         }
 
-        $license_query = new WP_Query( array(
-            'post_type'      => 'pronamic_license',
-            's'              => $license_key,
-            'posts_per_page' => 1,
-        ) );
-
-        // Check if any licenses were found
-        if ( $license_query->have_posts() ) {
-
-            $license = $license_query->next_post();
-
-            $active_sites = Pronamic_WP_ExtensionsPlugin_License::get_active_sites( $license->ID );
-
-            if ( array_key_exists( $site, $active_sites ) ) {
-
-                // Remove site from active sites
-                if ( Pronamic_WP_ExtensionsPlugin_License::remove_active_site( $license->ID, $site ) ) {
-                    wp_send_json( array( 'success' => true ) );
-                } else {
-                    wp_send_json( array( 'success' => false, 'error_code' => self::LICENSE_KEY_COULD_NOT_BE_DEACTIVATED ) );
-                }
-            }
-
-            wp_send_json( array( 'success' => true, 'error_code' => self::LICENSE_KEY_NOT_ACTIVE ) );
+        if ( ! isset( $_POST['data'] ) || strlen( $_POST['data'] ) <= 0 ) {
+            wp_send_json( array( 'success' => false, 'error_code' => self::NO_DATA) );
         }
 
-        wp_send_json( array( 'success' => false, 'error_code' => self::INVALID_LICENSE_KEY ) );
+        $data = json_decode( stripcslashes( $_POST['data'] ) );
+
+        if ( json_last_error() !== JSON_ERROR_NONE ||
+             ! is_array( $data->extensions ) ) {
+            wp_send_json( array( 'success' => false, 'error_code' => self::JSON_ERROR ) );
+        }
+
+        $result = array();
+
+        foreach ( $data->extensions as $extension ) {
+
+            if ( ! is_object( $extension ) ||
+                 ! isset( $extension->license_key ) ) {
+                continue;
+            }
+
+            $license_key = $extension->license_key;
+
+            if ( strlen( $license_key ) <= 0 ) {
+                $result[ $license_key ] = array( 'success' => false, 'error_code' => self::NO_LICENSE_KEY );
+
+                continue;
+            }
+
+            $license_query = new WP_Query( array(
+                'post_type'      => 'pronamic_license',
+                's'              => $license_key,
+                'posts_per_page' => 1,
+            ) );
+
+            // Check if any licenses were found
+            if ( $license_query->have_posts() ) {
+
+                $license = $license_query->next_post();
+
+                $active_sites = Pronamic_WP_ExtensionsPlugin_License::get_active_sites( $license->ID );
+
+                if ( array_key_exists( $site, $active_sites ) ) {
+
+                    // Remove site from active sites
+                    if ( Pronamic_WP_ExtensionsPlugin_License::remove_active_site( $license->ID, $site ) ) {
+                        $result[ $license_key ] = array( 'success' => true );
+
+                        continue;
+                    } else {
+                        $result[ $license_key ] = array( 'success' => false, 'error_code' => self::LICENSE_KEY_COULD_NOT_BE_DEACTIVATED );
+
+                        continue;
+                    }
+                }
+
+                $result[ $license_key ] = array( 'success' => true, 'error_code' => self::LICENSE_KEY_NOT_ACTIVE );
+
+                continue;
+            }
+
+            $result[ $license_key ] = array( 'success' => false, 'error_code' => self::INVALID_LICENSE_KEY );
+        }
+
+        wp_send_json( $result );
     }
 
     /**
@@ -636,6 +678,11 @@ class Pronamic_WP_ExtensionsPlugin_Api {
         $result = array();
 
         foreach ( $data->extensions as $extension ) {
+
+            if ( ! is_object( $extension ) ||
+                 ! isset( $extension->license_key ) ) {
+                continue;
+            }
 
             $license_key = $extension->license_key;
 
@@ -681,8 +728,6 @@ class Pronamic_WP_ExtensionsPlugin_Api {
             }
 
             $result[ $license_key ] = array( 'success' => false, 'error_code' => self::INVALID_LICENSE_KEY );
-
-            continue;
         }
 
         wp_send_json( $result );
