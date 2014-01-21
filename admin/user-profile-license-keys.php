@@ -30,14 +30,20 @@ $license_query = new WP_Query( array(
 
                 <?php if ( is_numeric( $license->post_parent ) && $license->post_parent > 0 ) : ?>
 
-                <a href="<?php echo get_edit_post_link( $license->post_parent ); ?>"><?php echo get_the_title( $license->post_parent ); ?></a>
+                <a href="<?php echo current_user_can( 'edit_posts' ) ? get_edit_post_link( $license->post_parent ) : get_permalink( $license->post_parent ); ?>"><?php echo get_the_title( $license->post_parent ); ?></a>
 
                 <?php endif; ?>
 
             </th>
 
             <td>
-                <a href="<?php echo get_edit_post_link( $license->ID ); ?>"><?php echo $license->post_title; ?></a>
+
+                <?php echo current_user_can( 'edit_posts' ) ? '<a href="' . get_edit_post_link( $license->ID ) . '">' : ''; ?>
+
+                <?php echo $license->post_title; ?>
+
+                <?php echo current_user_can( 'edit_posts' ) ? '</a>' : ''; ?>
+
             </td>
 
         </tr>
