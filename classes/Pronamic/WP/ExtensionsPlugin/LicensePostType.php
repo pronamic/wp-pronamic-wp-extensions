@@ -62,8 +62,12 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
 
         add_action( 'woocommerce_email_order_meta', array( $this, 'woocommerce_email_order_meta_add_license_keys' ) );
 
+        add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'manage_pronamic_license_posts_custom_column' ), 10, 2 );
+
         // Filters
         add_filter( 'default_title', array( $this, 'maybe_generate_license_key' ) );
+
+        add_filter( 'manage_' . self::POST_TYPE . '_posts_columns', array( $this, 'manage_pronamic_license_posts_columns' ) );
     }
 
     //////////////////////////////////////////////////
@@ -143,30 +147,6 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
     public function add_license_keys_to_user_profile( WP_User $user ) {
 
         $this->plugin->display( 'admin/user-profile-license-keys.php', array( 'user' => $user ) );
-    }
-
-    //////////////////////////////////////////////////
-
-    /**
-     * Filters the title of a new license to be a uniquely generated license key
-     *
-     * @param string $title
-     *
-     * @return string $title
-     */
-    public function maybe_generate_license_key( $title ) {
-
-        if ( ! function_exists( 'get_current_screen' ) ) {
-            return $title;
-        }
-
-        $current_screen = get_current_screen();
-
-        if ( $current_screen->post_type === self::POST_TYPE ) {
-            return Pronamic_WP_ExtensionsPlugin_License::generate_license_key();
-        }
-
-        return $title;
     }
 
     //////////////////////////////////////////////////
@@ -267,6 +247,62 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
     public function woocommerce_email_order_meta_add_license_keys() {
 
         $this->plugin->display( 'public/emails/license-keys.php', array( 'products_with_generated_licenses' => $this->products_with_generated_licenses ) );
+    }
+
+    //////////////////////////////////////////////////
+
+    /**
+     * Filters the title of a new license to be a uniquely generated license key
+     *
+     * @param string $title
+     *
+     * @return string $title
+     */
+    public function maybe_generate_license_key( $title ) {
+
+        if ( ! function_exists( 'get_current_screen' ) ) {
+            return $title;
+        }
+
+        $current_screen = get_current_screen();
+
+        if ( $current_screen->post_type === self::POST_TYPE ) {
+            return Pronamic_WP_ExtensionsPlugin_License::generate_license_key();
+        }
+
+        return $title;
+    }
+
+    //////////////////////////////////////////////////
+
+    /**
+     * Adds a custom table head to this post type's overview page.
+     *
+     * @param array $columns
+     *
+     * @return array $columns
+     */
+    public function manage_pronamic_license_posts_columns( $columns ) {
+
+        $columns['extension'] = __( 'Extensions', 'pronamic_wp_extensions' );
+
+        return $columns;
+    }
+
+    /**
+     * Fills the custom columns with custom data.
+     *
+     * @param string $column_name
+     * @param string $post_id
+     */
+    public function manage_pronamic_license_posts_custom_column( $column_name, $post_id ) {
+
+        if ( $column_name === 'extension' ) {
+
+            $parent_post_id = wp_get_post_parent_id( $post_id );
+
+            echo '<a href="' . get_edit_post_link( $parent_post_id ) . '">' . get_the_title( $parent_post_id ) . '</a>';
+        }
     }
 
     //////////////////////////////////////////////////
