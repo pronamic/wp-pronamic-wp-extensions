@@ -1,4 +1,4 @@
-<?php if ( isset( $products_with_generated_licenses ) ) : ?>
+<?php if ( isset( $products_with_generated_licenses ) && count( $products_with_generated_licenses ) > 0 ) : ?>
 
 <h2><?php _e( 'License Keys', 'pronamic_wp_extensions' ); ?></h2>
 
@@ -13,11 +13,11 @@
 
     <tbody>
 
-    <?php foreach ( $products_with_generated_licenses as $product_with_generated_licenses ) : ?>
+    <?php foreach ( $products_with_generated_licenses as $product_id => $generated_licenses ) : ?>
 
     <tr>
         <td style="text-align:left; vertical-align:middle; border: 1px solid #eee; word-wrap:break-word;">
-            <?php echo $product_with_generated_licenses['product']->post_title; ?>
+            <?php echo get_the_title( $product_id ); ?>
         </td>
 
         <td style="text-align:left; vertical-align:middle; border: 1px solid #eee;">
@@ -26,7 +26,7 @@
 
                 <tbody>
 
-                <?php foreach ( $product_with_generated_licenses['licenses'] as $generated_license) : ?>
+                <?php foreach ( $generated_licenses as $generated_license) : ?>
 
                 <tr>
                     <td><?php echo $generated_license->post_title; ?></td>

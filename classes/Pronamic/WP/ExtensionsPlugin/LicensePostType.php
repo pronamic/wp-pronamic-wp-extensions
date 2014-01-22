@@ -29,7 +29,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
      *
      * @var array Array of Pronamic_WP_ExtensionsPlugin_License objects
      */
-    private $products_with_generated_licenses = array();
+    private $products_with_generated_licenses;
 
     //////////////////////////////////////////////////
 
@@ -63,6 +63,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
         // Actions
         add_action( 'init', array( $this, 'init' ) );
 
+        add_action( 'add_meta_boxes', array( $this, 'license_author_meta_box' ), 10, 2 );
         add_action( 'add_meta_boxes', array( $this, 'woocommerce_order_add_license_key_meta_box' ), 10, 2 );
 
         add_action( 'edit_user_profile', array( $this, 'add_license_keys_to_user_profile' ) );
@@ -153,6 +154,23 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
     //////////////////////////////////////////////////
 
     /**
+     *
+     */
+    public function license_author_meta_box() {
+
+//        add_meta_box(
+//            'pronamic_license_author_meta_box',
+//            __( 'Author', 'pronamic_wp_extensions' ),
+//            array( $this, 'woocommerce_order_license_key_meta_box' ),
+//            'shop_order',
+//            'normal',
+//            'default'
+//        );
+    }
+
+    //////////////////////////////////////////////////
+
+    /**
      * Adds a license keys meta box to the WooCommerce shop order post type.
      */
     public function woocommerce_order_add_license_key_meta_box() {
@@ -215,6 +233,13 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
             return;
         }
 
+        // When $order_license_ids consists of an array of license IDs, the licenses have already been generated and the method should exit
+        $order_license_ids = get_post_meta( $order_id, self::WOOCOMMERCE_ORDER_LICENSE_KEYS_META_KEY, true );
+
+        if ( is_array( $order_license_ids ) ) {
+            return;
+        }
+
         $order = new WC_Order( $order_id );
 
         $products = $order->get_items();
@@ -246,6 +271,8 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
 
         $license_ids = array();
 
+        $this->products_with_generated_licenses = array();
+
         // Loop through licensed products, generating licenses
         while ( $licensed_products_query->have_posts() ) {
 
@@ -256,8 +283,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
             // When the product's quantity is greater than zero, prepare the array of licenses
             if ( $product_quantities[ $licensed_product->ID ] > 0 ) {
 
-                $this->products_with_generated_licenses[ $licensed_product->ID ]['product']  = $licensed_product;
-                $this->products_with_generated_licenses[ $licensed_product->ID ]['licenses'] = array();
+                $this->products_with_generated_licenses[ $extension_id ] = array();
             }
 
             // Generate as many licenses as the product has been purchased
@@ -278,7 +304,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
                     Pronamic_WP_ExtensionsPlugin_License::set_start_date( $license->ID, date( 'Y-m-d h:i:s' ) );
                     Pronamic_WP_ExtensionsPlugin_License::set_end_date( $license->ID, date( 'Y-m-d h:i:s', strtotime( '+ 1 year' ) ) );
 
-                    $this->products_with_generated_licenses[ $licensed_product->ID ]['licenses'][] = $license;
+                    $this->products_with_generated_licenses[ $extension_id ][] = $license;
 
                     $license_ids[] = $license->ID;
                 }
@@ -291,8 +317,35 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
 
     /**
      * Add a table with the generated license keys to the WooCommerce order email.
+     *
+     * @param WC_Order $order
      */
-    public function woocommerce_email_order_meta_add_license_keys() {
+    public function woocommerce_email_order_meta_add_license_keys( $order ) {
+
+        // The 'products_with_generated_licenses' variable is set after licenses have been generated. If the mail is being resent, get the license keys first
+        if ( ! is_array( $this->products_with_generated_licenses ) ) {
+
+            $order_license_ids = get_post_meta( $order->id, self::WOOCOMMERCE_ORDER_LICENSE_KEYS_META_KEY, true );
+
+            if ( ! is_array( $order_license_ids ) || count( $order_license_ids ) <= 0 ) {
+                $order_license_ids = array( -1 );
+            }
+
+            $license_query = new WP_Query( array(
+                'post_type'      => Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
+                'post__in'       => $order_license_ids,
+                'posts_per_page' => -1,
+            ) );
+
+            $this->products_with_generated_licenses = array();
+
+            while ( $license_query->have_posts() ) {
+
+                $license = $license_query->next_post();
+
+                $this->products_with_generated_licenses[ $license->post_parent ][] = $license;
+            }
+        }
 
         $this->plugin->display( 'public/emails/license-keys.php', array( 'products_with_generated_licenses' => $this->products_with_generated_licenses ) );
     }
@@ -346,7 +399,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
     //////////////////////////////////////////////////
 
     /**
-     * Adds a custom table head to this post type's overview page.
+     * Add custom table heads to this post type's overview page.
      *
      * @param array $columns
      *
@@ -354,6 +407,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
      */
     public function manage_pronamic_license_posts_columns( $columns ) {
 
+        $columns['user']      = __( 'User', 'pronamic_wp_extensions' );
         $columns['extension'] = __( 'Extensions', 'pronamic_wp_extensions' );
 
         return $columns;
@@ -367,11 +421,23 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
      */
     public function manage_pronamic_license_posts_custom_column( $column_name, $post_id ) {
 
-        if ( $column_name === 'extension' ) {
+        switch ( $column_name ) {
 
-            $parent_post_id = wp_get_post_parent_id( $post_id );
+            case 'user':
 
-            echo '<a href="' . get_edit_post_link( $parent_post_id ) . '">' . get_the_title( $parent_post_id ) . '</a>';
+                $post = get_post( $post_id );
+
+                echo '<a href="' . get_edit_user_link( $post->post_author ) . '">' . get_the_author_meta( 'display_name', $post->post_author ) . '</a>';
+
+                break;
+
+            case 'extension':
+
+                $parent_post_id = wp_get_post_parent_id( $post_id );
+
+                echo '<a href="' . get_edit_post_link( $parent_post_id ) . '">' . get_the_title( $parent_post_id ) . '</a>';
+
+                break;
         }
     }
 
