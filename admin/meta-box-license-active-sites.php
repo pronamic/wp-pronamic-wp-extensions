@@ -1,6 +1,6 @@
-<?php
+<?php if ( isset( $post ) && $post instanceof WP_Post ) : ?>
 
-global $post;
+<?php
 
 wp_nonce_field( 'pronamic_wp_extension_save_meta_license_status', 'pronamic_wp_extensions_meta_license_status_nonce' );
 
@@ -47,3 +47,5 @@ $i = 0;
 
 	</tbody>
 </table>
+
+<?php endif; ?>

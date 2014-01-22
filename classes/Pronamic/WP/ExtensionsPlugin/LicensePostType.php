@@ -417,7 +417,11 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
 
                 $parent_post_id = wp_get_post_parent_id( $post_id );
 
-                echo '<a href="' . get_edit_post_link( $parent_post_id ) . '">' . get_the_title( $parent_post_id ) . '</a>';
+                if ( $parent_post_id > 0 ) {
+                    echo '<a href="' . get_edit_post_link( $parent_post_id ) . '">' . get_the_title( $parent_post_id ) . '</a>';
+                } else {
+                    _e( 'Warning: No extension has been assigned to this license yet', 'pronamic_wp_extensions' );
+                }
 
                 break;
         }

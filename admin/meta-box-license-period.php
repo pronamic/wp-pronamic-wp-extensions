@@ -1,6 +1,6 @@
-<?php
+<?php if ( isset( $post ) && $post instanceof WP_Post ) : ?>
 
-global $post;
+<?php
 
 wp_nonce_field( 'pronamic_wp_extension_save_meta_license_period', 'pronamic_wp_extensions_meta_license_period_nonce' );
 
@@ -28,3 +28,5 @@ $end_date   = esc_attr( Pronamic_WP_ExtensionsPlugin_License::get_end_date( $pos
     </tr>
     </tbody>
 </table>
+
+<?php endif; ?>

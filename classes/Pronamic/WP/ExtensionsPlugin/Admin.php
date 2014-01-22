@@ -38,7 +38,8 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		add_action( 'save_post', array( $this, 'save_extension_meta_bitbucket' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_wp_org' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_license_period' ), 10, 2 );
-		add_action( 'save_post', array( $this, 'save_extension_meta_license_status' ), 10, 2 );
+
+        add_filter( 'wp_insert_post_data', array( $this, 'save_extension_meta_license_product' ), 99, 2 );
 
 		add_action( 'admin_init', array( $this, 'maybe_deploy' ) );
 	}
@@ -325,7 +326,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 
         add_meta_box(
             'pronamic_license_license_period',
-            __( 'License Key', 'pronamic_wp_extensions' ),
+            __( 'Period', 'pronamic_wp_extensions' ),
             array( $this, 'pronamic_license_license_period' ),
             'pronamic_license',
             'normal',
@@ -402,23 +403,29 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 
     /**
      * Meta box for license key
+     *
+     * @param WP_Post $post
      */
-    public function pronamic_license_license_period() {
-        $this->plugin->display( 'admin/meta-box-license-period.php' );
+    public function pronamic_license_license_period( $post ) {
+        $this->plugin->display( 'admin/meta-box-license-period.php', array( 'post' => $post ) );
     }
 
     /**
      * Meta box for license status
+     *
+     * @param WP_Post $post
      */
-    public function pronamic_license_active_sites() {
-        $this->plugin->display( 'admin/meta-box-license-active-sites.php' );
+    public function pronamic_license_active_sites( $post ) {
+        $this->plugin->display( 'admin/meta-box-license-active-sites.php', array( 'post' => $post ) );
     }
 
     /**
      * Meta box for product reference
+     *
+     * @param WP_Post $post
      */
-    public function pronamic_license_product() {
-        $this->plugin->display( 'admin/meta-box-license-product.php' );
+    public function pronamic_license_product( $post ) {
+        $this->plugin->display( 'admin/meta-box-license-product.php', array( 'post' => $post ) );
     }
 
 	//////////////////////////////////////////////////
@@ -528,13 +535,21 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
         ) );
     }
 
-    public function save_extension_meta_license_status( $post_id, $post ) {
-        if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_license_status_nonce', 'pronamic_wp_extension_save_meta_license_status' ) )
-            return;
+    public function save_extension_meta_license_product( $data, $post_array ) {
 
-        $this->save_extension_meta( $post_id, array(
-            '_pronamic_extensions_license_status' => FILTER_SANITIZE_STRING,
-        ) );
+        $post_id = $post_array['ID'];
+
+        if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_license_product_nonce', 'pronamic_wp_extension_save_meta_license_product' ) )
+            return $data;
+
+        $product_id = filter_input( INPUT_POST, '_pronamic_extensions_license_product', FILTER_VALIDATE_INT );
+
+        if ( is_int( $product_id) ) {
+
+            $data['post_parent'] = $product_id;
+        }
+
+        return $data;
     }
 
 	//////////////////////////////////////////////////
