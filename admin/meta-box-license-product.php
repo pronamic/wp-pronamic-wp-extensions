@@ -23,9 +23,9 @@ if ( is_numeric( $post->post_parent ) && $post->post_parent > 0 ) {
 
             <?php endif; ?>
 
-            <a href="<?php echo get_edit_post_link( $product->ID ); ?>">
-                <?php echo $product->post_title; ?>
-            </a>
+            <a href="<?php echo get_edit_post_link( $product->ID ); ?>"><?php echo $product->post_title; ?></a>
+
+            <div class="dashicons dashicons-edit" style="margin-left: 10px;"></div>
 
             <?php else : ?>
 
