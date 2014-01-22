@@ -43,6 +43,15 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
     //////////////////////////////////////////////////
 
     /**
+     * Meta key with which the WooCommerce order's license keys are stored.
+     *
+     * @const string
+     */
+    const WOOCOMMERCE_ORDER_LICENSE_KEYS_META_KEY = '_pronamic_wp_extensions_license_keys';
+
+    //////////////////////////////////////////////////
+
+    /**
      * Constructor.
      *
      * @param Pronamic_WP_ExtensionsPlugin_Plugin $plugin
@@ -54,6 +63,8 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
         // Actions
         add_action( 'init', array( $this, 'init' ) );
 
+        add_action( 'add_meta_boxes', array( $this, 'woocommerce_order_add_license_key_meta_box' ), 10, 2 );
+
         add_action( 'edit_user_profile', array( $this, 'add_license_keys_to_user_profile' ) );
         add_action( 'show_user_profile', array( $this, 'add_license_keys_to_user_profile' ) );
 
@@ -61,6 +72,8 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
         add_action( 'woocommerce_order_status_pending_to_complete', array( $this, 'woocommerce_order_status_pending_to_processing_generate_licenses' ) );
 
         add_action( 'woocommerce_email_order_meta', array( $this, 'woocommerce_email_order_meta_add_license_keys' ) );
+
+        add_action( 'woocommerce_order_details_after_order_table', array( $this, 'woocommerce_order_details_after_order_table_add_license_keys' ) );
 
         add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'manage_pronamic_license_posts_custom_column' ), 10, 2 );
 
@@ -135,6 +148,46 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
                 array( 'slug' => 'license-key' )
             );
         }
+    }
+
+    //////////////////////////////////////////////////
+
+    /**
+     * Adds a license keys meta box to the WooCommerce shop order post type.
+     */
+    public function woocommerce_order_add_license_key_meta_box() {
+
+        add_meta_box(
+            'pronamic_woocommerce_order_license_key_meta_box',
+            __( 'License Keys', 'pronamic_wp_extensions' ),
+            array( $this, 'woocommerce_order_license_key_meta_box' ),
+            'shop_order',
+            'normal',
+            'default'
+        );
+    }
+
+    /**
+     * Renders the Pronamic WooCoommerce license keys meta box.
+     *
+     * @param WP_Post $post
+     */
+    public function woocommerce_order_license_key_meta_box( $post ) {
+
+        $license_ids = get_post_meta( $post->ID, self::WOOCOMMERCE_ORDER_LICENSE_KEYS_META_KEY, true );
+
+        if ( ! is_array( $license_ids ) ) {
+            $license_ids = array( -1 );
+        }
+
+        $license_query = new WP_Query( array(
+            'post_type'      => self::POST_TYPE,
+            'post__in'       => $license_ids,
+            'orderby'        => 'parent',
+            'posts_per_page' => -1,
+        ) );
+
+        $this->plugin->display( 'admin/meta-box-order-license-keys.php', array( 'license_query' => $license_query ) );
     }
 
     //////////////////////////////////////////////////
@@ -216,6 +269,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
                 $license->post_status = 'publish';
                 $license->post_type   = self::POST_TYPE;
                 $license->post_parent = $extension_id;
+                $license->post_author = get_current_user_id();
 
                 $license_saved = $license->save();
 
@@ -231,14 +285,8 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
             }
         }
 
-        // Get the current user to add license IDs to
-        $current_user = wp_get_current_user();
-
-        if ( $current_user instanceof WP_User ) {
-
-            // TODO Perhaps it's a good idea to log when storing the license IDs fails.
-            Pronamic_WP_ExtensionsPlugin_License::add_user_license_ids( $current_user->ID, $license_ids );
-        }
+        // Add the license IDs to the order
+        update_post_meta( $order_id, self::WOOCOMMERCE_ORDER_LICENSE_KEYS_META_KEY, $license_ids );
     }
 
     /**
@@ -247,6 +295,28 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
     public function woocommerce_email_order_meta_add_license_keys() {
 
         $this->plugin->display( 'public/emails/license-keys.php', array( 'products_with_generated_licenses' => $this->products_with_generated_licenses ) );
+    }
+
+    /**
+     * Add a table with the order's generated license keys to the WooCommerce 'thank you' page.
+     *
+     * @param WC_order $order
+     */
+    public function woocommerce_order_details_after_order_table_add_license_keys( $order ) {
+
+        $order_license_ids = get_post_meta( $order->id, self::WOOCOMMERCE_ORDER_LICENSE_KEYS_META_KEY, true );
+
+        if ( ! is_array( $order_license_ids ) || count( $order_license_ids ) <= 0 ) {
+            $order_license_ids = array( -1 );
+        }
+
+        $license_query = new WP_Query( array(
+            'post_type'      => Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
+            'post__in'       => $order_license_ids,
+            'posts_per_page' => -1,
+        ) );
+
+        $this->plugin->display( 'public/license-keys.php', array( 'license_query' => $license_query ) );
     }
 
     //////////////////////////////////////////////////

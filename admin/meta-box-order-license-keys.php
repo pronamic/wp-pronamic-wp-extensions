@@ -1,12 +1,6 @@
-<?php if ( isset( $user ) && $user instanceof WP_User ) : ?>
+<?php if ( isset( $license_query ) && $license_query instanceof WP_Query ) : ?>
 
 <?php
-
-$license_query = new WP_Query( array(
-    'post_type'      => Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
-    'author'         => $user->ID,
-    'posts_per_page' => -1,
-) );
 
 $licenses_by_product_id = array();
 
@@ -19,8 +13,6 @@ while ( $license_query->have_posts() ) {
 
 ?>
 
-<h3><?php _e( 'License Keys', 'pronamic_wp_extensions' ); ?></h3>
-
 <table class="form-table">
     <tbody>
 
@@ -31,7 +23,7 @@ while ( $license_query->have_posts() ) {
         <tr style="border-bottom: 1px solid #e5e5e5">
 
             <th style="vertical-align: middle;">
-                <a href="<?php echo current_user_can( 'edit_posts' ) ? get_edit_post_link( $product_id ) : get_permalink( $product_id ); ?>"><?php echo get_the_title( $product_id ); ?></a>
+                <a href="<?php echo get_edit_post_link( $product_id ); ?>"><?php echo get_the_title( $product_id ); ?></a>
             </th>
 
             <td>
@@ -43,13 +35,7 @@ while ( $license_query->have_posts() ) {
 
                     <tr>
                         <td>
-
-                            <?php echo current_user_can( 'edit_posts' ) ? '<a href="' . get_edit_post_link( $license->ID ) . '">' : ''; ?>
-
-                            <?php echo $license->post_title; ?>
-
-                            <?php echo current_user_can( 'edit_posts' ) ? '</a>' : ''; ?>
-
+                            <a href="<?php echo get_edit_post_link( $license->ID ); ?>"><?php echo $license->post_title; ?></a>
                         </td>
                     </tr>
 
