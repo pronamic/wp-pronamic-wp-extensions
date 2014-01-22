@@ -6,71 +6,121 @@ $license_query = new WP_Query( array(
     'post_type'      => Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
     'author'         => $user->ID,
     'posts_per_page' => -1,
+    'orderby'        => 'parent'
 ) );
 
-$licenses_by_product_id = array();
-
-while ( $license_query->have_posts() ) {
-
-    $license = $license_query->next_post();
-
-    $licenses_by_product_id[ $license->post_parent ][] = $license;
-}
+$licenses = $license_query->get_posts();
 
 ?>
 
 <h3><?php _e( 'License Keys', 'pronamic_wp_extensions' ); ?></h3>
 
 <table class="form-table">
+
+    <?php if ( $license_query->have_posts() ) : ?>
+
+    <thead>
+
+    <tr>
+
+        <th><?php _e( 'Product', 'pronamic_wp_extensions' ); ?></th>
+        <th><?php _e( 'License Key', 'pronamic_wp_extensions' ); ?></th>
+        <th><?php _e( 'Expiration Date', 'pronamic_wp_extensions' ); ?></th>
+        <th><?php _e( 'Actions', 'pronamic_wp_extensions' ); ?></th>
+
+    </tr>
+
+    </thead>
+
+    <?php for ( $i = 0; $i < count( $licenses ); $i++ ) : $license = $licenses[ $i ]; ?>
+
+    <?php $is_different_product_from_previous_product = $i <= 0 || $licenses[ $i - 1 ]->post_parent !== $license->post_parent; ?>
+
     <tbody>
 
-        <?php if ( count( $licenses_by_product_id ) > 0 ) : ?>
+    <tr <?php echo $is_different_product_from_previous_product ? 'style="border-top: 1px solid #e5e5e5"' : ''; ?>>
 
-        <?php foreach ( $licenses_by_product_id as $product_id => $licenses ) : ?>
+        <td style="vertical-align: middle;">
 
-        <tr style="border-bottom: 1px solid #e5e5e5">
+            <?php
 
-            <th style="vertical-align: middle;">
-                <a href="<?php echo current_user_can( 'edit_posts' ) ? get_edit_post_link( $product_id ) : get_permalink( $product_id ); ?>"><?php echo get_the_title( $product_id ); ?></a>
-            </th>
+            if ( $is_different_product_from_previous_product ) {
 
-            <td>
+                $product_title = get_the_title( $license->post_parent );
 
-                <table>
-                    <tbody>
+                if ( strlen( $product_title ) > 0 ) {
+                    $product_link = '<a href="' . ( current_user_can( 'edit_posts' ) ? get_edit_post_link( $license->post_parent ) : get_permalink( $license->post_parent ) ) . '">' . $product_title . '</a>';
+                } else {
+                    $product_link = __( 'Product title not available', 'pronamic_wp_extensions' );
+                }
 
-                    <?php foreach ( $licenses as $license ) : ?>
+                echo $product_link;
 
-                    <tr>
-                        <td>
+            }
 
-                            <?php echo current_user_can( 'edit_posts' ) ? '<a href="' . get_edit_post_link( $license->ID ) . '">' : ''; ?>
+            ?>
 
-                            <?php echo $license->post_title; ?>
+        </td>
 
-                            <?php echo current_user_can( 'edit_posts' ) ? '</a>' : ''; ?>
+        <td>
 
-                        </td>
-                    </tr>
+            <?php echo current_user_can( 'edit_posts' ) ? '<a href="' . get_edit_post_link( $license->ID ) . '">' : ''; ?>
 
-                    <?php endforeach; ?>
+            <?php echo $license->post_title; ?>
 
-                    </tbody>
-                </table>
+            <?php echo current_user_can( 'edit_posts' ) ? '</a>' : ''; ?>
 
-            </td>
+        </td>
 
-        </tr>
+        <?php
 
-        <?php endforeach; ?>
+        $end_date    = Pronamic_WP_ExtensionsPlugin_License::get_end_date( $license->ID );
+        $is_expired  = strtotime( $end_date ) < time();
+        $extend_url  = '#';
+        $extend_text = $is_expired ? __( 'Renew', 'pronamic_wp_extensions' ) : __( 'Extend', 'pronamic_wp_extensions' );
 
-        <?php else: ?>
+        ?>
 
-        <?php _e( 'No license keys available', 'pronamic_wp_extensions' ); ?>
+        <td>
 
-        <?php endif; ?>
+            <?php if ( $is_expired ) : ?>
+
+            <span class="license-expired"><?php _e( 'Expired', 'pronamic_wp_extensions' ); ?></span>
+
+            <?php else : ?>
+
+            <?php echo $end_date; ?>
+
+            <?php endif; ?>
+
+        </td>
+
+        <td>
+
+            <a href="<?php echo $extend_url; ?>"><?php echo $extend_text; ?></a>
+
+        </td>
+
+    </tr>
 
     </tbody>
+
+    <?php endfor; ?>
+
+    <?php else: ?>
+
+    <tbody>
+
+    <tr>
+        <td>
+            <?php _e( 'No license keys available', 'pronamic_wp_extensions' ); ?>
+        </td>
+    </tr>
+
+    </tbody>
+
+    <?php endif; ?>
+
 </table>
 
 <?php endif; ?>

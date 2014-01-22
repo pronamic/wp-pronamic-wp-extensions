@@ -20,7 +20,7 @@ $end_date   = esc_attr( Pronamic_WP_ExtensionsPlugin_License::get_end_date( $pos
     </tr>
     <tr>
         <th scope="row">
-            <label for="_pronamic_extensions_license_end_date"><?php _e( 'Start date', 'pronamic_wp_extensions' ); ?></label>
+            <label for="_pronamic_extensions_license_end_date"><?php _e( 'End date', 'pronamic_wp_extensions' ); ?></label>
         </th>
         <td>
             <input id="_pronamic_extensions_license_end_date" name="_pronamic_extensions_license_end_date" value="<?php echo $end_date; ?>" type="text" size="25" class="regular-text" />
