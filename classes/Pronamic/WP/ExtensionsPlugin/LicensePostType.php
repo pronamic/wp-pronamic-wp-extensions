@@ -63,7 +63,6 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
         // Actions
         add_action( 'init', array( $this, 'init' ) );
 
-        add_action( 'add_meta_boxes', array( $this, 'license_add_user_meta_box' ) );
         add_action( 'add_meta_boxes', array( $this, 'woocommerce_order_add_license_key_meta_box' ) );
 
         add_action( 'edit_user_profile', array( $this, 'add_license_keys_to_user_profile' ) );
@@ -149,35 +148,6 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
                 array( 'slug' => 'license-key' )
             );
         }
-    }
-
-    //////////////////////////////////////////////////
-
-    /**
-     * Add a user meta box to the License post type.
-     */
-    public function license_add_user_meta_box() {
-
-        add_meta_box(
-            'pronamic_license_user_meta_box',
-            __( 'User', 'pronamic_wp_extensions' ),
-            array( $this, 'license_user_meta_box' ),
-            self::POST_TYPE,
-            'side',
-            'default'
-        );
-    }
-
-    /**
-     * Renders the License's user meta box.
-     *
-     * @param WP_Post $post
-     */
-    public function license_user_meta_box( $post ) {
-
-        $user = new WP_User( $post->post_author );
-
-        $this->plugin->display( 'admin/meta-box-license-user.php', array( 'user' => $user ) );
     }
 
     //////////////////////////////////////////////////
