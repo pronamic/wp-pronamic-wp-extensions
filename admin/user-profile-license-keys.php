@@ -11,9 +11,29 @@ $license_query = new WP_Query( array(
 
 $licenses = $license_query->get_posts();
 
+$license_added_to_cart = filter_input( INPUT_GET, 'license_added_to_cart', FILTER_VALIDATE_INT );
+
 ?>
 
-<h3><?php _e( 'License Keys', 'pronamic_wp_extensions' ); ?></h3>
+<h3 id="license-keys"><?php _e( 'License Keys', 'pronamic_wp_extensions' ); ?></h3>
+
+<?php if ( class_exists( 'WC_Cart' ) && $license_added_to_cart === 1 ) : $woocommerce_cart = new WC_Cart(); ?>
+
+<div class="updated">
+    <p>
+        <?php _e( 'The license was successfully added to the cart', 'pronamic_wp_extensions' ); ?>
+    </p>
+</div>
+
+<?php elseif ( $license_added_to_cart === 0 ) : ?>
+
+<div class="error">
+    <p>
+        <?php _e( 'The license could not be added to the cart', 'pronamic_wp_extensions' ); ?>
+    </p>
+</div>
+
+<?php endif; ?>
 
 <table class="form-table">
 
@@ -76,8 +96,13 @@ $licenses = $license_query->get_posts();
 
         $end_date    = Pronamic_WP_ExtensionsPlugin_License::get_end_date( $license->ID );
         $is_expired  = strtotime( $end_date ) < time();
-        $extend_url  = '#';
         $extend_text = $is_expired ? __( 'Renew', 'pronamic_wp_extensions' ) : __( 'Extend', 'pronamic_wp_extensions' );
+
+        $extend_url  = add_query_arg( array(
+            'pronamic_extensions_add_product_to_cart_to_be_extended' => true,
+            'pronamic_extensions_woocommerce_product_id'             => Pronamic_WP_ExtensionsPlugin_License::get_product_id( $license->ID ),
+            'pronamic_extensions_license_id'                         => $license->ID,
+        ), home_url() );
 
         ?>
 

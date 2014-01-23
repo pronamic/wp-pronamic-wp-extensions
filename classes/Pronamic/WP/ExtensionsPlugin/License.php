@@ -59,7 +59,7 @@ class Pronamic_WP_ExtensionsPlugin_License {
      *
      * @const string
      */
-    const LICENSE_IDS_USER_META_KEY = '_pronamic_extensions_license_keys';
+    const WOOCOMMERCE_PRODUCT_ID_META_KEY = '_pronamic_extensions_license_woocommerce_product_id';
 
     //////////////////////////////////////////////////
 
@@ -271,48 +271,40 @@ class Pronamic_WP_ExtensionsPlugin_License {
     //////////////////////////////////////////////////
 
     /**
-     * Get all license IDs assigned to the passed user.
+     * Get the WooCommerce product ID of the license.
      *
-     * @param int $user_id
+     * @param int $license_id
      *
-     * @return array $license_ids
+     * @return int $product_id
      */
-    public static function get_user_license_ids( $user_id ) {
+    public static function get_product_id( $license_id ) {
 
-        $license_ids = get_user_meta( $user_id, self::LICENSE_IDS_USER_META_KEY, true );
+        $product_id = get_post_meta( $license_id, self::WOOCOMMERCE_PRODUCT_ID_META_KEY, true );
 
-        if ( is_array( $license_ids ) ) {
-            return $license_ids;
+        if ( ! is_numeric( $product_id ) ) {
+
+            return 0;
         }
 
-        return array();
+        return $product_id;
     }
 
     /**
-     * Adds the passed license ID or IDs to the current array of license IDs.
+     * Sets the WooCommerce product ID of the license.
      *
-     * @param int   $user_id
-     * @param mixed $license_ids
+     * @param int $license_id
+     * @param int $product_id
      *
      * @return bool $success
      */
-    public static function add_user_license_ids( $user_id, $license_ids ) {
+    public static function set_product_id( $license_id, $product_id ) {
 
-        // Make sure $license_ids is an array
-        if ( ! is_array( $license_ids ) ) {
+        if ( ! is_numeric( $product_id ) ) {
 
-            if ( is_numeric( $license_ids ) ) {
-                $license_ids = array( $license_ids );
-            } else {
-                return false;
-            }
+            return false;
         }
 
-        $current_license_ids = self::get_user_license_ids( $user_id );
-
-        $license_ids = array_merge( $current_license_ids, $license_ids );
-
-        return update_user_meta( $user_id, self::LICENSE_IDS_USER_META_KEY, $license_ids );
+        return update_post_meta( $license_id, self::WOOCOMMERCE_PRODUCT_ID_META_KEY, $product_id );
     }
 
     //////////////////////////////////////////////////

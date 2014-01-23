@@ -68,6 +68,10 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
         add_action( 'edit_user_profile', array( $this, 'add_license_keys_to_user_profile' ) );
         add_action( 'show_user_profile', array( $this, 'add_license_keys_to_user_profile' ) );
 
+        add_action( 'init', array( $this, 'woocommerce_maybe_add_license_to_cart_to_be_extended' ) );
+
+        add_action( 'woocommerce_add_order_item_meta', array( $this, 'woocommerce_add_order_item_meta' ), 10, 2 );
+
         add_action( 'woocommerce_order_status_pending_to_processing', array( $this, 'woocommerce_order_status_pending_to_processing_generate_licenses' ) );
         add_action( 'woocommerce_order_status_pending_to_complete', array( $this, 'woocommerce_order_status_pending_to_processing_generate_licenses' ) );
 
@@ -81,6 +85,10 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
         add_filter( 'default_title', array( $this, 'maybe_generate_license_key' ) );
 
         add_filter( 'manage_' . self::POST_TYPE . '_posts_columns', array( $this, 'manage_pronamic_license_posts_columns' ) );
+
+        add_filter( 'woocommerce_get_cart_item_from_session', array( $this, 'woocommerce_get_cart_item_from_session_add_license_id' ), 10, 2 );
+
+        add_filter( 'woocommerce_in_cart_product_title', array( $this, 'woocommerce_in_cart_product_title' ), 10, 2 );
     }
 
     //////////////////////////////////////////////////
@@ -203,6 +211,114 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
     }
 
     //////////////////////////////////////////////////
+    // WooCommerce cart functions
+    //////////////////////////////////////////////////
+
+    /**
+     * Adds a licensed product to the WooCommerce cart when requested to.
+     */
+    public function woocommerce_maybe_add_license_to_cart_to_be_extended() {
+
+        global $woocommerce;
+
+        if ( is_admin() ||
+             ! isset( $woocommerce ) ||
+             ! filter_input( INPUT_GET, 'pronamic_extensions_add_product_to_cart_to_be_extended', FILTER_VALIDATE_BOOLEAN ) ) {
+            return;
+        }
+
+        $redirect_url = remove_query_arg( 'pronamic_extensions_add_product_to_cart_to_be_extended', wp_get_referer() );
+
+        $product_id = filter_input( INPUT_GET, 'pronamic_extensions_woocommerce_product_id', FILTER_VALIDATE_INT );
+        $license_id = filter_input( INPUT_GET, 'pronamic_extensions_license_id'            , FILTER_VALIDATE_INT );
+
+        if ( ! $product_id || ! $license_id ) {
+            wp_redirect( add_query_arg( 'license_added_to_cart', 0, $redirect_url ) );
+
+            die();
+        }
+
+        $success = $woocommerce->cart->add_to_cart( $product_id, 1, '', '', array( 'license_id' => $license_id ) );
+
+        if ( $success ) {
+
+            $cart = $woocommerce->cart->get_cart();
+
+            $last_item = end( $cart );
+            $last_key  = key( $cart );
+
+            $last_item['license_id'] = $license_id;
+
+            $woocommerce->cart->cart_contents[ $last_key ] = $last_item;
+        }
+
+        wp_redirect(
+            add_query_arg(
+                'license_added_to_cart',
+                $success ? 1 : 0,
+                $redirect_url
+            )
+        );
+
+        die();
+    }
+
+    /**
+     * Hook into where WooCommerce gets its products from the session and add a license ID where necessary.
+     *
+     * @param array $item
+     * @param array $values
+     *
+     * @return array mixed
+     */
+    public function woocommerce_get_cart_item_from_session_add_license_id( $item, $values ) {
+
+        if ( isset( $values['license_id'] ) && is_numeric( $values['license_id'] ) ) {
+
+            $item['license_id'] = $values['license_id'];
+        }
+
+        return $item;
+    }
+
+    /**
+     * Hook into where WooCommerce outputs the cart items' titles and add the license key where necessary.
+     *
+     * @param string $title
+     * @param array  $values
+     *
+     * @return string $title
+     */
+    public function woocommerce_in_cart_product_title( $title, $values ) {
+
+        if ( isset( $values['license_id'] ) && is_numeric( $values['license_id'] ) ) {
+
+            $license = new Pronamic_WP_ExtensionsPlugin_License( $values['license_id'] );
+
+            if ( strlen( $license->post_title ) > 0 ) {
+
+                $title .= ' &ndash; ' . __( 'Extend License', 'pronamic_wp_extensions' ) . ': ' . $license->post_title;
+            }
+        }
+
+        return $title;
+    }
+
+    /**
+     * Hook into where WooCommerce converts the cart items into order items and add add a license ID where necessary.
+     *
+     * @param int   $item_id
+     * @param array $values
+     */
+    public function woocommerce_add_order_item_meta( $item_id, $values ) {
+
+        if ( isset( $values['license_id'] ) && is_numeric( $values['license_id'] ) ) {
+
+            woocommerce_add_order_item_meta( $item_id, '_license_id', $values['license_id'] );
+        }
+    }
+
+    //////////////////////////////////////////////////
 
     /**
      * Called when a WooCommerce order gets its status updated.
@@ -283,6 +399,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
 
                 if ( $license_saved ) {
 
+                    Pronamic_WP_ExtensionsPlugin_License::set_product_id( $license->ID, $licensed_product->ID );
                     Pronamic_WP_ExtensionsPlugin_License::set_start_date( $license->ID, date( 'Y-m-d h:i:s' ) );
                     Pronamic_WP_ExtensionsPlugin_License::set_end_date( $license->ID, date( 'Y-m-d h:i:s', strtotime( '+ 1 year' ) ) );
 
@@ -296,6 +413,10 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
         // Add the license IDs to the order
         update_post_meta( $order_id, self::WOOCOMMERCE_ORDER_LICENSE_KEYS_META_KEY, $license_ids );
     }
+
+    //////////////////////////////////////////////////
+    // WooCommerce add license key information
+    //////////////////////////////////////////////////
 
     /**
      * Add a table with the generated license keys to the WooCommerce order email.
@@ -389,7 +510,6 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
      */
     public function manage_pronamic_license_posts_columns( $columns ) {
 
-        $columns['user']      = __( 'User', 'pronamic_wp_extensions' );
         $columns['extension'] = __( 'Extensions', 'pronamic_wp_extensions' );
 
         return $columns;
@@ -405,14 +525,6 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
 
         switch ( $column_name ) {
 
-            case 'user':
-
-                $post = get_post( $post_id );
-
-                echo '<a href="' . get_edit_user_link( $post->post_author ) . '">' . get_the_author_meta( 'display_name', $post->post_author ) . '</a>';
-
-                break;
-
             case 'extension':
 
                 $parent_post_id = wp_get_post_parent_id( $post_id );
@@ -427,6 +539,8 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
         }
     }
 
+    //////////////////////////////////////////////////
+    // Singleton
     //////////////////////////////////////////////////
 
     /**
