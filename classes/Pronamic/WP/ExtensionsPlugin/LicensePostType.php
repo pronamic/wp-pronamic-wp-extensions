@@ -358,6 +358,22 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
     }
 
     /**
+     * Hook into where WooCommerce converts the cart items into order items and add add a license ID where necessary.
+     *
+     * @param int   $item_id
+     * @param array $values
+     */
+    public function woocommerce_add_order_item_meta( $item_id, $values ) {
+
+        if ( isset( $values['license_id'] ) && is_numeric( $values['license_id'] ) ) {
+
+            woocommerce_add_order_item_meta( $item_id, '_license_id', $values['license_id'] );
+        }
+    }
+
+    //////////////////////////////////////////////////
+
+    /**
      * Hook into where WooCommerce outputs the information about the received order and add the license key where necessary.
      *
      * @param string $title
@@ -379,20 +395,6 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
         }
 
         return $title;
-    }
-
-    /**
-     * Hook into where WooCommerce converts the cart items into order items and add add a license ID where necessary.
-     *
-     * @param int   $item_id
-     * @param array $values
-     */
-    public function woocommerce_add_order_item_meta( $item_id, $values ) {
-
-        if ( isset( $values['license_id'] ) && is_numeric( $values['license_id'] ) ) {
-
-            woocommerce_add_order_item_meta( $item_id, '_license_id', $values['license_id'] );
-        }
     }
 
     //////////////////////////////////////////////////
@@ -579,100 +581,6 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
 
         return $license->ID;
     }
-
-//    /**
-//     * Called when a WooCommerce order gets its status updated.
-//     *
-//     * @param int $order_id
-//     */
-//    public function woocommerce_order_status_pending_to_processing_manage_licensed_products( $order_id ) {
-//
-//        if ( ! class_exists( 'WC_Order' ) ) {
-//            return;
-//        }
-//
-//        // When $order_license_ids consists of an array of license IDs, the licenses have already been generated and the method should exit
-//        $order_license_ids = get_post_meta( $order_id, self::WOOCOMMERCE_ORDER_LICENSE_KEYS_META_KEY, true );
-//
-//        if ( is_array( $order_license_ids ) ) {
-//            return;
-//        }
-//
-//        $order = new WC_Order( $order_id );
-//
-//        $products = $order->get_items();
-//
-//        // An empty array will make WP_Query drop the 'post__in' variable, -1 will make sure no products are retrieved when there are no product IDs
-//        $product_ids        = array( -1 );
-//        $product_quantities = array();
-//
-//        foreach ( $products as $product ) {
-//
-//            $product_ids[] = $product['product_id'];
-//
-//            $product_quantities[ $product['product_id'] ] = $product['qty'];
-//        }
-//
-//        // Get all products that have the license key term
-//        $licensed_products_query = new WP_Query( array(
-//            'post_type'      => 'product',
-//            'post__in'       => $product_ids,
-//            'posts_per_page' => -1,
-//            'tax_query'      => array(
-//                array(
-//                    'taxonomy' => 'product_licensing',
-//                    'field'    => 'slug',
-//                    'terms'    => 'license-key',
-//                )
-//            ),
-//        ) );
-//
-//        $license_ids = array();
-//
-//        $this->products_with_generated_licenses = array();
-//
-//        // Loop through licensed products, generating licenses
-//        while ( $licensed_products_query->have_posts() ) {
-//
-//            $licensed_product = $licensed_products_query->next_post();
-//
-//            $extension_id = get_post_meta( $licensed_product->ID, 'extension_id', true );
-//
-//            // When the product's quantity is greater than zero, prepare the array of licenses
-//            if ( $product_quantities[ $licensed_product->ID ] > 0 ) {
-//
-//                $this->products_with_generated_licenses[ $extension_id ] = array();
-//            }
-//
-//            // Generate as many licenses as the product has been purchased
-//            for ( $i = 0; $i < $product_quantities[ $licensed_product->ID ]; $i++ ) {
-//
-//                $license = new Pronamic_WP_ExtensionsPlugin_License();
-//
-//                $license->post_title  = Pronamic_WP_ExtensionsPlugin_License::generate_license_key();
-//                $license->post_status = 'publish';
-//                $license->post_type   = self::POST_TYPE;
-//                $license->post_parent = $extension_id;
-//                $license->post_author = get_current_user_id();
-//
-//                $license_saved = $license->save();
-//
-//                if ( $license_saved ) {
-//
-//                    Pronamic_WP_ExtensionsPlugin_License::set_product_id( $license->ID, $licensed_product->ID );
-//                    Pronamic_WP_ExtensionsPlugin_License::set_start_date( $license->ID, date( 'Y-m-d h:i:s' ) );
-//                    Pronamic_WP_ExtensionsPlugin_License::set_end_date( $license->ID, date( 'Y-m-d h:i:s', strtotime( '+ 1 year' ) ) );
-//
-//                    $this->products_with_generated_licenses[ $extension_id ][] = $license;
-//
-//                    $license_ids[] = $license->ID;
-//                }
-//            }
-//        }
-//
-//        // Add the license IDs to the order
-//        update_post_meta( $order_id, self::WOOCOMMERCE_ORDER_LICENSE_KEYS_META_KEY, $license_ids );
-//    }
 
     //////////////////////////////////////////////////
     // WooCommerce add license key information
