@@ -20,16 +20,21 @@ $license_added_to_cart = filter_input( INPUT_GET, 'license_added_to_cart', FILTE
 <?php if ( class_exists( 'WC_Cart' ) && $license_added_to_cart === 1 ) : $woocommerce_cart = new WC_Cart(); ?>
 
 <div class="updated">
-    <p>
-        <?php _e( 'The license was successfully added to the cart', 'pronamic_wp_extensions' ); ?>
+    <p style="width: 75%; float: left;">
+        <?php _e( 'The license was successfully added to your cart', 'pronamic_wp_extensions' ); ?>
     </p>
+    <p style="width: 20%; float: right; text-align: right;">
+        <a href="<?php echo $woocommerce_cart->get_cart_url(); ?>"><?php _e( 'View cart', 'pronamic_wp_extensions' ); ?> &raquo;</a>
+    </p>
+
+    <div style="clear: both;"></div>
 </div>
 
 <?php elseif ( $license_added_to_cart === 0 ) : ?>
 
 <div class="error">
     <p>
-        <?php _e( 'The license could not be added to the cart', 'pronamic_wp_extensions' ); ?>
+        <?php _e( 'The license could not be added to your cart', 'pronamic_wp_extensions' ); ?>
     </p>
 </div>
 

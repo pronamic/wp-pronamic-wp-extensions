@@ -89,7 +89,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
         add_action( 'woocommerce_add_order_item_meta', array( $this, 'woocommerce_add_order_item_meta' ), 10, 2 );
 
         add_action( 'woocommerce_order_status_pending_to_processing', array( $this, 'woocommerce_order_status_pending_to_processing_manage_licensed_products' ) );
-        add_action( 'woocommerce_order_status_pending_to_complete', array( $this, 'woocommerce_order_status_pending_to_processing_manage_licensed_products' ) );
+        add_action( 'woocommerce_order_status_pending_to_complete'  , array( $this, 'woocommerce_order_status_pending_to_processing_manage_licensed_products' ) );
 
         add_action( 'woocommerce_email_order_meta', array( $this, 'woocommerce_email_order_meta_add_license_keys' ) );
 
@@ -104,7 +104,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
 
         add_filter( 'woocommerce_get_cart_item_from_session', array( $this, 'woocommerce_get_cart_item_from_session_add_license_id' ), 10, 2 );
 
-        add_filter( 'woocommerce_in_cart_product_title', array( $this, 'woocommerce_in_cart_product_title' ), 10, 2 );
+        add_filter( 'woocommerce_in_cart_product_title'    , array( $this, 'woocommerce_in_cart_product_title' )    , 10, 2 );
         add_filter( 'woocommerce_order_table_product_title', array( $this, 'woocommerce_order_table_product_title' ), 10, 2 );
     }
 
@@ -390,7 +390,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
             if ( isset( $license->post_title ) ) {
 
                 $title  = '<a href="' . get_permalink( $item['product_id'] ) . '">' . $item['name'] . '</a> &ndash; ';
-                $title .= '<a href="' . get_edit_user_link() . '#license-keys">' . $license->post_title . '</a>';
+                $title .= __( 'Extend License', 'pronamic_wp_extensions' ) . ': <a href="' . get_edit_user_link() . '#license-keys">' . $license->post_title . '</a>';
             }
         }
 
