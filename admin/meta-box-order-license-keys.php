@@ -1,62 +1,43 @@
-<?php if ( isset( $license_query ) && $license_query instanceof WP_Query ) : ?>
+<?php if ( isset( $licenses ) && count( $licenses ) > 0 ) : ?>
 
-<?php
+<?php foreach ( $licenses as $license_type => $type_licenses ) : if ( count( $type_licenses ) <= 0 ) continue; ?>
 
-$licenses_by_product_id = array();
-
-while ( $license_query->have_posts() ) {
-
-    $license = $license_query->next_post();
-
-    $licenses_by_product_id[ $license->post_parent ][] = $license;
-}
-
-?>
+<h2><?php echo $license_type === 'generated' ? __( 'New License Keys', 'pronamic_wp_extensions' ) : __( 'Extended License Keys', 'pronamic_wp_extensions' ); ?></h2>
 
 <table class="form-table">
     <tbody>
 
-        <?php if ( count( $licenses_by_product_id ) > 0 ) : ?>
+    <?php if ( count( $type_licenses ) > 0 ) : ?>
 
-        <?php foreach ( $licenses_by_product_id as $product_id => $licenses ) : ?>
+    <?php foreach ( $type_licenses as $license ) : ?>
 
-        <tr style="border-bottom: 1px solid #e5e5e5">
+    <tr>
 
-            <th style="vertical-align: middle;">
-                <a href="<?php echo get_edit_post_link( $product_id ); ?>"><?php echo get_the_title( $product_id ); ?></a>
-            </th>
+        <th style="vertical-align: middle;">
+            <a href="<?php echo get_edit_post_link( $license->post_parent ); ?>"><?php echo get_the_title( $license->post_parent ); ?></a>
+        </th>
 
-            <td>
+        <td>
+            <a href="<?php echo get_edit_post_link( $license->ID ); ?>"><?php echo $license->post_title; ?></a>
+        </td>
 
-                <table>
-                    <tbody>
+        <td>
+            <?php echo Pronamic_WP_ExtensionsPlugin_License::get_end_date( $license->ID ); ?>
+        </td>
 
-                    <?php foreach ( $licenses as $license ) : ?>
+    </tr>
 
-                    <tr>
-                        <td>
-                            <a href="<?php echo get_edit_post_link( $license->ID ); ?>"><?php echo $license->post_title; ?></a>
-                        </td>
-                    </tr>
+    <?php endforeach; ?>
 
-                    <?php endforeach; ?>
+    <?php else: ?>
 
-                    </tbody>
-                </table>
+    <?php _e( 'No license keys available', 'pronamic_wp_extensions' ); ?>
 
-            </td>
-
-        </tr>
-
-        <?php endforeach; ?>
-
-        <?php else: ?>
-
-        <?php _e( 'No license keys available', 'pronamic_wp_extensions' ); ?>
-
-        <?php endif; ?>
+    <?php endif; ?>
 
     </tbody>
 </table>
+
+<?php endforeach; ?>
 
 <?php endif; ?>
