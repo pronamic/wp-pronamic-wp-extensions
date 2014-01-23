@@ -38,6 +38,8 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 
 		add_action( 'init', array( $this, 'init' ) );
 
+        add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
+
 		add_filter( 'posts_where', array( $this, 'posts_where' ), 10, 2 );
 
         // License
@@ -159,11 +161,22 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 
 	//////////////////////////////////////////////////
 
+    /**
+     * Plugins loaded
+     */
+    public function plugins_loaded() {
+        load_plugin_textdomain( 'pronamic_wp_extensions', false, dirname( plugin_basename( $this->file ) ) . '/languages/' );
+    }
+
+	//////////////////////////////////////////////////
+
 	/**
 	 * Posts where 'post_title__in', used by API
 	 * 
 	 * @param string $where
 	 * @param WP_Query $query
+     *
+     * @return string $where
 	 */
 	public function posts_where( $where, $query ) {
 		$titles = $query->get( 'post_title__in' );
@@ -184,6 +197,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 	 * Display/iinclude the specified file
 	 * 
 	 * @param string $file
+     * @param array  $args
 	 */
 	public function display( $file, array $args = array() ) {
 		extract( $args );
@@ -196,9 +210,11 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 	/**
 	 * Return an instance of this class.
 	 *
-	 * @since 1.0.0
-	 *
-	 * @return object A single instance of this class.
+     * @since 1.0.0
+     *
+     * @param string|bool $file
+     *
+     * @return Pronamic_WP_ExtensionsPlugin_Plugin A single instance of this class.
 	 */
 	public static function get_instance( $file = false ) {
 		// If the single instance hasn't been set, set it now.

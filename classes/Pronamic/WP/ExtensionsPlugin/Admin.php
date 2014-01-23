@@ -655,7 +655,9 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return object A single instance of this class.
+     * @param Pronamic_WP_ExtensionsPlugin_Plugin $plugin
+     *
+	 * @return Pronamic_WP_ExtensionsPlugin_Admin object A single instance of this class.
 	 */
 	public static function get_instance( Pronamic_WP_ExtensionsPlugin_Plugin $plugin ) {
 		// If the single instance hasn't been set, set it now.

@@ -2,10 +2,15 @@
 /*
 Plugin Name: Pronamic WordPress Extensions
 Plugin URI: http://www.pronamic.eu/
-Description: 
+Description:
+
 Version: 1.0.0
 Author: Pronamic
 Author URI: http://www.pronamic.eu/
+
+Text Domain: pronamic_wp_extensions
+Domain Path: /languages/
+
 License: GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 Network: true
 */
