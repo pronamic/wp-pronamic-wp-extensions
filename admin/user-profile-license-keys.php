@@ -102,12 +102,7 @@ $license_added_to_cart = filter_input( INPUT_GET, 'license_added_to_cart', FILTE
         $end_date    = Pronamic_WP_ExtensionsPlugin_License::get_end_date( $license->ID );
         $is_expired  = strtotime( $end_date ) < time();
         $extend_text = $is_expired ? __( 'Renew', 'pronamic_wp_extensions' ) : __( 'Extend', 'pronamic_wp_extensions' );
-
-        $extend_url  = add_query_arg( array(
-            'pronamic_extensions_add_product_to_cart_to_be_extended' => true,
-            'pronamic_extensions_woocommerce_product_id'             => Pronamic_WP_ExtensionsPlugin_License::get_product_id( $license->ID ),
-            'pronamic_extensions_license_id'                         => $license->ID,
-        ), home_url() );
+        $extend_url  = Pronamic_WP_ExtensionsPlugin_License::generate_extend_url( $license->ID );
 
         ?>
 

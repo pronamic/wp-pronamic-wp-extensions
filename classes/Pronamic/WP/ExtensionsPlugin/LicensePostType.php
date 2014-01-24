@@ -138,7 +138,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
             'capability_type'    => 'post',
             'has_archive'        => true,
             'rewrite'            => array( 'slug' => 'licenses' ),
-            'supports'           => array( 'title', 'author' ),
+            'supports'           => array( 'title' ),
         ) );
 
         // Add a license taxonomy to products
@@ -280,13 +280,18 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
             return;
         }
 
-        $redirect_url = remove_query_arg( 'pronamic_extensions_add_product_to_cart_to_be_extended', wp_get_referer() );
+        $return_url = urldecode( filter_input( INPUT_GET, 'return_url', FILTER_VALIDATE_URL ) );
+
+        if ( strlen( $return_url ) <= 0 ) {
+
+            $return_url = remove_query_arg( 'pronamic_extensions_add_product_to_cart_to_be_extended', wp_get_referer() );
+        }
 
         $product_id = filter_input( INPUT_GET, 'pronamic_extensions_woocommerce_product_id', FILTER_VALIDATE_INT );
         $license_id = filter_input( INPUT_GET, 'pronamic_extensions_license_id'            , FILTER_VALIDATE_INT );
 
         if ( ! $product_id || ! $license_id ) {
-            wp_redirect( add_query_arg( 'license_added_to_cart', 0, $redirect_url ) );
+            wp_redirect( add_query_arg( 'license_added_to_cart', 0, $return_url ) );
 
             die();
         }
@@ -309,7 +314,7 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
             add_query_arg(
                 'license_added_to_cart',
                 $success ? 1 : 0,
-                $redirect_url
+                $return_url
             )
         );
 
@@ -641,7 +646,18 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
      */
     public function manage_pronamic_license_posts_columns( $columns ) {
 
-        $columns['extension'] = __( 'Extensions', 'pronamic_wp_extensions' );
+        $columns['extension']       = __( 'Extensions'     , 'pronamic_wp_extensions' );
+        $columns['user']            = __( 'User'           , 'pronamic_wp_extensions' );
+        $columns['expiration_date'] = __( 'Expiration Date', 'pronamic_wp_extensions' );
+
+        // Move the date column to the end of the array
+        if ( isset( $columns['date'] ) ) {
+            $date_column = $columns['date'];
+
+            unset( $columns['date'] );
+
+            $columns['date'] = $date_column;
+        }
 
         return $columns;
     }
@@ -665,6 +681,22 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
                 } else {
                     _e( 'Warning: No extension has been assigned to this license yet', 'pronamic_wp_extensions' );
                 }
+
+                break;
+
+            case 'user':
+
+                $post = get_post( $post_id );
+
+                if ( $post->post_author > 0 ) {
+                    echo '<a href="' . get_edit_user_link( $post->post_author ) . '">' . get_the_author_meta( 'display_name', $post->post_author ) . '</a>';
+                }
+
+                break;
+
+            case 'expiration_date':
+
+                echo Pronamic_WP_ExtensionsPlugin_License::get_end_date( $post_id );
 
                 break;
         }

@@ -43,14 +43,15 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 		add_filter( 'posts_where', array( $this, 'posts_where' ), 10, 2 );
 
         // License
-        $this->api = Pronamic_WP_ExtensionsPlugin_LicensePostType::get_instance( $this );
+        Pronamic_WP_ExtensionsPlugin_LicensePostType::get_instance( $this );
+        Pronamic_WP_ExtensionsPlugin_LicenseReminder::get_instance( $this );
 
 		// API
 		$this->api = Pronamic_WP_ExtensionsPlugin_Api::get_instance( $this );
 		
 		// Admin
 		if ( is_admin() ) {
-			Pronamic_WP_ExtensionsPlugin_Admin::get_instance( $this );
+			$this->admin = Pronamic_WP_ExtensionsPlugin_Admin::get_instance( $this );
 		}
 	}
 
@@ -194,15 +195,39 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 	//////////////////////////////////////////////////
 
 	/**
-	 * Display/iinclude the specified file
+	 * Display/include the specified file
 	 * 
 	 * @param string $file
-     * @param array  $args
+     * @param array  $args                 (optional, defaults to an empty array)
+     * @param bool   $allow_theme_override (optional, defaults to false)
 	 */
-	public function display( $file, array $args = array() ) {
+	public function display( $file, array $args = array(), $allow_theme_override = false ) {
+
+        if ( $allow_theme_override ) {
+
+            $sub_folder = DIRECTORY_SEPARATOR . 'pronamic-wp-extensions' . DIRECTORY_SEPARATOR;
+
+            $stylesheet_directory_file_path = get_stylesheet_directory() . $sub_folder . $file;
+            $template_directory_file_path   = get_template_directory()   . $sub_folder . $file;
+
+            if ( file_exists( $stylesheet_directory_file_path ) ) {
+
+                $file_path = $stylesheet_directory_file_path;
+
+            } else if ( file_exists( $template_directory_file_path ) ) {
+
+                $file_path = $template_directory_file_path;
+            }
+        }
+
+        if ( ! isset( $file_path ) ) {
+
+            $file_path = plugin_dir_path( $this->file ) . $file;
+        }
+
 		extract( $args );
 
-		include plugin_dir_path( $this->file ) . $file; 
+		include $file_path;
 	}
 
 	//////////////////////////////////////////////////

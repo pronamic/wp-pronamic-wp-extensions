@@ -108,6 +108,13 @@ class Pronamic_WP_ExtensionsPlugin_License {
      */
     public function save() {
 
+        $is_license_new = false;
+
+        if ( ! isset( $this->ID ) || ! is_numeric( $this->ID ) || $this->ID <= 0 ) {
+
+            $is_license_new = true;
+        }
+
         $this->ID = wp_insert_post( array(
             'ID'                    => $this->ID,
             'post_content'          => $this->post_content,
@@ -134,7 +141,22 @@ class Pronamic_WP_ExtensionsPlugin_License {
             'page_template'         => $this->page_template,
         ) );
 
-        return ! is_wp_error( $this->ID );
+        if ( ! is_wp_error( $this->ID ) ) {
+
+            if ( $is_license_new ) {
+
+                do_action( 'pronamic_wp_extensions_license_created', $this->ID );
+
+            } else {
+
+                do_action( 'pronamic_wp_extensions_license_updated', $this->ID );
+
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     //////////////////////////////////////////////////
@@ -246,7 +268,7 @@ class Pronamic_WP_ExtensionsPlugin_License {
      */
     public static function get_end_date( $license_id ) {
 
-        $end_date = get_post_meta( $license_id, '_pronamic_extensions_license_end_date', true );
+        $end_date = get_post_meta( $license_id, self::END_DATE_META_KEY, true );
 
         if ( strlen( $end_date ) > 0 ) {
             return $end_date;
@@ -310,6 +332,72 @@ class Pronamic_WP_ExtensionsPlugin_License {
     //////////////////////////////////////////////////
 
     /**
+     * Get the date the last expiration reminder was sent.
+     *
+     * @param int $license_id
+     *
+     * @return string $date_last_reminder
+     */
+    public static function get_date_last_expiration_reminder( $license_id ) {
+
+        $date_last_reminder = get_post_meta( $license_id, Pronamic_WP_ExtensionsPlugin_LicenseReminder::DATE_LAST_LICENSE_EXPIRATION_REMINDER_META_KEY, true );
+
+        if ( ! $date_last_reminder ) {
+            return '';
+        }
+
+        return $date_last_reminder;
+    }
+
+    /**
+     * Set the date the last expiration reminder was sent.
+     *
+     * @param int    $license_id
+     * @param string $date_last_expiration_reminder
+     *
+     * @return bool $success
+     */
+    public static function set_date_last_expiration_reminder( $license_id, $date_last_expiration_reminder ) {
+
+        return update_post_meta( $license_id, Pronamic_WP_ExtensionsPlugin_LicenseReminder::DATE_LAST_LICENSE_EXPIRATION_REMINDER_META_KEY, $date_last_expiration_reminder );
+    }
+
+    //////////////////////////////////////////////////
+
+    /**
+     * Get whether or not the license expired reminder was sent.
+     *
+     * @param int $license_id
+     *
+     * @return bool $license_expired_reminder_sent
+     */
+    public static function get_license_expired_reminder_sent( $license_id ) {
+
+        $license_expired_reminder_sent = get_post_meta( $license_id, Pronamic_WP_ExtensionsPlugin_LicenseReminder::LICENSE_EXPIRED_REMINDER_SENT_META_KEY, true );
+
+        if ( $license_expired_reminder_sent ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Set whether or not the license expired reminder was sent.
+     *
+     * @param int  $license_id
+     * @param bool $license_expired_reminder_sent
+     *
+     * @return bool $success
+     */
+    public static function set_license_expired_reminder_sent( $license_id, $license_expired_reminder_sent ) {
+
+        return update_post_meta( $license_id, Pronamic_WP_ExtensionsPlugin_LicenseReminder::LICENSE_EXPIRED_REMINDER_SENT_META_KEY, $license_expired_reminder_sent );
+    }
+
+    //////////////////////////////////////////////////
+
+    /**
      * Generate a v4 UUID.
      *
      * @see https://gist.github.com/dahnielson/508447
@@ -338,5 +426,25 @@ class Pronamic_WP_ExtensionsPlugin_License {
             // 48 bits for "node"
             mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
         );
+    }
+
+    //////////////////////////////////////////////////
+
+    /**
+     * Generates the URL that adds the license extending product to the cart.
+     *
+     * @param int    $license_id
+     * @param string $return_url (optional, defaults to the default return URL)
+     *
+     * @return string $extend_url
+     */
+    public static function generate_extend_url( $license_id, $return_url = '' ) {
+
+        return add_query_arg( array(
+            'pronamic_extensions_add_product_to_cart_to_be_extended' => true,
+            'pronamic_extensions_woocommerce_product_id'             => self::get_product_id( $license_id ),
+            'pronamic_extensions_license_id'                         => $license_id,
+            'return_url'                                             => urlencode( $return_url ),
+        ), home_url() );
     }
 }
