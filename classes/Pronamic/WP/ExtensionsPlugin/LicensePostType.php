@@ -582,6 +582,8 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
 
         Pronamic_WP_ExtensionsPlugin_License::set_end_date( $license->ID, $new_end_date );
 
+        do_action( 'pronamic_wp_extensions_license_extended', $license->ID );
+
         $this->extended_licenses[] = $license;
 
         return $license->ID;

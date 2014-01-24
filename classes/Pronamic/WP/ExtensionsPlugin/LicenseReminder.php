@@ -66,11 +66,18 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
     const SEND_LICENSE_REMINDERS_TIME_IN_ADVANCE_OPTION = 'pronamic_wp_extensions_send_license_reminders_time_in_advance';
 
     /**
-     * Option key that stores
+     * Option key that stores the subject for the license expiration reminder.
      *
      * @const string
      */
     const LICENSE_REMINDER_SUBJECT_OPTION = 'pronamic_wp_extensions_license_reminder_subject';
+
+    /**
+     * Option key that stores the subject for the license expiration reminder taht's sent in advance.
+     *
+     * @const string
+     */
+    const LICENSE_REMINDER_IN_ADVANCE_SUBJECT_OPTION = 'pronamic_wp_extensions_license_reminder_in_advance_subject';
 
     //////////////////////////////////////////////////
 
@@ -94,8 +101,8 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 
         add_action( 'admin_init', array( $this, 'periodically_check_for_expired_licenses' ) );
 
-        // TODO Add hook resetting reminder count using the "init_license_meta_data" function
-        add_action( 'pronamic_wp_extensions_license_created', array( $this, 'init_license_meta_data' ) );
+        add_action( 'pronamic_wp_extensions_license_created' , array( $this, 'init_license_meta_data' ) );
+        add_action( 'pronamic_wp_extensions_license_extended', array( $this, 'init_license_meta_data' ) );
     }
 
     //////////////////////////////////////////////////
@@ -146,9 +153,35 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
             ) // args
         );
 
+        add_settings_field(
+            self::LICENSE_REMINDER_SUBJECT_OPTION, // id
+            __( 'Reminder subject', 'pronamic_wp_extensions' ), // title
+            array( $this->plugin->admin, 'input_text' ), // callback
+            'pronamic_wp_extensions', // page
+            'pronamic_wp_extensions_license_reminder', // section
+            array(
+                'label_for' => self::LICENSE_REMINDER_SUBJECT_OPTION,
+                'classes'   => array( 'regular-text' ),
+            ) // args
+        );
+
+        add_settings_field(
+            self::LICENSE_REMINDER_IN_ADVANCE_SUBJECT_OPTION, // id
+            __( 'Reminder in advance subject', 'pronamic_wp_extensions' ), // title
+            array( $this->plugin->admin, 'input_text' ), // callback
+            'pronamic_wp_extensions', // page
+            'pronamic_wp_extensions_license_reminder', // section
+            array(
+                'label_for' => self::LICENSE_REMINDER_IN_ADVANCE_SUBJECT_OPTION,
+                'classes'   => array( 'regular-text' ),
+            ) // args
+        );
+
         register_setting( 'pronamic_wp_extensions', self::SEND_LICENSE_EXPIRED_REMINDER_OPTION );
         register_setting( 'pronamic_wp_extensions', self::SEND_LICENSE_REMINDERS_IN_ADVANCE_OPTION );
         register_setting( 'pronamic_wp_extensions', self::SEND_LICENSE_REMINDERS_TIME_IN_ADVANCE_OPTION );
+        register_setting( 'pronamic_wp_extensions', self::LICENSE_REMINDER_SUBJECT_OPTION );
+        register_setting( 'pronamic_wp_extensions', self::LICENSE_REMINDER_IN_ADVANCE_SUBJECT_OPTION );
     }
 
     //////////////////////////////////////////////////
@@ -175,9 +208,9 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
         // Should be 40 characters or less
         $transient = 'pronamic_extensions_periodic_license_check';
 
-//        if ( get_site_transient( $transient ) !== false ) {
-//            return;
-//        }
+        if ( get_site_transient( $transient ) !== false ) {
+            return;
+        }
 
         if ( ! self::get_send_license_expired_reminder() &&
              ! self::get_send_license_reminders_in_advance() ) {
@@ -226,12 +259,16 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 
                 $template = 'public/emails/license-expiration-today-reminder.php';
 
+                $mail_subject = self::get_license_reminder_subject( $expiring_license->ID );
+
 //                Pronamic_WP_ExtensionsPlugin_License::set_license_expired_reminder_sent( $expiring_license->ID, true );
 
             // Mail about the license expiring within the next period of time
             } else if ( $expire_timestamp > time() && strlen( Pronamic_WP_ExtensionsPlugin_License::get_date_last_expiration_reminder( $expiring_license->ID ) ) <= 0 ) {
 
                 $template = 'public/emails/license-expiration-reminder.php';
+
+                $mail_subject = self::get_license_reminder_in_advance_subject( $expiring_license->ID );
 
 //                Pronamic_WP_ExtensionsPlugin_License::set_date_last_expiration_reminder( $expiring_license->ID, date( 'Y-m-d h:i:s' ) );
 
@@ -246,7 +283,6 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 
             $mail_body    = ob_get_clean();
             $mail_to      = $user->user_email;
-            $mail_subject = self::get_license_reminder_subject();
 
             $mail_headers = array(
                 'From: ' . get_bloginfo( 'name' ) . ' <' . get_bloginfo( 'admin_email' ) . '>',
@@ -341,9 +377,11 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
     /**
      * Get the subject of a reminder email
      *
+     * @param int $license_id
+     *
      * @return string $subject
      */
-    public static function get_license_reminder_subject() {
+    public static function get_license_reminder_subject( $license_id ) {
 
         $license_reminder_subject = get_option( self::LICENSE_REMINDER_SUBJECT_OPTION );
 
@@ -352,7 +390,26 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
             return $license_reminder_subject;
         }
 
-        return sprintf( __( 'Your %s license is about to expire', 'pronamic_wp_extensions' ), get_bloginfo( 'name' ) );
+        return sprintf( __( 'Your %s license expires today', 'pronamic_wp_extensions' ), get_the_title( wp_get_post_parent_id( $license_id ) ) );
+    }
+
+    /**
+     * Get the subject of a reminder email that's being sent in advance.
+     *
+     * @param int $license_id
+     *
+     * @return string $subject
+     */
+    public static function get_license_reminder_in_advance_subject( $license_id ) {
+
+        $license_reminder_in_advance_subject = get_option( self::LICENSE_REMINDER_IN_ADVANCE_SUBJECT_OPTION );
+
+        if ( strlen( $license_reminder_in_advance_subject ) > 0 ) {
+
+            return $license_reminder_in_advance_subject;
+        }
+
+        return sprintf( __( 'Your %s license is about to expire', 'pronamic_wp_extensions' ), get_the_title( wp_get_post_parent_id( $license_id ) ) );
     }
 
     //////////////////////////////////////////////////

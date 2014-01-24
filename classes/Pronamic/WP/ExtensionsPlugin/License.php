@@ -61,6 +61,13 @@ class Pronamic_WP_ExtensionsPlugin_License {
      */
     const WOOCOMMERCE_PRODUCT_ID_META_KEY = '_pronamic_extensions_license_woocommerce_product_id';
 
+    /**
+     * Log meta key.
+     *
+     * @const string
+     */
+    const LOG_META_KEY = '_pronamic_extensions_license_log';
+
     //////////////////////////////////////////////////
 
     /**
@@ -328,6 +335,10 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
         return update_post_meta( $license_id, self::WOOCOMMERCE_PRODUCT_ID_META_KEY, $product_id );
     }
+
+    //////////////////////////////////////////////////
+
+    // TODO Add logging function here
 
     //////////////////////////////////////////////////
 
