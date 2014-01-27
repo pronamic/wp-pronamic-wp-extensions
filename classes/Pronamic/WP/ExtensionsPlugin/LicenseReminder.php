@@ -267,7 +267,7 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 				$log_success_message = __( 'License expires today reminder sent', 'pronamic_wp_extensions' );
 				$log_error_message   = __( 'License expires today reminder could not be sent', 'pronamic_wp_extensions' );
 
-//                Pronamic_WP_ExtensionsPlugin_License::set_license_expired_reminder_sent( $expiring_license->ID, true );
+                Pronamic_WP_ExtensionsPlugin_License::set_license_expired_reminder_sent( $expiring_license->ID, true );
 
 			// Mail about the license expiring within the next period of time
 			} else if ( $expire_timestamp > time() && strlen( Pronamic_WP_ExtensionsPlugin_License::get_date_last_expiration_reminder( $expiring_license->ID ) ) <= 0 ) {
@@ -279,7 +279,7 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 				$log_success_message = __( 'License expiration reminder sent', 'pronamic_wp_extensions' );
 				$log_error_message   = __( 'License expiration reminder could not be sent', 'pronamic_wp_extensions' );
 
-//                Pronamic_WP_ExtensionsPlugin_License::set_date_last_expiration_reminder( $expiring_license->ID, date( 'Y-m-d h:i:s' ) );
+                Pronamic_WP_ExtensionsPlugin_License::set_date_last_expiration_reminder( $expiring_license->ID, date( 'Y-m-d h:i:s' ) );
 
 			} else {
 
