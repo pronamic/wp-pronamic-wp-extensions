@@ -544,8 +544,6 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
 				$this->generated_licenses[] = $license;
 
 				$license_ids[] = $license->ID;
-
-				Pronamic_WP_ExtensionsPlugin_License::log( $license->ID, __( 'License created', 'pronamic_wp_extensions' ) );
 			}
 		}
 

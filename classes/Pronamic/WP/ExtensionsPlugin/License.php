@@ -152,9 +152,13 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
 			if ( $is_license_new ) {
 
+				self::log( $this->ID, __( 'License created', 'pronamic_wp_extensions' ) );
+
 				do_action( 'pronamic_wp_extensions_license_created', $this->ID );
 
 			} else {
+
+				self::log( $this->ID, __( 'License updated', 'pronamic_wp_extensions' ) );
 
 				do_action( 'pronamic_wp_extensions_license_updated', $this->ID );
 
@@ -208,7 +212,14 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
 		$active_sites[ $site ] = array( 'activation_date' => $activation_date );
 
-		return update_post_meta( $license_id, self::ACTIVE_SITES_META_KEY, $active_sites );
+		$success = update_post_meta( $license_id, self::ACTIVE_SITES_META_KEY, $active_sites );
+
+		if ( $success ) {
+
+			self::log( $license_id, __( 'License activated on:', 'pronamic_wp_extensions' ) . ' ' . $site );
+		}
+
+		return $success;
 	}
 
 	/**
@@ -228,7 +239,14 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
 		unset( $active_sites[ $site ] );
 
-		return update_post_meta( $license_id, self::ACTIVE_SITES_META_KEY, $active_sites );
+		$success = update_post_meta( $license_id, self::ACTIVE_SITES_META_KEY, $active_sites );
+
+		if ( $success ) {
+
+			self::log( $license_id, __( 'License deactivated on:', 'pronamic_wp_extensions' ) . ' ' . $site );
+		}
+
+		return $success;
 	}
 
 	//////////////////////////////////////////////////

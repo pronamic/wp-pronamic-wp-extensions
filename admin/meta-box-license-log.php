@@ -20,7 +20,7 @@
 
 		<td>
 
-			<?php echo $log_entry['message']; ?>
+			<?php echo htmlspecialchars( $log_entry['message'] ); ?>
 
 		</td>
 	</tr>
