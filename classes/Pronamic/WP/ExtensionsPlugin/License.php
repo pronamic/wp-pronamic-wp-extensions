@@ -5,7 +5,7 @@
 class Pronamic_WP_ExtensionsPlugin_License {
 
 	/**
-	 * All fields possible for saving a post.
+	 * All fields available for saving a post.
 	 */
 	public $ID;
 	public $post_content;
