@@ -338,7 +338,46 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
     //////////////////////////////////////////////////
 
-    // TODO Add logging function here
+    /**
+     * Gets a license's log.
+     *
+     * @param int $license_id
+     *
+     * @return array $log
+     */
+    public static function get_log( $license_id ) {
+
+        $log = get_post_meta( $license_id, self::LOG_META_KEY, true );
+
+        if ( ! is_array( $log ) ) {
+
+            $log = array();
+        }
+
+        return $log;
+    }
+
+    /**
+     * Add a log entry.
+     *
+     * @param int    $license_id
+     * @param string $message
+     *
+     * @return bool $success
+     */
+    public static function log( $license_id, $message ) {
+
+        if ( is_string( $message ) && strlen( $message ) > 0 ) {
+
+            $log = self::get_log( $license_id );
+
+            $log[] = array( 'message' => $message, 'timestamp' => time() );
+
+            return update_post_meta( $license_id, self::LOG_META_KEY, $log );
+        }
+
+        return false;
+    }
 
     //////////////////////////////////////////////////
 

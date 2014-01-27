@@ -201,7 +201,8 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
     //////////////////////////////////////////////////
 
     /**
-     *
+     * Checks on a daily basis whether there are any expiring licenses within the next period of time. Sends an email
+     * to the license's author when the license is about to expire.
      */
     public function periodically_check_for_expired_licenses() {
 
@@ -254,12 +255,17 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
             $expire_day = date( 'Y-m-d', $expire_timestamp );
             $today      = date( 'Y-m-d' );
 
+            var_dump( $expire_day, $today );
+
             // Mail about the license expiring today
             if ( $expire_day === $today ) {
 
                 $template = 'public/emails/license-expiration-today-reminder.php';
 
                 $mail_subject = self::get_license_reminder_subject( $expiring_license->ID );
+
+                $log_success_message = __( 'License expires today reminder sent', 'pronamic_wp_extensions' );
+                $log_error_message   = __( 'License expires today reminder could not be sent', 'pronamic_wp_extensions' );
 
 //                Pronamic_WP_ExtensionsPlugin_License::set_license_expired_reminder_sent( $expiring_license->ID, true );
 
@@ -269,6 +275,9 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
                 $template = 'public/emails/license-expiration-reminder.php';
 
                 $mail_subject = self::get_license_reminder_in_advance_subject( $expiring_license->ID );
+
+                $log_success_message = __( 'License expiration reminder sent', 'pronamic_wp_extensions' );
+                $log_error_message   = __( 'License expiration reminder could not be sent', 'pronamic_wp_extensions' );
 
 //                Pronamic_WP_ExtensionsPlugin_License::set_date_last_expiration_reminder( $expiring_license->ID, date( 'Y-m-d h:i:s' ) );
 
@@ -281,8 +290,8 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 
             $this->plugin->display( $template, array( 'license' => $expiring_license, 'user' => $user ), true );
 
-            $mail_body    = ob_get_clean();
-            $mail_to      = $user->user_email;
+            $mail_body = ob_get_clean();
+            $mail_to   = $user->user_email;
 
             $mail_headers = array(
                 'From: ' . get_bloginfo( 'name' ) . ' <' . get_bloginfo( 'admin_email' ) . '>',
@@ -293,11 +302,9 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
             $success = wp_mail( $mail_to, $mail_subject, $mail_body, $mail_headers );
 
             if ( $success ) {
-
-                // TODO Log success
+                Pronamic_WP_ExtensionsPlugin_License::log( $expiring_license->ID, $log_success_message );
             } else {
-
-                // TODO Log failure
+                Pronamic_WP_ExtensionsPlugin_License::log( $expiring_license->ID, $log_error_message );
             }
         }
 

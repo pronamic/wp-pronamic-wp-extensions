@@ -544,6 +544,8 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
                 $this->generated_licenses[] = $license;
 
                 $license_ids[] = $license->ID;
+
+                Pronamic_WP_ExtensionsPlugin_License::log( $license->ID, __( 'License created', 'pronamic_wp_extensions' ) );
             }
         }
 
@@ -581,6 +583,8 @@ class Pronamic_WP_ExtensionsPlugin_LicensePostType {
         }
 
         Pronamic_WP_ExtensionsPlugin_License::set_end_date( $license->ID, $new_end_date );
+
+        Pronamic_WP_ExtensionsPlugin_License::log( $license->ID, __( 'License extended', 'pronamic_wp_extensions' ) );
 
         do_action( 'pronamic_wp_extensions_license_extended', $license->ID );
 
