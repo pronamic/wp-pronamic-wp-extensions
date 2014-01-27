@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pronamic WordPress Extensions\n"
-"POT-Creation-Date: 2014-01-23 15:39+0100\n"
-"PO-Revision-Date: 2014-01-23 16:07+0100\n"
+"POT-Creation-Date: 2014-01-27 09:22+0100\n"
+"PO-Revision-Date: 2014-01-27 09:29+0100\n"
 "Last-Translator: \n"
 "Language-Team: Pronamic <info@pronamic.eu>\n"
 "Language: nl_NL\n"
@@ -17,8 +17,8 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: admin/meta-box-bitbucket.php:12
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:94
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:292
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:95
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:357
 msgid "Bitbucket"
 msgstr "Bitbucket"
 
@@ -43,7 +43,7 @@ msgid "URL"
 msgstr "URL"
 
 #: admin/meta-box-github.php:12
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:283
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:348
 msgid "GitHub"
 msgstr "GitHub"
 
@@ -64,9 +64,26 @@ msgstr "Acties"
 msgid "Start date"
 msgstr "Begindatum"
 
-#: admin/meta-box-license-period.php:23
+#: admin/meta-box-license-period.php:24
 msgid "End date"
 msgstr "Einddatum"
+
+#: admin/meta-box-license-period.php:31
+#: admin/user-profile-license-keys.php:104
+msgid "Extend"
+msgstr "Verleng"
+
+#: admin/meta-box-license-period.php:44 admin/user-profile-license-keys.php:24
+msgid "The license was successfully added to your cart"
+msgstr "De licentiesleutel is toegevoegd aan uw winkelwagen"
+
+#: admin/meta-box-license-period.php:47 admin/user-profile-license-keys.php:27
+msgid "View cart"
+msgstr "Bekijk winkelwagen"
+
+#: admin/meta-box-license-period.php:57 admin/user-profile-license-keys.php:37
+msgid "The license could not be added to your cart"
+msgstr "De licentie kon niet worden toegevoegd aan uw winkelwagen"
 
 #: admin/meta-box-order-license-keys.php:5 public/license-keys.php:5
 #: public/emails/license-keys.php:5
@@ -79,7 +96,7 @@ msgid "Extended License Keys"
 msgstr "Verlengde Licentiesleutels"
 
 #: admin/meta-box-order-license-keys.php:34
-#: admin/user-profile-license-keys.php:146
+#: admin/user-profile-license-keys.php:141
 msgid "No license keys available"
 msgstr "Geen licentiesleutels beschikbaar"
 
@@ -100,7 +117,7 @@ msgid "Stable Version"
 msgstr "Stabiele Versie"
 
 #: admin/meta-box-version.php:20
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:319
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:384
 msgid "Downloads"
 msgstr "Downloads"
 
@@ -142,7 +159,7 @@ msgid "Reindex"
 msgstr "Herindexeren"
 
 #: admin/page-deploy.php:310
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:310
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:375
 msgid "Deploy"
 msgstr ""
 
@@ -152,20 +169,8 @@ msgstr ""
 msgid "License Keys"
 msgstr "Licentiesleutels"
 
-#: admin/user-profile-license-keys.php:24
-msgid "The license was successfully added to your cart"
-msgstr "De licentiesleutel is toegevoegd aan uw winkelwagen"
-
-#: admin/user-profile-license-keys.php:27
-msgid "View cart"
-msgstr "Bekijk winkelwagen"
-
-#: admin/user-profile-license-keys.php:37
-msgid "The license could not be added to your cart"
-msgstr "De licentie kon niet worden toegevoegd aan uw winkelwagen"
-
 #: admin/user-profile-license-keys.php:51
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:347
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:412
 #: public/license-keys.php:11 public/emails/license-keys.php:11
 msgid "Product"
 msgstr "Product"
@@ -175,8 +180,9 @@ msgstr "Product"
 msgid "License Key"
 msgstr "Licentiesleutel"
 
-#: admin/user-profile-license-keys.php:53 public/license-keys.php:13
-#: public/emails/license-keys.php:13
+#: admin/user-profile-license-keys.php:53
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:657
+#: public/license-keys.php:13 public/emails/license-keys.php:13
 msgid "Expiration Date"
 msgstr "Verloopdatum"
 
@@ -188,11 +194,7 @@ msgstr "Producttitel niet beschikbaar"
 msgid "Renew"
 msgstr "Verlengen"
 
-#: admin/user-profile-license-keys.php:104
-msgid "Extend"
-msgstr "Verleng"
-
-#: admin/user-profile-license-keys.php:118
+#: admin/user-profile-license-keys.php:113
 msgid "Expired"
 msgstr "Verlopen"
 
@@ -205,7 +207,7 @@ msgid "Rename"
 msgstr "Hernoemen"
 
 #: admin/zip-reindex-view.php:38
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:81
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:82
 msgid "Ignore"
 msgstr "Negeren"
 
@@ -213,55 +215,64 @@ msgstr "Negeren"
 msgid "Name"
 msgstr "Naam"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:56
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:57
 msgid "General"
 msgstr "Algemeen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:63
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:64
 msgid "Plugins Path"
 msgstr "Plugin Pad"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:72
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:73
 msgid "Themes Path"
 msgstr "Thema Pad"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:101
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:102
 msgid "Bitbucket Username"
 msgstr "Bitbucket Gebruikersnaam"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:113
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:114
 msgid "Bitbucket Password"
 msgstr "Bitbucket Wachtwoord"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:224
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:225
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:289
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:290
 msgid "Pronamic Extensions"
 msgstr "Pronamic Extensions"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:232
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:233
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:297
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:298
 msgid "Pronamic Deploy"
 msgstr ""
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:265
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:330
 msgid "Version"
 msgstr "Versie"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:274
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:339
 msgid "Sale"
 msgstr ""
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:301
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:366
 msgid "WordPress.org"
 msgstr "WordPress.org"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:329
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:394
 msgid "Period"
 msgstr "Periode"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:338
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:403
 msgid "Active Sites"
 msgstr "Actieve Websites"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:421
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:656
+msgid "User"
+msgstr "Gebruiker"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:430
+msgid "Log"
+msgstr "Log"
 
 #: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:120
 #: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:131
@@ -273,8 +284,8 @@ msgid "License"
 msgstr "Licentie"
 
 #: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:122
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:66
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:92
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:69
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:95
 msgid "Add New"
 msgstr "Nieuwe Toevoegen"
 
@@ -355,184 +366,289 @@ msgstr "Licentie"
 msgid "product-license"
 msgstr "product-licentie"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:353
-#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:393
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:358
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:398
 msgid "Extend License"
 msgstr "Licentie Verlengen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:644
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:548
+#, fuzzy
+msgid "License created"
+msgstr "Licentiesleutel"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:587
+#, fuzzy
+msgid "License extended"
+msgstr "Licentiesleutel"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:655
 msgid "Extensions"
 msgstr "Extensies"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:666
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:688
 msgid "Warning: No extension has been assigned to this license yet"
 msgstr "Waarschuwing: Er is nog geen extensie aan deze licentie toegewezen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:64
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:75
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:117
+msgid "License Reminder Emails"
+msgstr "Licentie Herinneringsemails"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:124
+msgid "Send license expired reminder"
+msgstr "Stuur licentie verlopen herinnering"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:135
+msgid "Send reminders in advance"
+msgstr "Stuur herinneringen vooraf"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:146
+msgid "Send reminders in advance when license expires in"
+msgstr "Stuur herinneringen vooraf wanneer de licentie verloopt in"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:158
+msgid "Reminder subject"
+msgstr "Herinnering onderwerp"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:170
+msgid "Reminder in advance subject"
+msgstr "Herinnering vooraf onderwerp"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:267
+msgid "License expires today reminder sent"
+msgstr "Licentie verloopt vandaag herinnering verstuurd"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:268
+msgid "License expires today reminder could not be sent"
+msgstr "Licentie verloop vandaag herinnering kon niet worden verstuurd"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:279
+msgid "License expiration reminder sent"
+msgstr "Aflopende licentie herinnering verstuurd"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:280
+msgid "License expiration reminder could not be sent"
+msgstr "Aflopende licentie herinnering kon niet worden verstuurd"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:373
+msgid "One day"
+msgstr "Eén dag"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:374
+msgid "Two days"
+msgstr "Twee dagen"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:375
+msgid "Three days"
+msgstr "Drie dagen"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:376
+msgid "Four days"
+msgstr "Vier dagen"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:377
+msgid "Five days"
+msgstr "Vijf dagen"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:378
+msgid "Six days"
+msgstr "Zes dagen"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:379
+msgid "One week"
+msgstr "Eén week"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:380
+msgid "Two weeks"
+msgstr "Twee weken"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:400
+#, php-format
+msgid "Your %s license expires today"
+msgstr "Uw %s licentie verloopt vandaag"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:419
+#, php-format
+msgid "Your %s license is about to expire"
+msgstr "Uw %s licentie verloop binnenkort"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:67
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:78
 msgid "Plugins"
 msgstr "Plugins"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:65
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:68
 msgid "Plugin"
 msgstr "Plugin"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:67
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:70
 msgid "Add New Plugin"
 msgstr "Nieuwe Plugin Toevoegen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:68
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:71
 msgid "Edit Plugin"
 msgstr "Plugin Bewerken"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:69
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:72
 msgid "New Plugin"
 msgstr "Nieuwe Plugin"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:70
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:73
 msgid "View Plugin"
 msgstr "Bekijk Plugin"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:71
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:74
 msgid "Search Plugins"
 msgstr "Plugins Zoeken"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:72
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:75
 msgid "No plugins found"
 msgstr "Geen plugins gevonden"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:73
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:76
 msgid "No plugins found in Trash"
 msgstr "Geen plugins gevonden in de prullenbak"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:74
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:77
 msgid "Parent Plugin:"
 msgstr "Bovenliggende Plugin:"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:90
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:101
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:93
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:104
 msgid "Themes"
 msgstr "Thema's"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:91
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:94
 msgid "Theme"
 msgstr "Thema"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:93
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:96
 msgid "Add New Theme"
 msgstr "Nieuw Thema Toevoegen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:94
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:97
 msgid "Edit Theme"
 msgstr "Thema Bewerken"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:95
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:98
 msgid "New Theme"
 msgstr "Nieuw Thema"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:96
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:99
 msgid "View Theme"
 msgstr "Bekijk Thema"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:97
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:100
 msgid "Search Themes"
 msgstr "Thema's Zoeken"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:98
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:101
 msgid "No themes found"
 msgstr "Geen thema's gevonden"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:99
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:102
 msgid "No themes found in Trash"
 msgstr "Geen thema's gevonden in de prullenbak"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:100
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:103
 msgid "Parent Theme:"
 msgstr "Bovenliggende Thema:"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:119
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:120
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:122
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:123
 msgid "Plugin Category"
 msgstr "Plugin Categorie"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:121
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:124
 msgid "Search Plugin Categories"
 msgstr "Plugin Categorieën Zoeken"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:122
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:125
 msgid "All Plugin Categories"
 msgstr "Alle Plugin Categorieën"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:123
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:126
 msgid "Parent Plugin Category"
 msgstr "Bovenliggende Plugin Categorie"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:124
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:127
 msgid "Parent Plugin Category:"
 msgstr "Bovenliggende Plugin Categorie"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:125
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:128
 msgid "Edit Plugin Category"
 msgstr "Plugin Categorie Bewerken"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:126
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:129
 msgid "Update Plugin Category"
 msgstr "Plugin Categorie Bijwerken"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:127
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:130
 msgid "Add New Plugin Category"
 msgstr "Nieuwe Plugin Categorie Toevoegen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:128
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:131
 msgid "New Plugin Category Name"
 msgstr "Nieuwe Plugin Categorie Naam"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:129
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:151
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:132
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:154
 msgid "Categories"
 msgstr "Categorieën"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:133
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:136
 msgid "plugin-category"
 msgstr "plugin-categorie"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:141
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:142
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:144
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:145
 msgid "Theme Category"
 msgstr "Thema Categorie"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:143
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:146
 msgid "Search Theme Categories"
 msgstr "Thema Categorieën Zoeken"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:144
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:147
 msgid "All Theme Categories"
 msgstr "Alle Thema Categorieën"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:145
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:148
 msgid "Parent Theme Category"
 msgstr "Bovenliggende Thema Categorie"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:146
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:149
 msgid "Parent Theme Category:"
 msgstr "Bovenliggende Thema Categorie:"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:147
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:150
 msgid "Edit Theme Category"
 msgstr "Thema Categorie Bewerken"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:148
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:151
 msgid "Update Theme Category"
 msgstr "Thema Categorie Bijwerken"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:149
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:152
 msgid "Add New Theme Category"
 msgstr "Nieuwe Thema Categorie Toevoegen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:150
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:153
 msgid "New Theme Category Name"
 msgstr "Nieuwe Thema Categorie Naam"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:155
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:158
 msgid "theme-category"
 msgstr "thema-categorie"
+
+#: public/emails/license-expiration-reminder.php:3
+msgid "The following license expires on"
+msgstr "De volgende licentie verloopt op"
+
+#: public/emails/license-expiration-reminder.php:14
+#: public/emails/license-expiration-today-reminder.php:14
+msgid "Click here to extend your license"
+msgstr "Klik hier om uw licentie te verlengen"
+
+#: public/emails/license-expiration-today-reminder.php:3
+msgid "The following license expires today"
+msgstr "De volgende licentie verloopt vandaag"
