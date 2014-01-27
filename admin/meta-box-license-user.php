@@ -3,29 +3,29 @@
 <?php wp_nonce_field( 'pronamic_wp_extension_save_meta_license_user', 'pronamic_wp_extensions_meta_license_user_nonce' ); ?>
 
 <table class="form-table">
-    <tbody>
+	<tbody>
 
-    <tr>
-        <td>
+	<tr>
+		<td>
 
-            <select name="_pronamic_extensions_license_user">
+			<select name="_pronamic_extensions_license_user">
 
-                <option value="0"></option>
+				<option value="0"></option>
 
-                <?php foreach ( $users as $user ) : ?>
+				<?php foreach ( $users as $user ) : ?>
 
-                <option value="<?php echo $user->ID; ?>" <?php selected( $user->ID, $user_of_license->ID ) ?>>
-                    <?php echo get_the_author_meta( 'display_name', $user->ID ); ?>
-                </option>
+				<option value="<?php echo $user->ID; ?>" <?php selected( $user->ID, $user_of_license->ID ) ?>>
+					<?php echo get_the_author_meta( 'display_name', $user->ID ); ?>
+				</option>
 
-                <?php endforeach; ?>
+				<?php endforeach; ?>
 
-            </select>
+			</select>
 
-        </td>
-    </tr>
+		</td>
+	</tr>
 
-    </tbody>
+	</tbody>
 </table>
 
 <?php endif; ?>

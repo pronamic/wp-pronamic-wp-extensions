@@ -5,37 +5,37 @@
 <h2><?php echo $license_type === 'generated' ? __( 'New License Keys', 'pronamic_wp_extensions' ) : __( 'Extended License Keys', 'pronamic_wp_extensions' ); ?></h2>
 
 <table class="form-table">
-    <tbody>
+	<tbody>
 
-    <?php if ( count( $type_licenses ) > 0 ) : ?>
+	<?php if ( count( $type_licenses ) > 0 ) : ?>
 
-    <?php foreach ( $type_licenses as $license ) : ?>
+	<?php foreach ( $type_licenses as $license ) : ?>
 
-    <tr>
+	<tr>
 
-        <th style="vertical-align: middle;">
-            <a href="<?php echo get_edit_post_link( $license->post_parent ); ?>"><?php echo get_the_title( $license->post_parent ); ?></a>
-        </th>
+		<th style="vertical-align: middle;">
+			<a href="<?php echo get_edit_post_link( $license->post_parent ); ?>"><?php echo get_the_title( $license->post_parent ); ?></a>
+		</th>
 
-        <td>
-            <a href="<?php echo get_edit_post_link( $license->ID ); ?>"><?php echo $license->post_title; ?></a>
-        </td>
+		<td>
+			<a href="<?php echo get_edit_post_link( $license->ID ); ?>"><?php echo $license->post_title; ?></a>
+		</td>
 
-        <td>
-            <?php echo Pronamic_WP_ExtensionsPlugin_License::get_end_date( $license->ID ); ?>
-        </td>
+		<td>
+			<?php echo Pronamic_WP_ExtensionsPlugin_License::get_end_date( $license->ID ); ?>
+		</td>
 
-    </tr>
+	</tr>
 
-    <?php endforeach; ?>
+	<?php endforeach; ?>
 
-    <?php else: ?>
+	<?php else: ?>
 
-    <?php _e( 'No license keys available', 'pronamic_wp_extensions' ); ?>
+	<?php _e( 'No license keys available', 'pronamic_wp_extensions' ); ?>
 
-    <?php endif; ?>
+	<?php endif; ?>
 
-    </tbody>
+	</tbody>
 </table>
 
 <?php endforeach; ?>

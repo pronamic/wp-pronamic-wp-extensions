@@ -33,9 +33,9 @@ $license_added_to_cart = filter_input( INPUT_GET, 'license_added_to_cart', FILTE
 <?php elseif ( $license_added_to_cart === 0 ) : ?>
 
 <div class="error">
-    <p>
-        <?php _e( 'The license could not be added to your cart', 'pronamic_wp_extensions' ); ?>
-    </p>
+	<p>
+		<?php _e( 'The license could not be added to your cart', 'pronamic_wp_extensions' ); ?>
+	</p>
 </div>
 
 <?php endif; ?>

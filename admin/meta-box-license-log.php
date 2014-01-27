@@ -1,35 +1,35 @@
 <?php if ( isset( $log ) && is_array( $log ) ) : ?>
 
 <table class="form-table">
-    <tbody>
+	<tbody>
 
-    <?php foreach ( $log as $log_entry ) : ?>
+	<?php foreach ( $log as $log_entry ) : ?>
 
-    <?php if ( isset( $log_entry['message'] ) ) : ?>
+	<?php if ( isset( $log_entry['message'] ) ) : ?>
 
-    <tr>
-        <td>
+	<tr>
+		<td>
 
-            <?php if ( isset( $log_entry['timestamp'] ) ) : ?>
+			<?php if ( isset( $log_entry['timestamp'] ) ) : ?>
 
-            <small><?php echo date( 'Y-m-d h:i:s', $log_entry['timestamp'] ); ?></small>
+			<small><?php echo date( 'Y-m-d h:i:s', $log_entry['timestamp'] ); ?></small>
 
-            <?php endif; ?>
+			<?php endif; ?>
 
-        </td>
+		</td>
 
-        <td>
+		<td>
 
-            <?php echo $log_entry['message']; ?>
+			<?php echo $log_entry['message']; ?>
 
-        </td>
-    </tr>
+		</td>
+	</tr>
 
-    <?php endif; ?>
+	<?php endif; ?>
 
-    <?php endforeach; ?>
+	<?php endforeach; ?>
 
-    </tbody>
+	</tbody>
 </table>
 
 <?php endif; ?>

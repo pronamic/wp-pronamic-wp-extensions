@@ -39,8 +39,8 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		add_action( 'save_post', array( $this, 'save_extension_meta_wp_org' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_license_period' ), 10, 2 );
 
-        add_filter( 'wp_insert_post_data', array( $this, 'save_extension_meta_license_product' ), 99, 2 );
-        add_filter( 'wp_insert_post_data', array( $this, 'save_extension_meta_license_user' ), 99, 2 );
+		add_filter( 'wp_insert_post_data', array( $this, 'save_extension_meta_license_product' ), 99, 2 );
+		add_filter( 'wp_insert_post_data', array( $this, 'save_extension_meta_license_user' ), 99, 2 );
 
 		add_action( 'admin_init', array( $this, 'maybe_deploy' ) );
 	}
@@ -58,7 +58,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			'__return_false', // callback
 			'pronamic_wp_extensions' // page
 		);
-                
+
 		add_settings_field(
 			'pronamic_wp_plugins_path', // id
 			__( 'Plugins Path', 'pronamic_wp_extensions' ), // title
@@ -67,7 +67,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			'pronamic_wp_extensions_general', // section
 			array( 'label_for' => 'pronamic_wp_plugins_path' ) // args
 		);
-                
+
 		add_settings_field(
 			'pronamic_wp_themes_path', // id
 			__( 'Themes Path', 'pronamic_wp_extensions' ), // title
@@ -76,7 +76,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			'pronamic_wp_extensions_general', // section
 			array( 'label_for' => 'pronamic_wp_themes_path' ) // args
 		);
-                
+
 		add_settings_field(
 			'pronamic_wp_ignore', // id
 			__( 'Ignore', 'pronamic_wp_extensions' ), // title
@@ -96,7 +96,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			'__return_false', // callback
 			'pronamic_wp_extensions' // page
 		);
-                
+
 		add_settings_field(
 			'pronamic_wp_bitbucket_username', // id
 			__( 'Bitbucket Username', 'pronamic_wp_extensions' ), // title
@@ -108,7 +108,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'classes'   => array( 'regular-text', 'code' ),
 			) // args
 		);
-                
+
 		add_settings_field(
 			'pronamic_wp_bitbucket_password', // id
 			__( 'Bitbucket Password', 'pronamic_wp_extensions' ), // title
@@ -121,14 +121,14 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			) // args
 		);
 
-        // Register
+		// Register
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_plugins_path' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_themes_path' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_ignore', array( $this, 'lines_to_array' ) );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_bitbucket_username' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_bitbucket_password' );
 
-        do_action( 'pronamic_wp_extensions_register_settings' );
+		do_action( 'pronamic_wp_extensions_register_settings' );
 	}
 
 	/**
@@ -188,67 +188,67 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		}
 	}
 
-    /**
-     * Input checkbox
-     *
-     * @param array $args
-     */
-    public function input_checkbox( $args ) {
-        $name = $args['label_for'];
+	/**
+	 * Input checkbox
+	 *
+	 * @param array $args
+	 */
+	public function input_checkbox( $args ) {
+		$name = $args['label_for'];
 
-        $classes = array();
-        if ( isset( $args['classes'] ) ) {
-            $classes = $args['classes'];
-        }
+		$classes = array();
+		if ( isset( $args['classes'] ) ) {
+			$classes = $args['classes'];
+		}
 
-        printf(
-            '<input name="%s" id="%s" type="checkbox" class="%s" %s />',
-            esc_attr( $name ),
-            esc_attr( $name ),
-            esc_attr( implode( ' ', $classes ) ),
-            checked( 'on', get_option( $name ), false )
-        );
-    }
+		printf(
+			'<input name="%s" id="%s" type="checkbox" class="%s" %s />',
+			esc_attr( $name ),
+			esc_attr( $name ),
+			esc_attr( implode( ' ', $classes ) ),
+			checked( 'on', get_option( $name ), false )
+		);
+	}
 
-    /**
-     * Input select
-     *
-     * @param array $args
-     */
-    public function input_select( $args ) {
-        $name = $args['label_for'];
+	/**
+	 * Input select
+	 *
+	 * @param array $args
+	 */
+	public function input_select( $args ) {
+		$name = $args['label_for'];
 
-        $classes = array();
-        if ( isset( $args['classes'] ) ) {
-            $classes = $args['classes'];
-        }
+		$classes = array();
+		if ( isset( $args['classes'] ) ) {
+			$classes = $args['classes'];
+		}
 
-        $options = array();
-        if ( isset( $args['options'] ) ) {
-            $options = $args['options'];
-        }
+		$options = array();
+		if ( isset( $args['options'] ) ) {
+			$options = $args['options'];
+		}
 
-        printf(
-            '<select name="%s" id="%s" class="%s">',
-            esc_attr( $name ),
-            esc_attr( $name ),
-            esc_attr( implode( ' ', $classes ) )
-        );
+		printf(
+			'<select name="%s" id="%s" class="%s">',
+			esc_attr( $name ),
+			esc_attr( $name ),
+			esc_attr( implode( ' ', $classes ) )
+		);
 
-        $current_value = get_option( $name );var_dump($current_value);
+		$current_value = get_option( $name );var_dump($current_value);
 
-        foreach ( $options as $option_key => $option ) {
+		foreach ( $options as $option_key => $option ) {
 
-            printf(
-                '<option value="%s" %s>%s</option>',
-                esc_attr( $option_key ),
-                selected( $option_key, $current_value, false ),
-                esc_attr( $option )
-            );
-        }
+			printf(
+				'<option value="%s" %s>%s</option>',
+				esc_attr( $option_key ),
+				selected( $option_key, $current_value, false ),
+				esc_attr( $option )
+			);
+		}
 
-        echo '</select>';
-    }
+		echo '</select>';
+	}
 
 	/**
 	 * Input path
@@ -389,153 +389,153 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			);
 		}
 
-        add_meta_box(
-            'pronamic_license_license_period',
-            __( 'Period', 'pronamic_wp_extensions' ),
-            array( $this, 'pronamic_license_license_period' ),
-            Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
-            'normal',
-            'high'
-        );
+		add_meta_box(
+			'pronamic_license_license_period',
+			__( 'Period', 'pronamic_wp_extensions' ),
+			array( $this, 'pronamic_license_license_period' ),
+			Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
+			'normal',
+			'high'
+		);
 
-        add_meta_box(
-            'pronamic_license_active_sites',
-            __( 'Active Sites', 'pronamic_wp_extensions' ),
-            array( $this, 'pronamic_license_active_sites' ),
-            Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
-            'normal',
-            'high'
-        );
+		add_meta_box(
+			'pronamic_license_active_sites',
+			__( 'Active Sites', 'pronamic_wp_extensions' ),
+			array( $this, 'pronamic_license_active_sites' ),
+			Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
+			'normal',
+			'high'
+		);
 
-        add_meta_box(
-            'pronamic_license_product',
-            __( 'Product', 'pronamic_wp_extensions' ),
-            array( $this, 'pronamic_license_product' ),
-            Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
-            'normal',
-            'high'
-        );
+		add_meta_box(
+			'pronamic_license_product',
+			__( 'Product', 'pronamic_wp_extensions' ),
+			array( $this, 'pronamic_license_product' ),
+			Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
+			'normal',
+			'high'
+		);
 
-        add_meta_box(
-            'pronamic_license_user_meta_box',
-            __( 'User', 'pronamic_wp_extensions' ),
-            array( $this, 'pronamic_license_user' ),
-            Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
-            'side',
-            'default'
-        );
+		add_meta_box(
+			'pronamic_license_user_meta_box',
+			__( 'User', 'pronamic_wp_extensions' ),
+			array( $this, 'pronamic_license_user' ),
+			Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
+			'side',
+			'default'
+		);
 
-        add_meta_box(
-            'pronamic_license_log_meta_box',
-            __( 'Log', 'pronamic_wp_extensions' ),
-            array( $this, 'pronamic_license_log' ),
-            Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
-            'side',
-            'default'
-        );
+		add_meta_box(
+			'pronamic_license_log_meta_box',
+			__( 'Log', 'pronamic_wp_extensions' ),
+			array( $this, 'pronamic_license_log' ),
+			Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
+			'side',
+			'default'
+		);
 	}
 
-    /**
+	/**
 	 * Meta box for version control
 	 */
-    public function pronamic_extension_version() {
+	public function pronamic_extension_version() {
 		$this->plugin->display( 'admin/meta-box-version.php' );
 	}
 
 	/**
 	 * Meta box for sale
 	 */
-    public function meta_box_extension_sale() {
+	public function meta_box_extension_sale() {
 		$this->plugin->display( 'admin/meta-box-sale.php' );
 	}
 
 	/**
 	 * Meta box for GitHub
 	 */
-    public function meta_box_extension_github() {
+	public function meta_box_extension_github() {
 		$this->plugin->display( 'admin/meta-box-github.php' );
 	}
 
 	/**
 	 * Meta box for Bitbucket
 	 */
-    public function meta_box_extension_bitbucket() {
+	public function meta_box_extension_bitbucket() {
 		$this->plugin->display( 'admin/meta-box-bitbucket.php' );
 	}
 
 	/**
 	 * Meta box for WordPress.org
 	 */
-    public function meta_box_extension_wp_org() {
+	public function meta_box_extension_wp_org() {
 		$this->plugin->display( 'admin/meta-box-wp-org.php' );
 	}
 
 	/**
 	 * Meta box for deploy
 	 */
-    public function meta_box_extension_deploy() {
+	public function meta_box_extension_deploy() {
 		$this->plugin->display( 'admin/meta-box-deploy.php' );
 	}
 	
 	/**
 	 * Meta box for downloads
 	 */
-    public function meta_box_extension_downloads() {
+	public function meta_box_extension_downloads() {
 		$this->plugin->display( 'admin/meta-box-downloads.php' );
 	}
 
-    /**
-     * Meta box for license key
-     *
-     * @param WP_Post $post
-     */
-    public function pronamic_license_license_period( $post ) {
-        $this->plugin->display( 'admin/meta-box-license-period.php', array( 'post' => $post ) );
-    }
+	/**
+	 * Meta box for license key
+	 *
+	 * @param WP_Post $post
+	 */
+	public function pronamic_license_license_period( $post ) {
+		$this->plugin->display( 'admin/meta-box-license-period.php', array( 'post' => $post ) );
+	}
 
-    /**
-     * Meta box for license status
-     *
-     * @param WP_Post $post
-     */
-    public function pronamic_license_active_sites( $post ) {
-        $this->plugin->display( 'admin/meta-box-license-active-sites.php', array( 'post' => $post ) );
-    }
+	/**
+	 * Meta box for license status
+	 *
+	 * @param WP_Post $post
+	 */
+	public function pronamic_license_active_sites( $post ) {
+		$this->plugin->display( 'admin/meta-box-license-active-sites.php', array( 'post' => $post ) );
+	}
 
-    /**
-     * Meta box for product reference
-     *
-     * @param WP_Post $post
-     */
-    public function pronamic_license_product( $post ) {
-        $this->plugin->display( 'admin/meta-box-license-product.php', array( 'post' => $post ) );
-    }
+	/**
+	 * Meta box for product reference
+	 *
+	 * @param WP_Post $post
+	 */
+	public function pronamic_license_product( $post ) {
+		$this->plugin->display( 'admin/meta-box-license-product.php', array( 'post' => $post ) );
+	}
 
-    /**
-     * Meta box for user reference
-     *
-     * @param WP_Post $post
-     */
-    public function pronamic_license_user( $post ) {
+	/**
+	 * Meta box for user reference
+	 *
+	 * @param WP_Post $post
+	 */
+	public function pronamic_license_user( $post ) {
 
-        $user_of_license = new WP_User( $post->post_author );
+		$user_of_license = new WP_User( $post->post_author );
 
-        $users = get_users();
+		$users = get_users();
 
-        $this->plugin->display( 'admin/meta-box-license-user.php', array( 'user_of_license' => $user_of_license, 'users' => $users ) );
-    }
+		$this->plugin->display( 'admin/meta-box-license-user.php', array( 'user_of_license' => $user_of_license, 'users' => $users ) );
+	}
 
-    /**
-     * Meta box for license log
-     *
-     * @param WP_Post $post
-     */
-    public function pronamic_license_log( $post ) {
+	/**
+	 * Meta box for license log
+	 *
+	 * @param WP_Post $post
+	 */
+	public function pronamic_license_log( $post ) {
 
-        $log = Pronamic_WP_ExtensionsPlugin_License::get_log( $post->ID );
+		$log = Pronamic_WP_ExtensionsPlugin_License::get_log( $post->ID );
 
-        $this->plugin->display( 'admin/meta-box-license-log.php', array( 'log' => $log ) );
-    }
+		$this->plugin->display( 'admin/meta-box-license-log.php', array( 'log' => $log ) );
+	}
 
 	//////////////////////////////////////////////////
 
@@ -634,51 +634,51 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		) );
 	}
 
-    public function save_extension_meta_license_period( $post_id, $post ) {
-        if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_license_period_nonce', 'pronamic_wp_extension_save_meta_license_period' ) )
-            return;
+	public function save_extension_meta_license_period( $post_id, $post ) {
+		if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_license_period_nonce', 'pronamic_wp_extension_save_meta_license_period' ) )
+			return;
 
-        $this->save_extension_meta( $post_id, array(
-            '_pronamic_extensions_license_start_date' => FILTER_SANITIZE_STRING,
-            '_pronamic_extensions_license_end_date'   => FILTER_SANITIZE_STRING,
-        ) );
-    }
+		$this->save_extension_meta( $post_id, array(
+			'_pronamic_extensions_license_start_date' => FILTER_SANITIZE_STRING,
+			'_pronamic_extensions_license_end_date'   => FILTER_SANITIZE_STRING,
+		) );
+	}
 
-    public function save_extension_meta_license_product( $data, $post_array ) {
+	public function save_extension_meta_license_product( $data, $post_array ) {
 
-        $post_id = $post_array['ID'];
+		$post_id = $post_array['ID'];
 
-        if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_license_product_nonce', 'pronamic_wp_extension_save_meta_license_product' ) )
-            return $data;
+		if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_license_product_nonce', 'pronamic_wp_extension_save_meta_license_product' ) )
+			return $data;
 
-        $product_id = filter_input( INPUT_POST, '_pronamic_extensions_license_product', FILTER_VALIDATE_INT );
+		$product_id = filter_input( INPUT_POST, '_pronamic_extensions_license_product', FILTER_VALIDATE_INT );
 
-        if ( is_int( $product_id ) ) {
+		if ( is_int( $product_id ) ) {
 
-            $data['post_parent'] = $product_id;
-        }
+			$data['post_parent'] = $product_id;
+		}
 
-        return $data;
-    }
+		return $data;
+	}
 
-    public function save_extension_meta_license_user( $data, $post_array ) {
+	public function save_extension_meta_license_user( $data, $post_array ) {
 
-        $data['post_author'] = null;
+		$data['post_author'] = null;
 
-        $post_id = $post_array['ID'];
+		$post_id = $post_array['ID'];
 
-        if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_license_product_nonce', 'pronamic_wp_extension_save_meta_license_product' ) )
-            return $data;
+		if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_license_product_nonce', 'pronamic_wp_extension_save_meta_license_product' ) )
+			return $data;
 
-        $user_id = filter_input( INPUT_POST, '_pronamic_extensions_license_user', FILTER_VALIDATE_INT );
+		$user_id = filter_input( INPUT_POST, '_pronamic_extensions_license_user', FILTER_VALIDATE_INT );
 
-        if ( is_int( $user_id ) ) {
+		if ( is_int( $user_id ) ) {
 
-            $data['post_author'] = $user_id;
-        }
+			$data['post_author'] = $user_id;
+		}
 
-        return $data;
-    }
+		return $data;
+	}
 
 	//////////////////////////////////////////////////
 
@@ -783,8 +783,8 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	 *
 	 * @since 1.0.0
 	 *
-     * @param Pronamic_WP_ExtensionsPlugin_Plugin $plugin
-     *
+	 * @param Pronamic_WP_ExtensionsPlugin_Plugin $plugin
+	 *
 	 * @return Pronamic_WP_ExtensionsPlugin_Admin object A single instance of this class.
 	 */
 	public static function get_instance( Pronamic_WP_ExtensionsPlugin_Plugin $plugin ) {

@@ -11,7 +11,7 @@
 <?php $woocommerce_cart = new WC_Cart(); ?>
 
 <a href="<?php echo Pronamic_WP_ExtensionsPlugin_License::generate_extend_url( $license->ID, $woocommerce_cart->get_cart_url() ); ?>">
-    <?php _e( 'Click here to extend your license', 'pronamic_wp_extensions' ); ?>.
+	<?php _e( 'Click here to extend your license', 'pronamic_wp_extensions' ); ?>.
 </a>
 
 <?php endif; ?>

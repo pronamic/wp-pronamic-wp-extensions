@@ -5,37 +5,37 @@
 <h2><?php echo $license_type === 'generated' ? __( 'New License Keys', 'pronamic_wp_extensions' ) : __( 'Extended License Keys', 'pronamic_wp_extensions' ); ?></h2>
 
 <table class="shop_table">
-    <thead>
+	<thead>
 
-    <tr>
-        <th><?php _e( 'Product', 'pronamic_wp_extensions' ); ?></th>
-        <th><?php _e( 'License Keys', 'pronamic_wp_extensions' ); ?></th>
-        <th><?php _e( 'Expiration Date', 'pronamic_wp_extensions' ); ?></th>
-    </tr>
+	<tr>
+		<th><?php _e( 'Product', 'pronamic_wp_extensions' ); ?></th>
+		<th><?php _e( 'License Keys', 'pronamic_wp_extensions' ); ?></th>
+		<th><?php _e( 'Expiration Date', 'pronamic_wp_extensions' ); ?></th>
+	</tr>
 
-    </thead>
+	</thead>
 
-    <tbody>
+	<tbody>
 
-    <?php foreach ( $type_licenses as $license ) : ?>
+	<?php foreach ( $type_licenses as $license ) : ?>
 
-    <tr>
-        <td>
-            <?php echo get_the_title( $license->post_parent ); ?>
-        </td>
+	<tr>
+		<td>
+			<?php echo get_the_title( $license->post_parent ); ?>
+		</td>
 
-        <td>
-            <?php echo $license->post_title; ?>
-        </td>
+		<td>
+			<?php echo $license->post_title; ?>
+		</td>
 
-        <td>
-            <?php echo Pronamic_WP_ExtensionsPlugin_License::get_end_date( $license->ID ); ?>
-        </td>
-    </tr>
+		<td>
+			<?php echo Pronamic_WP_ExtensionsPlugin_License::get_end_date( $license->ID ); ?>
+		</td>
+	</tr>
 
-    <?php endforeach; ?>
+	<?php endforeach; ?>
 
-    </tbody>
+	</tbody>
 </table>
 
 <?php endforeach; ?>

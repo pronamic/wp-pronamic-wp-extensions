@@ -38,13 +38,13 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 
 		add_action( 'init', array( $this, 'init' ) );
 
-        add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
+		add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
 
 		add_filter( 'posts_where', array( $this, 'posts_where' ), 10, 2 );
 
-        // License
-        Pronamic_WP_ExtensionsPlugin_LicensePostType::get_instance( $this );
-        Pronamic_WP_ExtensionsPlugin_LicenseReminder::get_instance( $this );
+		// License
+		Pronamic_WP_ExtensionsPlugin_LicensePostType::get_instance( $this );
+		Pronamic_WP_ExtensionsPlugin_LicenseReminder::get_instance( $this );
 
 		// API
 		$this->api = Pronamic_WP_ExtensionsPlugin_Api::get_instance( $this );
@@ -135,7 +135,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 				'query_var'    => true,
 				'rewrite'      => array( 'slug' => _x( 'plugin-category', 'slug', 'pronamic_wp_extensions' ) ),
 			)
-        );
+		);
 
 		register_taxonomy( 'pronamic_theme_category', 'pronamic_theme',
 			array(
@@ -157,17 +157,17 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 				'query_var'    => true,
 				'rewrite'      => array( 'slug' => _x( 'theme-category', 'slug', 'pronamic_wp_extensions' ) ),
 			)
-        );
+		);
 	}
 
 	//////////////////////////////////////////////////
 
-    /**
-     * Plugins loaded
-     */
-    public function plugins_loaded() {
-        load_plugin_textdomain( 'pronamic_wp_extensions', false, dirname( plugin_basename( $this->file ) ) . '/languages/' );
-    }
+	/**
+	 * Plugins loaded
+	 */
+	public function plugins_loaded() {
+		load_plugin_textdomain( 'pronamic_wp_extensions', false, dirname( plugin_basename( $this->file ) ) . '/languages/' );
+	}
 
 	//////////////////////////////////////////////////
 
@@ -176,8 +176,8 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 	 * 
 	 * @param string $where
 	 * @param WP_Query $query
-     *
-     * @return string $where
+	 *
+	 * @return string $where
 	 */
 	public function posts_where( $where, $query ) {
 		$titles = $query->get( 'post_title__in' );
@@ -198,32 +198,32 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 	 * Display/include the specified file
 	 * 
 	 * @param string $file
-     * @param array  $args                 (optional, defaults to an empty array)
-     * @param bool   $allow_theme_override (optional, defaults to false)
+	 * @param array  $args                 (optional, defaults to an empty array)
+	 * @param bool   $allow_theme_override (optional, defaults to false)
 	 */
 	public function display( $file, array $args = array(), $allow_theme_override = false ) {
 
-        if ( $allow_theme_override ) {
+		if ( $allow_theme_override ) {
 
-            $sub_folder = DIRECTORY_SEPARATOR . 'pronamic-wp-extensions' . DIRECTORY_SEPARATOR;
+			$sub_folder = DIRECTORY_SEPARATOR . 'pronamic-wp-extensions' . DIRECTORY_SEPARATOR;
 
-            $stylesheet_directory_file_path = get_stylesheet_directory() . $sub_folder . $file;
-            $template_directory_file_path   = get_template_directory()   . $sub_folder . $file;
+			$stylesheet_directory_file_path = get_stylesheet_directory() . $sub_folder . $file;
+			$template_directory_file_path   = get_template_directory()   . $sub_folder . $file;
 
-            if ( file_exists( $stylesheet_directory_file_path ) ) {
+			if ( file_exists( $stylesheet_directory_file_path ) ) {
 
-                $file_path = $stylesheet_directory_file_path;
+				$file_path = $stylesheet_directory_file_path;
 
-            } else if ( file_exists( $template_directory_file_path ) ) {
+			} else if ( file_exists( $template_directory_file_path ) ) {
 
-                $file_path = $template_directory_file_path;
-            }
-        }
+				$file_path = $template_directory_file_path;
+			}
+		}
 
-        if ( ! isset( $file_path ) ) {
+		if ( ! isset( $file_path ) ) {
 
-            $file_path = plugin_dir_path( $this->file ) . $file;
-        }
+			$file_path = plugin_dir_path( $this->file ) . $file;
+		}
 
 		extract( $args );
 
@@ -235,11 +235,11 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 	/**
 	 * Return an instance of this class.
 	 *
-     * @since 1.0.0
-     *
-     * @param string|bool $file
-     *
-     * @return Pronamic_WP_ExtensionsPlugin_Plugin A single instance of this class.
+	 * @since 1.0.0
+	 *
+	 * @param string|bool $file
+	 *
+	 * @return Pronamic_WP_ExtensionsPlugin_Plugin A single instance of this class.
 	 */
 	public static function get_instance( $file = false ) {
 		// If the single instance hasn't been set, set it now.
