@@ -371,7 +371,7 @@ class Pronamic_WP_ExtensionsPlugin_License {
 
             $log = self::get_log( $license_id );
 
-            $log[] = array( 'message' => $message, 'timestamp' => time() );
+            array_unshift( $log, array( 'message' => $message, 'timestamp' => time() ) );
 
             return update_post_meta( $license_id, self::LOG_META_KEY, $log );
         }

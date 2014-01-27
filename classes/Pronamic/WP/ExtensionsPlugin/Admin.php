@@ -424,6 +424,15 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
             'side',
             'default'
         );
+
+        add_meta_box(
+            'pronamic_license_log_meta_box',
+            __( 'Log', 'pronamic_wp_extensions' ),
+            array( $this, 'pronamic_license_log' ),
+            Pronamic_WP_ExtensionsPlugin_LicensePostType::POST_TYPE,
+            'side',
+            'default'
+        );
 	}
 
     /**
@@ -514,6 +523,18 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
         $users = get_users();
 
         $this->plugin->display( 'admin/meta-box-license-user.php', array( 'user_of_license' => $user_of_license, 'users' => $users ) );
+    }
+
+    /**
+     * Meta box for license log
+     *
+     * @param WP_Post $post
+     */
+    public function pronamic_license_log( $post ) {
+
+        $log = Pronamic_WP_ExtensionsPlugin_License::get_log( $post->ID );
+
+        $this->plugin->display( 'admin/meta-box-license-log.php', array( 'log' => $log ) );
     }
 
 	//////////////////////////////////////////////////
