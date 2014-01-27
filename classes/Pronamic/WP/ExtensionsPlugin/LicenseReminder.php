@@ -255,8 +255,6 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 			$expire_day = date( 'Y-m-d', $expire_timestamp );
 			$today      = date( 'Y-m-d' );
 
-			var_dump( $expire_day, $today );
-
 			// Mail about the license expiring today
 			if ( $expire_day === $today ) {
 
