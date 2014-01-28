@@ -25,7 +25,7 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 	//////////////////////////////////////////////////
 
 	/**
-	 * The cronjob's hook
+	 * The check for expired licenses cronjob hook
 	 *
 	 * @const string
 	 */
@@ -228,8 +228,8 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 	}
 
 	/**
-	 * Checks on a daily basis whether there are any expiring licenses within the next period of time. Sends an email
-	 * to the license's author when the license is about to expire.
+	 * Called by a daily cronjob to check whether there are any expiring licenses within the next period of time. Sends
+	 * an email to the license's author when the license is about to expire.
 	 */
 	public function check_for_expired_licenses() {
 
