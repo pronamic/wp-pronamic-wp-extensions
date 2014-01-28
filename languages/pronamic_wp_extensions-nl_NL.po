@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Pronamic WordPress Extensions\n"
-"POT-Creation-Date: 2014-01-27 09:22+0100\n"
-"PO-Revision-Date: 2014-01-27 09:29+0100\n"
+"POT-Creation-Date: 2014-01-28 16:56+0100\n"
+"PO-Revision-Date: 2014-01-28 16:57+0100\n"
 "Last-Translator: \n"
 "Language-Team: Pronamic <info@pronamic.eu>\n"
 "Language: nl_NL\n"
@@ -181,7 +181,7 @@ msgid "License Key"
 msgstr "Licentiesleutel"
 
 #: admin/user-profile-license-keys.php:53
-#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:657
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:655
 #: public/license-keys.php:13 public/emails/license-keys.php:13
 msgid "Expiration Date"
 msgstr "Verloopdatum"
@@ -266,13 +266,29 @@ msgid "Active Sites"
 msgstr "Actieve Websites"
 
 #: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:421
-#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:656
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:654
 msgid "User"
 msgstr "Gebruiker"
 
 #: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:430
 msgid "Log"
 msgstr "Log"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/License.php:155
+msgid "License created"
+msgstr "Licentie aangemaakt"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/License.php:161
+msgid "License updated"
+msgstr "Licentie bijgewerkt"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/License.php:219
+msgid "License activated on:"
+msgstr "Licentie geactiveerd op:"
+
+#: classes/Pronamic/WP/ExtensionsPlugin/License.php:246
+msgid "License deactivated on:"
+msgstr "Licentie gedeactiveerd op:"
 
 #: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:120
 #: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:131
@@ -371,102 +387,96 @@ msgstr "product-licentie"
 msgid "Extend License"
 msgstr "Licentie Verlengen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:548
-#, fuzzy
-msgid "License created"
-msgstr "Licentiesleutel"
-
-#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:587
-#, fuzzy
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:585
 msgid "License extended"
-msgstr "Licentiesleutel"
+msgstr "Licentie verlengd"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:655
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:653
 msgid "Extensions"
 msgstr "Extensies"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:688
+#: classes/Pronamic/WP/ExtensionsPlugin/LicensePostType.php:686
 msgid "Warning: No extension has been assigned to this license yet"
 msgstr "Waarschuwing: Er is nog geen extensie aan deze licentie toegewezen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:117
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:129
 msgid "License Reminder Emails"
 msgstr "Licentie Herinneringsemails"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:124
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:136
 msgid "Send license expired reminder"
 msgstr "Stuur licentie verlopen herinnering"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:135
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:147
 msgid "Send reminders in advance"
 msgstr "Stuur herinneringen vooraf"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:146
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:158
 msgid "Send reminders in advance when license expires in"
 msgstr "Stuur herinneringen vooraf wanneer de licentie verloopt in"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:158
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:170
 msgid "Reminder subject"
 msgstr "Herinnering onderwerp"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:170
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:182
 msgid "Reminder in advance subject"
 msgstr "Herinnering vooraf onderwerp"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:267
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:285
 msgid "License expires today reminder sent"
 msgstr "Licentie verloopt vandaag herinnering verstuurd"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:268
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:286
 msgid "License expires today reminder could not be sent"
 msgstr "Licentie verloop vandaag herinnering kon niet worden verstuurd"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:279
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:297
 msgid "License expiration reminder sent"
 msgstr "Aflopende licentie herinnering verstuurd"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:280
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:298
 msgid "License expiration reminder could not be sent"
 msgstr "Aflopende licentie herinnering kon niet worden verstuurd"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:373
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:388
 msgid "One day"
 msgstr "Eén dag"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:374
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:389
 msgid "Two days"
 msgstr "Twee dagen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:375
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:390
 msgid "Three days"
 msgstr "Drie dagen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:376
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:391
 msgid "Four days"
 msgstr "Vier dagen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:377
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:392
 msgid "Five days"
 msgstr "Vijf dagen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:378
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:393
 msgid "Six days"
 msgstr "Zes dagen"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:379
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:394
 msgid "One week"
 msgstr "Eén week"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:380
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:395
 msgid "Two weeks"
 msgstr "Twee weken"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:400
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:415
 #, php-format
 msgid "Your %s license expires today"
 msgstr "Uw %s licentie verloopt vandaag"
 
-#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:419
+#: classes/Pronamic/WP/ExtensionsPlugin/LicenseReminder.php:434
 #, php-format
 msgid "Your %s license is about to expire"
 msgstr "Uw %s licentie verloop binnenkort"
