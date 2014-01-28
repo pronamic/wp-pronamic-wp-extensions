@@ -235,7 +235,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			esc_attr( implode( ' ', $classes ) )
 		);
 
-		$current_value = get_option( $name );var_dump($current_value);
+		$current_value = get_option( $name );
 
 		foreach ( $options as $option_key => $option ) {
 

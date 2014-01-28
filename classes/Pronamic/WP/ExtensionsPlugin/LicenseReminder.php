@@ -16,6 +16,24 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 	//////////////////////////////////////////////////
 
 	/**
+	 * Extensions plugin.
+	 *
+	 * @var Pronamic_WP_ExtensionsPlugin_Plugin
+	 */
+	private $plugin;
+
+	//////////////////////////////////////////////////
+
+	/**
+	 * The cronjob's hook
+	 *
+	 * @const string
+	 */
+	const CHECK_FOR_EXPIRED_LICENSES_CRONJOB = 'pronamic_wp_extensions_check_for_expired_licenses';
+
+	//////////////////////////////////////////////////
+
+	/**
 	 * Meta key that stores whether or not the license expired message was sent.
 	 *
 	 * @const string
@@ -82,13 +100,6 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 	//////////////////////////////////////////////////
 
 	/**
-	 * Extensions plugin.
-	 *
-	 * @var Pronamic_WP_ExtensionsPlugin_Plugin
-	 */
-	private $plugin;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param Pronamic_WP_ExtensionsPlugin_Plugin $plugin
@@ -99,7 +110,8 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 
 		add_action( 'pronamic_wp_extensions_register_settings', array( $this, 'register_settings' ) );
 
-		add_action( 'admin_init', array( $this, 'periodically_check_for_expired_licenses' ) );
+		add_action( 'admin_init', array( $this, 'schedule_check_for_expired_licenses' ) );
+		add_action( self::CHECK_FOR_EXPIRED_LICENSES_CRONJOB, array( $this, 'check_for_expired_licenses' ) );
 
 		add_action( 'pronamic_wp_extensions_license_created' , array( $this, 'init_license_meta_data' ) );
 		add_action( 'pronamic_wp_extensions_license_extended', array( $this, 'init_license_meta_data' ) );
@@ -199,19 +211,27 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 	}
 
 	//////////////////////////////////////////////////
+	// Check for expired licenses cron
+	//////////////////////////////////////////////////
+
+	/**
+	 * Schedule a cronjob for executing the check_for_expired_licenses() method on a daily basis.
+	 */
+	public function schedule_check_for_expired_licenses() {
+
+		if ( is_numeric( wp_next_scheduled( self::CHECK_FOR_EXPIRED_LICENSES_CRONJOB ) ) ) {
+
+			return;
+		}
+
+		wp_schedule_event( strtotime( 'midnight' ), 'daily', self::CHECK_FOR_EXPIRED_LICENSES_CRONJOB );
+	}
 
 	/**
 	 * Checks on a daily basis whether there are any expiring licenses within the next period of time. Sends an email
 	 * to the license's author when the license is about to expire.
 	 */
-	public function periodically_check_for_expired_licenses() {
-
-		// Should be 40 characters or less
-		$transient = 'pronamic_extensions_periodic_license_check';
-
-		if ( get_site_transient( $transient ) !== false ) {
-			return;
-		}
+	public function check_for_expired_licenses() {
 
 		if ( ! self::get_send_license_expired_reminder() &&
 			 ! self::get_send_license_reminders_in_advance() ) {
@@ -305,9 +325,6 @@ class Pronamic_WP_ExtensionsPlugin_LicenseReminder {
 				Pronamic_WP_ExtensionsPlugin_License::log( $expiring_license->ID, $log_error_message );
 			}
 		}
-
-		// Check licenses on a daily basis
-		set_site_transient( $transient, true, 60 * 60 * 24 );
 	}
 
 	//////////////////////////////////////////////////
