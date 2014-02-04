@@ -18,7 +18,7 @@ function rename_root( $file, $old_root ) {
 	$old_root_length = strlen( $old_root );
 
 	if ( substr( $file, 0, $old_root_length ) == $old_root ) {
-		$file = substr( $file , $old_root_length );
+    	$file = substr( $file , $old_root_length );
 	}
 	
 	return $file;
