@@ -13,9 +13,20 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	//////////////////////////////////////////////////
 
 	/**
+	 * Extensions plugin
+	 * 
+	 * @var Pronamic_WP_ExtensionsPlugin_Plugin
+	 */
+	private $plugin;
+
+	//////////////////////////////////////////////////
+
+	/**
 	 * Constructs and initialize Pronamic WordPress Extensions API object
 	 */
-	private function __construct() {
+	private function __construct( Pronamic_WP_ExtensionsPlugin_Plugin $plugin ) {
+		$this->plugin = $plugin;
+
 		add_action( 'init', array( $this, 'init' ) );
 		
 		add_action( 'query_vars', array( $this, 'query_vars' ) );
@@ -131,7 +142,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 							),
 						),
 					) );
-						
+
 					$theme_names = array();
 					foreach ( $theme_posts as $post ) {
 						$theme_names[$post->post_title] = $post;
@@ -304,10 +315,10 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	 *
 	 * @return object A single instance of this class.
 	 */
-	public static function get_instance() {
+	public static function get_instance( Pronamic_WP_ExtensionsPlugin_Plugin $plugin ) {
 		// If the single instance hasn't been set, set it now.
 		if ( null == self::$instance ) {
-			self::$instance = new self();
+			self::$instance = new self( $plugin );
 		}
 	
 		return self::$instance;

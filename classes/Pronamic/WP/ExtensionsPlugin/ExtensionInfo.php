@@ -88,7 +88,7 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
         if ( null === $version )
             $version = $this->get_version();
 
-        $url = home_url( $this->get_downloads_path() . '/' . $this->post->post_name . '.' . $version . '.zip' );
+        $url = $this->get_downloads_url() . '.' . $version . '.zip';
 
         return $url;
     }
@@ -126,25 +126,29 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
      * @return string
      */
     public function get_downloads_path() {
-		$path = false;
+    	global $pronamic_wp_extensions_plugin;
 
-		switch ( $this->post->post_type ) {
-			case 'pronamic_plugin':
-				$path = get_option( 'pronamic_wp_plugins_path' );
+    	$path = $pronamic_wp_extensions_plugin->get_downloads_path( $this->post->post_type );
 
-				break;
-			case 'pronamic_theme':
-				$path = get_option( 'pronamic_wp_themes_path' );
+    	$path = trailingslashit( $path ) . $this->post->post_name;
 
-				break;
-		}
+    	return $path;
+    }
 
-		$path = $path . '/' . $this->post->post_name;
+    /**
+     * Get downloads path
+     * 
+     * @return string
+     */
+    public function get_downloads_url() {
+    	global $pronamic_wp_extensions_plugin;
 
-		return $path;
-	}
+    	$url = $pronamic_wp_extensions_plugin->get_downloads_url( $this->post->post_type );
 
-	//////////////////////////////////////////////////
+    	$url = trailingslashit( $url ) . $this->post->post_name;
+    	
+    	return $url;
+    }	
 
     /**
      * Get downloads
@@ -156,7 +160,7 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
 
 		$downloads_path = $this->get_downloads_path();
 
-    	$glob_pattern = ABSPATH . DIRECTORY_SEPARATOR . $downloads_path . DIRECTORY_SEPARATOR . '*.zip';
+    	$glob_pattern = $downloads_path . DIRECTORY_SEPARATOR . '*.zip';
 
     	$glob = glob( $glob_pattern );
 

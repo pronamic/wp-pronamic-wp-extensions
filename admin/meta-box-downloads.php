@@ -4,6 +4,8 @@ global $post;
 
 $extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $post );
 
+$downloads_url = trailingslashit( $extension->get_downloads_url() );
+
 $downloads = $extension->get_downloads();
 
 if ( empty( $downloads ) ) : ?>
@@ -29,7 +31,7 @@ if ( empty( $downloads ) ) : ?>
 				<tr>
 					<?php 
 
-					$url = home_url( $extension->get_downloads_path() . '/' . $download );
+					$url = $downloads_url . $download;
 
 					?>
 					<td>

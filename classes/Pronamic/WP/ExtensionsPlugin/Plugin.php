@@ -41,7 +41,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 		add_filter( 'posts_where', array( $this, 'posts_where' ), 10, 2 );
 
 		// API
-		$this->api = Pronamic_WP_ExtensionsPlugin_Api::get_instance();
+		$this->api = Pronamic_WP_ExtensionsPlugin_Api::get_instance( $this );
 		
 		// Admin
 		if ( is_admin() ) {
@@ -186,6 +186,54 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 		extract( $args );
 
 		include plugin_dir_path( $this->file ) . $file; 
+	}
+
+	//////////////////////////////////////////////////
+
+    /**
+     * Get download path
+     * 
+     * @return string
+     */
+    public function get_downloads_path( $type ) {
+		$path = false;
+
+		switch ( $type ) {
+			case 'pronamic_plugin':
+				$path = get_option( 'pronamic_wp_plugins_path' );
+
+				break;
+			case 'pronamic_theme':
+				$path = get_option( 'pronamic_wp_themes_path' );
+
+				break;
+		}
+		
+		$path = ABSPATH . DIRECTORY_SEPARATOR . $path;
+
+		return $path;
+	}
+
+    /**
+     * Get download URL
+     * 
+     * @return string
+     */
+    public function get_downloads_url( $type ) {
+		$url = false;
+
+		switch ( $type ) {
+			case 'pronamic_plugin':
+				$url = get_option( 'pronamic_wp_plugins_url' );
+
+				break;
+			case 'pronamic_theme':
+				$url = get_option( 'pronamic_wp_themes_url' );
+
+				break;
+		}
+
+		return $url;
 	}
 
 	//////////////////////////////////////////////////

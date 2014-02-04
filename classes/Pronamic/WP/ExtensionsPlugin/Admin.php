@@ -65,12 +65,36 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		);
                 
 		add_settings_field(
+			'pronamic_wp_plugins_url', // id
+			__( 'Plugins URL', 'pronamic_wp_extensions' ), // title
+			array( $this, 'input_text' ), // callback
+			'pronamic_wp_extensions', // page
+			'pronamic_wp_extensions_general', // section
+			array(
+				'label_for' => 'pronamic_wp_plugins_url',
+				'classes'   => array( 'regular-text', 'code' ),
+			) // args
+		);
+                
+		add_settings_field(
 			'pronamic_wp_themes_path', // id
 			__( 'Themes Path', 'pronamic_wp_extensions' ), // title
 			array( $this, 'input_path' ), // callback
 			'pronamic_wp_extensions', // page
 			'pronamic_wp_extensions_general', // section
 			array( 'label_for' => 'pronamic_wp_themes_path' ) // args
+		);
+                
+		add_settings_field(
+			'pronamic_wp_themes_url', // id
+			__( 'Themes URL', 'pronamic_wp_extensions' ), // title
+			array( $this, 'input_text' ), // callback
+			'pronamic_wp_extensions', // page
+			'pronamic_wp_extensions_general', // section
+			array(
+				'label_for' => 'pronamic_wp_themes_url',
+				'classes'   => array( 'regular-text', 'code' ),
+			) // args
 		);
                 
 		add_settings_field(
@@ -119,7 +143,9 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 
 		// Register
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_plugins_path' );
+		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_plugins_url' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_themes_path' );
+		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_themes_url' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_ignore', array( $this, 'lines_to_array' ) );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_bitbucket_username' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_bitbucket_password' );
