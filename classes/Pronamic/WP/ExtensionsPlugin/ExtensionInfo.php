@@ -88,7 +88,7 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
         if ( null === $version )
             $version = $this->get_version();
 
-        $url = $this->get_downloads_url() . '.' . $version . '.zip';
+        $url = trailingslashit( $this->get_downloads_url() ) . $this->post->post_name . '.' . $version . '.zip';
 
         return $url;
     }
@@ -146,7 +146,7 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
     	$url = $pronamic_wp_extensions_plugin->get_downloads_url( $this->post->post_type );
 
     	$url = trailingslashit( $url ) . $this->post->post_name;
-    	
+
     	return $url;
     }	
 
