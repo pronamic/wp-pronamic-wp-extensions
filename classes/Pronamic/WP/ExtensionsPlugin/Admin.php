@@ -451,6 +451,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		$this->save_extension_meta( $post_id, array(
 			'_pronamic_extension_stable_version'  => FILTER_SANITIZE_STRING,
 			'_pronamic_extension_total_downloads' => FILTER_SANITIZE_STRING,
+			'_pronamic_extension_is_private'      => FILTER_VALIDATE_BOOLEAN,
 		) );
 	}
 

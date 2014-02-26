@@ -23,5 +23,15 @@ wp_nonce_field( 'pronamic_wp_extension_save_meta_version', 'pronamic_wp_extensio
 				<input id="pronamic_extension_total_downloads" name="_pronamic_extension_total_downloads" value="<?php echo esc_attr( get_post_meta( $post->ID, '_pronamic_extension_total_downloads', true ) ); ?>" type="text" size="25" class="regular-text" />
 			</td>
 		</tr>
+		<tr>
+			<th scope="row">
+				<label for="pronamic_extension_is_private"><?php _e( ' Access level', 'pronamic_wp_extensions' ); ?></label>
+			</th>
+			<td>
+				<input id="pronamic_extension_is_private" name="_pronamic_extension_is_private" value="yes" <?php checked( get_post_meta( $post->ID, '_pronamic_extension_is_private', true ) ); ?>" type="checkbox" />
+
+				<label for="pronamic_extension_is_private">This is a private extension</label>
+			</td>
+		</tr>
 	</tbody>
 </table>
