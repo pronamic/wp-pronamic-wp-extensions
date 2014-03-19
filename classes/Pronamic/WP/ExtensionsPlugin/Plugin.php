@@ -79,7 +79,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'rewrite'            => array( 'slug' => 'plugins' ),
-			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields' ),
+			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments' ),
 		) );
 	
 		register_post_type( 'pronamic_theme', array(
@@ -105,7 +105,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'rewrite'            => array( 'slug' => 'themes' ),
-			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields' ),
+			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments' ),
 		) );
 		
 		// Taxonomies
