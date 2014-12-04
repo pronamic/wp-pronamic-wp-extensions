@@ -79,7 +79,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'rewrite'            => array( 'slug' => 'plugins' ),
-			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments' ),
+			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments', 'pronamic-extension' ),
 			'menu_icon'          => 'dashicons-clipboard',
 		) );
 	
@@ -106,7 +106,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'rewrite'            => array( 'slug' => 'themes' ),
-			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments' ),
+			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments', 'pronamic-extension' ),
 			'menu_icon'          => 'dashicons-clipboard',
 		) );
 		

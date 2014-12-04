@@ -262,10 +262,8 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	/**
 	 * Add meta boxes
 	 */
-	public function add_meta_boxes() {
-		$screens = array( 'pronamic_plugin', 'pronamic_theme' );
-
-		foreach ( $screens as $screen ) {
+	public function add_meta_boxes( $post_type ) {
+		if ( post_type_supports( $post_type, 'pronamic-extension' ) ) {
 			add_meta_box(
 				'pronamic_extension_version',
 				__( 'Version', 'pronamic_wp_extensions' ),
