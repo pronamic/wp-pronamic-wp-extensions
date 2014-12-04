@@ -312,15 +312,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'normal',
 				'high'
 			);
-
-			add_meta_box(
-				'pronamic_extension_deploy',
-				__( 'Deploy', 'pronamic_wp_extensions' ),
-				array( $this, 'meta_box_extension_deploy' ),
-				$screen,
-				'normal',
-				'high'
-			);
 	
 			add_meta_box(
 				'pronamic_extension_downloads',
@@ -368,13 +359,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		$this->plugin->display( 'admin/meta-box-wp-org.php' );
 	}
 
-	/**
-	 * Meta box for deploy
-	 */
-	function meta_box_extension_deploy() {
-		$this->plugin->display( 'admin/meta-box-deploy.php' );
-	}
-	
 	/**
 	 * Meta box for downloads
 	 */
@@ -478,102 +462,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		$this->save_extension_meta( $post_id, array(
 			'_pronamic_extension_wp_org_slug' => FILTER_SANITIZE_STRING,
 		) );
-	}
-
-	//////////////////////////////////////////////////
-
-	/**
-	 * Maybe deploy
-	 */
-	public function maybe_deploy() {
-		if ( filter_has_var( INPUT_POST, 'pronamic_extension_deploy' ) ) {
-			$post_id = filter_input( INPUT_POST, 'post_ID', FILTER_SANITIZE_STRING );
-
-			$post    = get_post( $post_id );
-
-			$version = get_post_meta( $post_id, '_pronamic_extension_stable_version', true );
-			
-			$deploy_path = false;
-			
-			switch ( $post->post_type ) {
-				case 'pronamic_plugin':
-					$deploy_path = ABSPATH . get_option( 'pronamic_wp_plugins_path' ) . DIRECTORY_SEPARATOR . $post->post_name;
-			
-					break;
-				case 'pronamic_theme':
-					$deploy_path = ABSPATH . get_option( 'pronamic_wp_themes_path' ) . DIRECTORY_SEPARATOR . $post->post_name;
-			
-					break;
-			}
-			
-			$download_url = sprintf(
-				'https://%s:%s@bitbucket.org/%s/%s/get/%s.zip',
-				get_option( 'pronamic_wp_bitbucket_username' ),
-				get_option( 'pronamic_wp_bitbucket_password' ),
-				get_post_meta( $post->ID, '_pronamic_extension_bitbucket_user', true ),
-				get_post_meta( $post->ID, '_pronamic_extension_bitbucket_repo', true ),
-				$version
-			);
-			
-			$deploy_file = $deploy_path . DIRECTORY_SEPARATOR . $post->post_name . '.' . $version . '.zip';
-			
-			if ( filter_has_var( INPUT_POST, 'pronamic_extension_deploy' ) ) {
-				// Download
-				$tmpfname = wp_tempnam( $download_url );
-			
-				$response = wp_remote_get( $download_url, array( 'timeout' => 300, 'stream' => true, 'filename' => $tmpfname ) );
-
-				if ( is_wp_error( $response ) ) {
-					unlink( $tmpfname );
-					
-					var_dump( $response );
-
-					exit;
-				}
-
-				if ( 200 != wp_remote_retrieve_response_code( $response ) ) {
-					unlink( $tmpfname );
-					
-					var_dump( $response );
-					
-					exit;
-				}
-			
-				$zip = new ZipArchive();
-			
-				$result = $zip->open( $tmpfname );
-					
-				if ( $result === true ) {
-					$old_dir = $zip->getNameIndex( 0 );
-					$new_dir = $post->post_name . '/';
-
-					$i = 0;
-					while ( $item_name = $zip->getNameIndex( $i ) ) {					
-						$new_name = str_replace( $old_dir, $new_dir, $item_name );
-
-						$zip->renameIndex( $i, $new_name );
-
-						$i++;
-					}
-
-					$zip->close();
-				} else {
-					echo 'failed, code:' . $res;
-				}
-
-				$moved = rename( $tmpfname, $deploy_file );
-				
-				$url = add_query_arg( array(
-					'post'     => $post_id,
-					'action'   => 'edit',
-					'deployed' => $moved ? 'true' : 'false',
-				) );
-				
-				wp_redirect( $url );
-				
-				exit;
-			}
-		}
 	}
 
 	//////////////////////////////////////////////////
