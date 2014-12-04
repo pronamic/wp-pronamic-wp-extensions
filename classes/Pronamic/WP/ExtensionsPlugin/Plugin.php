@@ -193,30 +193,6 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 	//////////////////////////////////////////////////
 
     /**
-     * Get download path
-     * 
-     * @return string
-     */
-    public function get_downloads_path( $type ) {
-		$path = false;
-
-		switch ( $type ) {
-			case 'pronamic_plugin':
-				$path = get_option( 'pronamic_wp_plugins_path' );
-
-				break;
-			case 'pronamic_theme':
-				$path = get_option( 'pronamic_wp_themes_path' );
-
-				break;
-		}
-		
-		$path = ABSPATH . DIRECTORY_SEPARATOR . $path;
-
-		return $path;
-	}
-
-    /**
      * Get download URL
      * 
      * @return string

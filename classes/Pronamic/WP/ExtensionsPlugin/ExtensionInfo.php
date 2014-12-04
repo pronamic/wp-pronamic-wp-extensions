@@ -125,21 +125,6 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
      * 
      * @return string
      */
-    public function get_downloads_path() {
-    	global $pronamic_wp_extensions_plugin;
-
-    	$path = $pronamic_wp_extensions_plugin->get_downloads_path( $this->post->post_type );
-
-    	$path = trailingslashit( $path ) . $this->post->post_name;
-
-    	return $path;
-    }
-
-    /**
-     * Get downloads path
-     * 
-     * @return string
-     */
     public function get_downloads_url() {
     	global $pronamic_wp_extensions_plugin;
 
@@ -148,35 +133,5 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
     	$url = trailingslashit( $url ) . $this->post->post_name;
 
     	return $url;
-    }	
-
-    /**
-     * Get downloads
-     * 
-     * @return array
-     */
-    public function get_downloads() {
-    	$download = array();
-
-		$downloads_path = $this->get_downloads_path();
-
-    	$glob_pattern = $downloads_path . DIRECTORY_SEPARATOR . '*.zip';
-
-    	$glob = glob( $glob_pattern );
-
-    	$files = $glob == false ? array() : $glob;
-
-    	$file_versions = array();
-
-    	foreach ( $files as $file ) {
-    		$file_versions[] = basename( $file );
-    	}
-
-    	// @see https://github.com/afragen/github-updater/blob/1.7.4/classes/class-theme-updater.php
-    	usort( $file_versions, 'version_compare' );
-
-    	$downloads = $file_versions;
-
-    	return $downloads;
     }
 }
