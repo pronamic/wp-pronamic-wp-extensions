@@ -85,8 +85,9 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
      */
     public function get_download_link( $version = null ) {
         // If no version supplied, get the latest
-        if ( null === $version )
+        if ( null === $version ) {
             $version = $this->get_version();
+        }
 
         $url = trailingslashit( $this->get_downloads_url() ) . $this->post->post_name . '.' . $version . '.zip';
 
