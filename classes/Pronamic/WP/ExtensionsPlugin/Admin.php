@@ -37,8 +37,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		add_action( 'save_post', array( $this, 'save_extension_meta_github' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_bitbucket' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_wp_org' ), 10, 2 );
-
-		add_action( 'admin_init', array( $this, 'maybe_deploy' ) );
 	}
 
 	//////////////////////////////////////////////////
