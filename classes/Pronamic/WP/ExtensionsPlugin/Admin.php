@@ -54,15 +54,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 		);
                 
 		add_settings_field(
-			'pronamic_wp_plugins_path', // id
-			__( 'Plugins Path', 'pronamic_wp_extensions' ), // title
-			array( $this, 'input_path' ), // callback
-			'pronamic_wp_extensions', // page
-			'pronamic_wp_extensions_general', // section
-			array( 'label_for' => 'pronamic_wp_plugins_path' ) // args
-		);
-                
-		add_settings_field(
 			'pronamic_wp_plugins_url', // id
 			__( 'Plugins URL', 'pronamic_wp_extensions' ), // title
 			array( $this, 'input_text' ), // callback
@@ -72,15 +63,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'label_for' => 'pronamic_wp_plugins_url',
 				'classes'   => array( 'regular-text', 'code' ),
 			) // args
-		);
-                
-		add_settings_field(
-			'pronamic_wp_themes_path', // id
-			__( 'Themes Path', 'pronamic_wp_extensions' ), // title
-			array( $this, 'input_path' ), // callback
-			'pronamic_wp_extensions', // page
-			'pronamic_wp_extensions_general', // section
-			array( 'label_for' => 'pronamic_wp_themes_path' ) // args
 		);
                 
 		add_settings_field(
@@ -95,46 +77,9 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			) // args
 		);
 
-		// Settings - Bitbucket
-		add_settings_section(
-			'pronamic_wp_extensions_bitbucket', // id
-			__( 'Bitbucket', 'pronamic_wp_extensions' ), // title
-			'__return_false', // callback
-			'pronamic_wp_extensions' // page
-		);
-                
-		add_settings_field(
-			'pronamic_wp_bitbucket_username', // id
-			__( 'Bitbucket Username', 'pronamic_wp_extensions' ), // title
-			array( $this, 'input_text' ), // callback
-			'pronamic_wp_extensions', // page
-			'pronamic_wp_extensions_bitbucket', // section
-			array(
-				'label_for' => 'pronamic_wp_bitbucket_username',
-				'classes'   => array( 'regular-text', 'code' ),
-			) // args
-		);
-                
-		add_settings_field(
-			'pronamic_wp_bitbucket_password', // id
-			__( 'Bitbucket Password', 'pronamic_wp_extensions' ), // title
-			array( $this, 'input_text' ), // callback
-			'pronamic_wp_extensions', // page
-			'pronamic_wp_extensions_bitbucket', // section
-			array(
-				'label_for' => 'pronamic_wp_bitbucket_password',
-				'classes'   => array( 'regular-text', 'code' ),
-			) // args
-		);
-
 		// Register
-		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_plugins_path' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_plugins_url' );
-		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_themes_path' );
 		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_themes_url' );
-		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_ignore', array( $this, 'lines_to_array' ) );
-		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_bitbucket_username' );
-		register_setting( 'pronamic_wp_extensions', 'pronamic_wp_bitbucket_password' );
 	}
 
 	/**
@@ -157,41 +102,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			esc_attr( implode( ' ', $classes ) ),
 			esc_attr( get_option( $name ) )
 		);
-	}
-
-	/**
-	 * Input text
-	 * 
-	 * @param array $args
-	 */
-	public function input_textarea( $args ) {
-		$name = $args['label_for'];
-		
-		$classes = array();
-		if ( isset( $args['classes'] ) ) {
-			$classes = $args['classes'];
-		}
-
-		$value = get_option( $name );
-
-		if ( is_array( $value ) ) {
-			$value = implode( "\r\n", $value );
-		}
-
-		printf(
-			'<textarea name="%s" id="%s" class="%s" rows="10" cols="60">%s</textarea>',
-			esc_attr( $name ),
-			esc_attr( $name ),
-			esc_attr( implode( ' ', $classes ) ),
-			esc_textarea( $value )
-		);
-
-		if ( isset( $args['description'] ) ) {
-			printf(
-				'<span class="description"><br />%s</span>',
-				$args['description']
-			);
-		}
 	}
 
 	/**
