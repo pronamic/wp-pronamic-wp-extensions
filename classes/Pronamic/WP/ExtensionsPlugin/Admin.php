@@ -250,14 +250,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			'pronamic_wp_extensions',
 			array( $this, 'page_options' )
 		);
-		
-		add_utility_page(
-			__( 'Pronamic Deploy', 'pronamic_wp_extensions' ),
-			__( 'Pronamic Deploy', 'pronamic_wp_extensions' ),
-			'manage_options',
-			'pronamic_wp_extensions_deploy',
-			array( $this, 'page_deploy' )
-		);
 	}
 
 	/**
@@ -265,13 +257,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	 */
 	public function page_options() {
 		$this->plugin->display( 'admin/page-options.php' );
-	}
-	
-	/**
-	 * Page deploy
-	 */
-	public function page_deploy() {
-		$this->plugin->display( 'admin/page-deploy.php' );
 	}
 
 	//////////////////////////////////////////////////
