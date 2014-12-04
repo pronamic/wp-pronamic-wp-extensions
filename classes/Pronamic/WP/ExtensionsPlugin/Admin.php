@@ -308,15 +308,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'normal',
 				'high'
 			);
-	
-			add_meta_box(
-				'pronamic_extension_downloads',
-				__( 'Downloads', 'pronamic_wp_extensions' ),
-				array( $this, 'meta_box_extension_downloads' ),
-				$screen,
-				'normal',
-				'high'
-			);
 		}
 	}
 
@@ -353,13 +344,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	 */
 	function meta_box_extension_wp_org() {
 		$this->plugin->display( 'admin/meta-box-wp-org.php' );
-	}
-
-	/**
-	 * Meta box for downloads
-	 */
-	function meta_box_extension_downloads() {
-		$this->plugin->display( 'admin/meta-box-downloads.php' );
 	}
 
 	//////////////////////////////////////////////////
