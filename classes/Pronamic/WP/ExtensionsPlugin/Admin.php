@@ -32,7 +32,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 
-		add_action( 'save_post', array( $this, 'save_extension_meta_version' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_extension_meta_extension' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_sale' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_github' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_extension_meta_bitbucket' ), 10, 2 );
@@ -92,18 +92,6 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			array(
 				'label_for' => 'pronamic_wp_themes_url',
 				'classes'   => array( 'regular-text', 'code' ),
-			) // args
-		);
-                
-		add_settings_field(
-			'pronamic_wp_ignore', // id
-			__( 'Ignore', 'pronamic_wp_extensions' ), // title
-			array( $this, 'input_textarea' ), // callback
-			'pronamic_wp_extensions', // page
-			'pronamic_wp_extensions_general', // section
-			array(
-				'label_for'   => 'pronamic_wp_ignore',
-				'description' => sprintf( 'For example: <pre>%s</pre>', file_get_contents( plugin_dir_path( $this->plugin->file ) . '/admin/ignore.txt' ) ),
 			) // args
 		);
 
@@ -265,9 +253,9 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	public function add_meta_boxes( $post_type ) {
 		if ( post_type_supports( $post_type, 'pronamic-extension' ) ) {
 			add_meta_box(
-				'pronamic_extension_version',
-				__( 'Version', 'pronamic_wp_extensions' ),
-				array( $this, 'pronamic_extension_version' ),
+				'pronamic_extension_extension',
+				__( 'Extension', 'pronamic_wp_extensions' ),
+				array( $this, 'meta_box_extension' ),
 				$screen,
 				'normal',
 				'high'
@@ -314,8 +302,8 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	/**
 	 * Meta box for version control
 	 */
-	function pronamic_extension_version() {
-		$this->plugin->display( 'admin/meta-box-version.php' );
+	function meta_box_extension() {
+		$this->plugin->display( 'admin/meta-box-extension.php' );
 	}
 
 	/**
@@ -393,8 +381,8 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	 * @param string $post_id
 	 * @param WP_Post $post
 	 */
-	public function save_extension_meta_version( $post_id, $post ) {
-		if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_version_nonce', 'pronamic_wp_extension_save_meta_version' ) )
+	public function save_extension_meta_extension( $post_id, $post ) {
+		if ( ! $this->can_save( $post_id, 'pronamic_wp_extensions_meta_extension_nonce', 'pronamic_wp_extension_save_meta_extension' ) )
 			return;
 	
 		$this->save_extension_meta( $post_id, array(
