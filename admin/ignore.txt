@@ -1,8 +1,0 @@
-.buildpath
-.gitignore
-.project
-.settings/*
-bin/*
-tests/*
-phpunit.xml
-.travis.yml
