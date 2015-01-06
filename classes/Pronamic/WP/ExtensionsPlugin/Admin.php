@@ -255,17 +255,21 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	 * @return boolean
 	 */
 	private function can_save( $post_id, $nonce, $action ) {
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return false;
+		}
 		
-		if ( ! filter_has_var( INPUT_POST, $nonce ) )
+		if ( ! filter_has_var( INPUT_POST, $nonce ) ) {
 			return false;
+		}
 		
-		if ( ! wp_verify_nonce( filter_input( INPUT_POST, $nonce, FILTER_SANITIZE_STRING ), $action ) )
+		if ( ! wp_verify_nonce( filter_input( INPUT_POST, $nonce, FILTER_SANITIZE_STRING ), $action ) ) {
 			return false;
+		}
 		
-		if ( ! current_user_can( 'edit_post', $post_id ) )
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return false;
+		}
 
 		return true;
 	}
