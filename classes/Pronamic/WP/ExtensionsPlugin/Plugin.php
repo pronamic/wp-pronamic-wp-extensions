@@ -40,6 +40,11 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 
 		add_filter( 'posts_where', array( $this, 'posts_where' ), 10, 2 );
 
+		// @see https://github.com/WordPress/WordPress/blob/4.1/wp-includes/comment-template.php#L693-L701
+		add_filter( 'get_comments_link', array( $this, 'get_comments_link' ), 10, 2 );
+		// @see https://github.com/WordPress/WordPress/blob/4.1/wp-includes/comment-template.php#L669-L680
+		add_filter( 'get_comment_link', array( $this, 'get_comment_link' ), 10, 3 );
+
 		// API
 		$this->api = Pronamic_WP_ExtensionsPlugin_Api::get_instance( $this );
 		
@@ -154,6 +159,10 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 				'rewrite'      => array( 'slug' => _x( 'theme-category', 'slug', 'pronamic_wp_extensions' ) ),
 			)
         );
+
+		// Permalinks
+		add_rewrite_endpoint( 'comments', EP_PERMALINK );
+		add_rewrite_endpoint( 'changelog', EP_PERMALINK );
 	}
 
 	//////////////////////////////////////////////////
@@ -175,6 +184,40 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 		}
 	
 		return $where;
+	}
+
+	//////////////////////////////////////////////////
+
+	/**
+	 * Get comments link
+	 * 
+	 * @see https://github.com/WordPress/WordPress/blob/4.1/wp-includes/comment-template.php#L693-L701
+	 */
+	public function get_comments_link( $comments_link, $post_id  ) {
+		$post_type = get_post_type( $post_id );
+
+		if ( post_type_supports( $post_type, 'pronamic-extension' ) ) {
+			$comments_link = get_permalink() . 'comments/';
+		}
+
+		return $comments_link;
+	}
+
+	/**
+	 * Get comment link
+	 *
+	 * @see https://github.com/WordPress/WordPress/blob/4.1/wp-includes/comment-template.php#L669-L680
+	 */
+	public function get_comment_link( $link, $comment, $args ) {
+		$post_type = get_post_type( $comment->comment_post_ID );
+
+		if ( post_type_supports( $post_type, 'pronamic-extension' ) ) {
+			$link = get_comments_link( $comment->comment_post_ID );
+
+			$link = $link . '#comment-' . $comment->comment_ID;
+		}
+
+		return $link;
 	}
 
 	//////////////////////////////////////////////////
