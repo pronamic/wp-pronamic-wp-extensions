@@ -303,6 +303,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 			'_pronamic_extension_stable_version'  => FILTER_SANITIZE_STRING,
 			'_pronamic_extension_total_downloads' => FILTER_SANITIZE_STRING,
 			'_pronamic_extension_is_private'      => FILTER_VALIDATE_BOOLEAN,
+			'_pronamic_extension_changelog'       => FILTER_UNSAFE_RAW,
 		) );
 	}
 

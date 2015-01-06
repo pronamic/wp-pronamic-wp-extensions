@@ -4,6 +4,8 @@ global $post;
 
 wp_nonce_field( 'pronamic_wp_extension_save_meta_extension', 'pronamic_wp_extensions_meta_extension_nonce' );
 
+$changelog = get_post_meta( $post->ID, '_pronamic_extension_changelog', true );
+
 ?>
 <table class="form-table">
 	<tbody>
@@ -31,6 +33,21 @@ wp_nonce_field( 'pronamic_wp_extension_save_meta_extension', 'pronamic_wp_extens
 				<input id="pronamic_extension_is_private" name="_pronamic_extension_is_private" value="yes" <?php checked( get_post_meta( $post->ID, '_pronamic_extension_is_private', true ) ); ?> type="checkbox" />
 
 				<label for="pronamic_extension_is_private">This is a private extension</label>
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">
+				<label for="pronamic_extension_changelog"><?php _e( 'Changelog', 'pronamic_wp_extensions' ); ?></label>
+			</th>
+			<td>
+				<?php
+
+				wp_editor( $changelog, '_pronamic_extension_changelog', array(
+					'media_buttons' => false,
+					'textarea_rows' => 5,
+				) );
+
+				?>
 			</td>
 		</tr>
 	</tbody>
