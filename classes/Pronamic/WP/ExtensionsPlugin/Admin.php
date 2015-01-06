@@ -166,7 +166,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'pronamic_extension_extension',
 				__( 'Extension', 'pronamic_wp_extensions' ),
 				array( $this, 'meta_box_extension' ),
-				$screen,
+				$post_type,
 				'normal',
 				'high'
 			);
@@ -175,7 +175,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'pronamic_extension_sale',
 				__( 'Sale', 'pronamic_wp_extensions' ),
 				array( $this, 'meta_box_extension_sale' ),
-				$screen,
+				$post_type,
 				'normal',
 				'high'
 			);
@@ -184,7 +184,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'pronamic_extension_github',
 				__( 'GitHub', 'pronamic_wp_extensions' ),
 				array( $this, 'meta_box_extension_github' ),
-				$screen,
+				$post_type,
 				'normal',
 				'high'
 			);
@@ -193,7 +193,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'pronamic_extension_bitbucket',
 				__( 'Bitbucket', 'pronamic_wp_extensions' ),
 				array( $this, 'meta_box_extension_bitbucket' ),
-				$screen,
+				$post_type,
 				'normal',
 				'high'
 			);
@@ -202,7 +202,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 				'pronamic_extension_wp_org',
 				__( 'WordPress.org', 'pronamic_wp_extensions' ),
 				array( $this, 'meta_box_extension_wp_org' ),
-				$screen,
+				$post_type,
 				'normal',
 				'high'
 			);
