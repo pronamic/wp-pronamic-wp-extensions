@@ -123,7 +123,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 				$titles = array();
 				foreach ( $themes as $file => $theme ) {
-					$titles[$file] = $theme['Title'];
+					$titles[ $file ] = $theme['Title'];
 				}
 
 				$theme_updates = array();
@@ -145,7 +145,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 					$theme_names = array();
 					foreach ( $theme_posts as $post ) {
-						$theme_names[$post->post_title] = $post;
+						$theme_names[ $post->post_title ] = $post;
 					}
 
 					/*
@@ -163,8 +163,8 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 					* - AuthorName
 					*/
 					foreach ( $themes as $file => $theme ) {
-						if ( isset( $theme_names[$theme['Name']] ) ) {
-							$post = $theme_names[$theme['Name']];
+						if ( isset( $theme_names[ $theme['Name'] ] ) ) {
+							$post = $theme_names[ $theme['Name'] ];
 
 							$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $post );
 
@@ -180,14 +180,14 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 								$result->url         = get_permalink( $post );
 								$result->package     = $extension->get_download_link();
 
-								$theme_updates[$file] = $result;
+								$theme_updates[ $file ] = $result;
 							}
 						}
 					}
 				}
 
 				$result = array(
-					'themes' => $theme_updates
+					'themes' => $theme_updates,
 				);
 
 				wp_send_json( $result );
@@ -233,7 +233,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 				$titles = array();
 				foreach ( $plugins as $file => $plugin ) {
-					$titles[$file] = $plugin['Name'];
+					$titles[ $file ] = $plugin['Name'];
 				}
 
 				$plugin_updates = array();
@@ -255,7 +255,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 					$plugin_names = array();
 					foreach ( $plugin_posts as $post ) {
-						$plugin_names[$post->post_title] = $post;
+						$plugin_names[ $post->post_title ] = $post;
 					}
 
 					/*
@@ -273,8 +273,8 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 					 * - AuthorName
 					 */
 					foreach ( $plugins as $file => $plugin ) {
-						if ( isset( $plugin_names[$plugin['Name']] ) ) {
-							$post = $plugin_names[$plugin['Name']];
+						if ( isset( $plugin_names[ $plugin['Name'] ] ) ) {
+							$post = $plugin_names[ $plugin['Name'] ];
 
 							$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $post );
 
@@ -290,14 +290,14 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 								$result->url         = get_permalink( $post );
 								$result->package     = $extension->get_download_link();
 
-								$plugin_updates[$file] = $result;
+								$plugin_updates[ $file ] = $result;
 							}
 						}
 					}
 				}
 
 				$result = array(
-					'plugins' => $plugin_updates
+					'plugins' => $plugin_updates,
 				);
 
 				wp_send_json( $result );
