@@ -1,0 +1,47 @@
+{
+  "name": "pronamic-wp-extensions",
+  "version": "1.0.0",
+  "description": "WordPress plugin wich allows your to create your own WordPress extensions directory.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pronamic/wp-pronamic-wp-extensions.git"
+  },
+  "keywords": [
+    "edd",
+    "downloads",
+    "vat"
+  ],
+  "author": {
+    "name": "Pronamic",
+    "email": "info@pronamic.nl",
+    "url": "http://www.pronamic.nl/"
+  },
+  "contributors": [
+    {
+      "name": "Remco Tolsma",
+      "email": "info@remcotolsma.nl",
+      "url": "http://www.remcotolsma.nl/"
+    }
+  ],
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/pronamic/wp-pronamic-wp-extensions/issues",
+    "email": "support@pronamic.nl"
+  },
+  "homepage": "https://github.com/pronamic/wp-pronamic-wp-extensions",
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-aws-s3": "^0.9.4",
+    "grunt-checktextdomain": "^0.1.1",
+    "grunt-checkwpversion": "~0.3.0",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-compress": "^0.12.0",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-uglify": "~0.6.0",
+    "grunt-git": "^0.3.2",
+    "grunt-phpcs": "^0.2.3",
+    "grunt-phplint": "0.0.5",
+    "grunt-wp-i18n": "~0.4.9"
+  }
+}
