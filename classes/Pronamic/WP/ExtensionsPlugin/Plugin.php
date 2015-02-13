@@ -14,14 +14,14 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 
 	/**
 	 * Plugin file
-	 * 
+	 *
 	 * @var string
 	 */
 	public $file;
 
 	/**
 	 * Extensions API
-	 * 
+	 *
 	 * @var Pronamic_WP_ExtensionsPlugin_Api
 	 */
 	public $api;
@@ -30,7 +30,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 
 	/**
 	 * Constructs and initialize Pronamic WordPress Extensions plugin
-	 * 
+	 *
 	 * @param string $file
 	 */
 	private function __construct( $file ) {
@@ -47,7 +47,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 
 		// API
 		$this->api = Pronamic_WP_ExtensionsPlugin_Api::get_instance( $this );
-		
+
 		// Admin
 		if ( is_admin() ) {
 			Pronamic_WP_ExtensionsPlugin_Admin::get_instance( $this );
@@ -87,7 +87,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments', 'pronamic-extension' ),
 			'menu_icon'          => 'dashicons-clipboard',
 		) );
-	
+
 		register_post_type( 'pronamic_theme', array(
 			'labels'             => array(
 				'name'               => _x( 'Themes', 'post type general name', 'pronamic_wp_extensions' ),
@@ -114,7 +114,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments', 'pronamic-extension' ),
 			'menu_icon'          => 'dashicons-clipboard',
 		) );
-		
+
 		// Taxonomies
 		register_taxonomy( 'pronamic_plugin_category', 'pronamic_plugin',
 			array(
@@ -136,7 +136,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 				'query_var'    => true,
 				'rewrite'      => array( 'slug' => _x( 'plugin-category', 'slug', 'pronamic_wp_extensions' ) ),
 			)
-        );
+		);
 
 		register_taxonomy( 'pronamic_theme_category', 'pronamic_theme',
 			array(
@@ -158,7 +158,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 				'query_var'    => true,
 				'rewrite'      => array( 'slug' => _x( 'theme-category', 'slug', 'pronamic_wp_extensions' ) ),
 			)
-        );
+		);
 
 		// Permalinks
 		add_rewrite_endpoint( 'comments', EP_PERMALINK );
@@ -169,20 +169,20 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 
 	/**
 	 * Posts where 'post_title__in', used by API
-	 * 
+	 *
 	 * @param string $where
 	 * @param WP_Query $query
 	 */
 	public function posts_where( $where, $query ) {
 		$titles = $query->get( 'post_title__in' );
-	
+
 		if ( is_array( $titles ) && ! empty ( $titles )  ) {
 			// @see https://github.com/WordPress/WordPress/blob/3.7/wp-includes/post.php#L3806
 			$post_titles = implode( "', '", esc_sql( $titles ) );
-	
+
 			$where .= " AND post_title IN ('$post_titles')";
 		}
-	
+
 		return $where;
 	}
 
@@ -190,7 +190,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 
 	/**
 	 * Get comments link
-	 * 
+	 *
 	 * @see https://github.com/WordPress/WordPress/blob/4.1/wp-includes/comment-template.php#L693-L701
 	 */
 	public function get_comments_link( $comments_link, $post_id  ) {
@@ -224,23 +224,23 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 
 	/**
 	 * Display/iinclude the specified file
-	 * 
+	 *
 	 * @param string $file
 	 */
 	public function display( $file, array $args = array() ) {
 		extract( $args );
 
-		include plugin_dir_path( $this->file ) . $file; 
+		include plugin_dir_path( $this->file ) . $file;
 	}
 
 	//////////////////////////////////////////////////
 
-    /**
-     * Get download URL
-     * 
-     * @return string
-     */
-    public function get_downloads_url( $type ) {
+	/**
+	 * Get download URL
+	 *
+	 * @return string
+	 */
+	public function get_downloads_url( $type ) {
 		$url = false;
 
 		switch ( $type ) {
@@ -271,7 +271,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 		if ( null == self::$instance ) {
 			self::$instance = new self( $file );
 		}
-	
+
 		return self::$instance;
 	}
 }

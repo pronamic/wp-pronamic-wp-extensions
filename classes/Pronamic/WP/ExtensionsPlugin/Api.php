@@ -14,7 +14,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 	/**
 	 * Extensions plugin
-	 * 
+	 *
 	 * @var Pronamic_WP_ExtensionsPlugin_Plugin
 	 */
 	private $plugin;
@@ -28,9 +28,9 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 		$this->plugin = $plugin;
 
 		add_action( 'init', array( $this, 'init' ) );
-		
+
 		add_action( 'query_vars', array( $this, 'query_vars' ) );
-		
+
 		add_action( 'template_redirect', array( $this, 'template_redirect' ) );
 	}
 
@@ -39,7 +39,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	/**
 	 * Initialize
 	 */
-	public function init() {	
+	public function init() {
 		// Rewrite rules
 		// @see http://wordpress.stackexchange.com/questions/5413/need-help-with-add-rewrite-rule
 		add_rewrite_rule(
@@ -56,7 +56,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 	/**
 	 * Query vars
-	 * 
+	 *
 	 * @param array $query_vars
 	 */
 	public function query_vars( $query_vars ) {
@@ -79,20 +79,20 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 			$method = get_query_var( 'pronamic_wp_extensions_api_method' );
 			$version = get_query_var( 'pronamic_wp_extensions_api_version' );
 
-			switch( $module ) {
+			switch ( $module ) {
 				case 'themes':
 					$result = $this->themes_api( $method );
 
 					break;
 				case 'plugins':
 					$result = $this->plugins_api( $method );
-					
+
 					break;
 			}
-			
+
 			wp_send_json_error();
 		}
-		
+
 	}
 
 	//////////////////////////////////////////////////
@@ -100,34 +100,34 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	//////////////////////////////////////////////////
 
 	public function themes_api( $method ) {
-		switch( $method ) {
+		switch ( $method ) {
 			case 'info':
 				return $this->themes_api_info();
 			case 'update-check':
 				return $this->themes_api_update_check();
 		}
 	}
-	
+
 	public function themes_api_info() {
-		
+
 	}
 
 	public function themes_api_update_check() {
 		if ( filter_has_var( INPUT_POST, 'themes' ) ) {
 			$json = filter_input( INPUT_POST, 'themes', FILTER_UNSAFE_RAW );
-			
+
 			$themes = json_decode( $json, true );
-		
+
 			if ( is_array( $themes ) ) {
 				global $wpdb;
-			
+
 				$titles = array();
 				foreach ( $themes as $file => $theme ) {
 					$titles[$file] = $theme['Title'];
 				}
-		
+
 				$theme_updates = array();
-			
+
 				if ( ! empty( $titles ) ) {
 					$theme_posts = get_posts( array(
 						'post_type'        => 'pronamic_theme',
@@ -147,7 +147,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 					foreach ( $theme_posts as $post ) {
 						$theme_names[$post->post_title] = $post;
 					}
-			
+
 					/*
 					 * Theme array values
 					* - Name
@@ -165,12 +165,12 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 					foreach ( $themes as $file => $theme ) {
 						if ( isset( $theme_names[$theme['Name']] ) ) {
 							$post = $theme_names[$theme['Name']];
-							
+
 							$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $post );
-			
+
 							$stable_version  = $extension->get_version();
 							$current_version = $theme['Version'];
-								
+
 							if ( version_compare( $stable_version, $current_version, '>' ) ) {
 								$result              = new stdClass();
 								$result->id          = $post->ID;
@@ -179,17 +179,17 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 								// $result->upgrade_notice = '';
 								$result->url         = get_permalink( $post );
 								$result->package     = $extension->get_download_link();
-			
+
 								$theme_updates[$file] = $result;
 							}
 						}
 					}
 				}
-		
+
 				$result = array(
 					'themes' => $theme_updates
 				);
-			
+
 				wp_send_json( $result );
 			}
 		}
@@ -200,28 +200,28 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	//////////////////////////////////////////////////
 
 	public function plugins_api( $method ) {
-		switch( $method ) {
+		switch ( $method ) {
 			case 'info':
 				return $this->plugins_api_info();
 			case 'update-check':
 				return $this->plugins_api_update_check();
 		}
 	}
-	
+
 	public function plugins_api_info() {
 		$slug = filter_input( INPUT_GET, 'slug', FILTER_SANITIZE_STRING );
-		
+
 		$finder = new Pronamic_WP_ExtensionsPlugin_Finder();
-		
+
 		$plugin = $finder->by_slug( $slug, 'pronamic_plugin' );
-		
+
 		if ( false !== $plugin ) {
 			$plugin_info = $plugin->get_info();
-		
+
 			wp_send_json( $plugin_info );
 		}
 	}
-	
+
 	public function plugins_api_update_check() {
 		if ( filter_has_var( INPUT_POST, 'plugins' ) ) {
 			$json = filter_input( INPUT_POST, 'plugins', FILTER_UNSAFE_RAW );
@@ -241,7 +241,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 				if ( ! empty( $titles ) ) {
 					$plugin_posts = get_posts( array(
 						'post_type'        => 'pronamic_plugin',
-						'nopaging'         => true,  
+						'nopaging'         => true,
 						'post_title__in'   => $titles,
 						'suppress_filters' => false,
 						'meta_query'       => array(
@@ -252,7 +252,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 							),
 						),
 					) );
-					
+
 					$plugin_names = array();
 					foreach ( $plugin_posts as $post ) {
 						$plugin_names[$post->post_title] = $post;
@@ -275,17 +275,17 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 					foreach ( $plugins as $file => $plugin ) {
 						if ( isset( $plugin_names[$plugin['Name']] ) ) {
 							$post = $plugin_names[$plugin['Name']];
-						
+
 							$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $post );
 
 							$stable_version  = $extension->get_version();
 							$current_version = $plugin['Version'];
-							
+
 							if ( version_compare( $stable_version, $current_version, '>' ) ) {
 								$result              = new stdClass();
 								$result->id          = $post->ID;
 								$result->slug        = $post->post_name;
-								$result->new_version = $stable_version; 
+								$result->new_version = $stable_version;
 								// $result->upgrade_notice = '';
 								$result->url         = get_permalink( $post );
 								$result->package     = $extension->get_download_link();
@@ -304,7 +304,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 			}
 		}
 	}
-	
+
 
 	//////////////////////////////////////////////////
 
@@ -320,7 +320,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 		if ( null == self::$instance ) {
 			self::$instance = new self( $plugin );
 		}
-	
+
 		return self::$instance;
 	}
 }
