@@ -285,6 +285,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 								$result              = new stdClass();
 								$result->id          = $post->ID;
 								$result->slug        = $post->post_name;
+								$result->plugin      = $file;
 								$result->new_version = $stable_version;
 								// $result->upgrade_notice = '';
 								$result->url         = get_permalink( $post );
