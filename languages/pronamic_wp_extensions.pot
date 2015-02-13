@@ -1,0 +1,309 @@
+# Copyright (C) 2015 Pronamic
+# This file is distributed under the GPL.
+msgid ""
+msgstr ""
+"Project-Id-Version: Pronamic WordPress Extensions 1.0.0\n"
+"Report-Msgid-Bugs-To: "
+"http://wordpress.org/support/plugin/pronamic-wp-extensions\n"
+"POT-Creation-Date: 2015-02-13 10:46:32+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: grunt-wp-i18n 0.4.9\n"
+
+#: admin/meta-box-bitbucket.php:12
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:194
+msgid "Bitbucket"
+msgstr ""
+
+#: admin/meta-box-extension.php:14
+msgid "Stable Version"
+msgstr ""
+
+#: admin/meta-box-extension.php:22
+msgid "Downloads"
+msgstr ""
+
+#: admin/meta-box-extension.php:30
+msgid " Access level"
+msgstr ""
+
+#: admin/meta-box-extension.php:40
+msgid "Changelog"
+msgstr ""
+
+#: admin/meta-box-github.php:12
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:185
+msgid "GitHub"
+msgstr ""
+
+#: admin/meta-box-sale.php:12
+msgid "Price"
+msgstr ""
+
+#: admin/meta-box-sale.php:20
+msgid "Total Sales"
+msgstr ""
+
+#: admin/meta-box-sale.php:28
+msgid "Buy URL"
+msgstr ""
+
+#: admin/meta-box-wp-org.php:12
+msgid "WordPress.org slug"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:51
+msgid "General"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:58
+msgid "Plugins URL"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:70
+msgid "Themes URL"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:143
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:144
+msgid "Pronamic Extensions"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:167
+msgid "Extension"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:176
+msgid "Sale"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Admin.php:203
+msgid "WordPress.org"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:69
+msgid "Add New Plugin"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:70
+msgid "Edit Plugin"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:71
+msgid "New Plugin"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:72
+msgid "View Plugin"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:73
+msgid "Search Plugins"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:74
+msgid "No plugins found"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:75
+msgid "No plugins found in Trash"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:76
+msgid "Parent Plugin:"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:77
+msgid "Plugins"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:96
+msgid "Add New Theme"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:97
+msgid "Edit Theme"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:98
+msgid "New Theme"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:99
+msgid "View Theme"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:100
+msgid "Search Themes"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:101
+msgid "No themes found"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:102
+msgid "No themes found in Trash"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:103
+msgid "Parent Theme:"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:104
+msgid "Themes"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:125
+msgid "Search Plugin Categories"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:126
+msgid "All Plugin Categories"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:127
+msgid "Parent Plugin Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:128
+msgid "Parent Plugin Category:"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:129
+msgid "Edit Plugin Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:130
+msgid "Update Plugin Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:131
+msgid "Add New Plugin Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:132
+msgid "New Plugin Category Name"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:133
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:155
+msgid "Categories"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:147
+msgid "Search Theme Categories"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:148
+msgid "All Theme Categories"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:149
+msgid "Parent Theme Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:150
+msgid "Parent Theme Category:"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:151
+msgid "Edit Theme Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:152
+msgid "Update Theme Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:153
+msgid "Add New Theme Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:154
+msgid "New Theme Category Name"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Pronamic WordPress Extensions"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.pronamic.eu/plugins/pronamic-wp-extensions/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"WordPress plugin wich allows your to create your own WordPress extensions "
+"directory."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Pronamic"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.pronamic.eu/"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:66
+msgctxt "post type general name"
+msgid "Plugins"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:93
+msgctxt "post type general name"
+msgid "Themes"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:67
+msgctxt "post type singular name"
+msgid "Plugin"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:94
+msgctxt "post type singular name"
+msgid "Theme"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:68
+msgctxt "plugin"
+msgid "Add New"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:95
+msgctxt "theme"
+msgid "Add New"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:123
+msgctxt "category general name"
+msgid "Plugin Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:145
+msgctxt "category general name"
+msgid "Theme Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:124
+msgctxt "category singular name"
+msgid "Plugin Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:146
+msgctxt "category singular name"
+msgid "Theme Category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:137
+msgctxt "slug"
+msgid "plugin-category"
+msgstr ""
+
+#: classes/Pronamic/WP/ExtensionsPlugin/Plugin.php:159
+msgctxt "slug"
+msgid "theme-category"
+msgstr ""
