@@ -173,8 +173,9 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 							if ( version_compare( $stable_version, $current_version, '>' ) ) {
 								$result              = new stdClass();
-								$result->id          = $post->ID;
-								$result->slug        = $post->post_name;
+								//$result->id          = $post->ID;
+								//$result->slug        = $post->post_name;
+								$result->theme       = $file;
 								$result->new_version = $stable_version;
 								// $result->upgrade_notice = '';
 								$result->url         = get_permalink( $post );
