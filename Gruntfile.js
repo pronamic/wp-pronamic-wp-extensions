@@ -201,7 +201,7 @@ module.exports = function( grunt ) {
 	grunt.loadNpmTasks( 'grunt-aws-s3' );
 
 	// Default task(s).
-	grunt.registerTask( 'default', [ 'jshint', 'phplint', 'checkwpversion' ] );
+	grunt.registerTask( 'default', [ 'jshint', 'phplint', 'phpcs', 'checkwpversion' ] );
 	grunt.registerTask( 'pot', [ 'checktextdomain', 'makepot' ] );
 
 	grunt.registerTask( 'deploy', [
