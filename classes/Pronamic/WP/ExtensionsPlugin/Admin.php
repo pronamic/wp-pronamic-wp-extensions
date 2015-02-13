@@ -110,7 +110,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 	 * @param array $args
 	 */
 	public function input_path( $args ) {
-		echo ABSPATH;
+		echo esc_html( ABSPATH );
 
 		$name = $args['label_for'];
 
