@@ -1,11 +1,17 @@
 <?php
 /*
 Plugin Name: Pronamic WordPress Extensions
-Plugin URI: http://www.pronamic.eu/
-Description: 
+Plugin URI: http://www.pronamic.eu/plugins/pronamic-wp-extensions/
+Description: WordPress plugin wich allows your to create your own WordPress extensions directory.
+
 Version: 1.0.0
+
 Author: Pronamic
 Author URI: http://www.pronamic.eu/
+
+Text Domain: pronamic_wp_extensions
+Domain Path: /languages/
+
 License: GPL
 */
 
