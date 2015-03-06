@@ -163,6 +163,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 		// Permalinks
 		add_rewrite_endpoint( 'comments', EP_PERMALINK );
 		add_rewrite_endpoint( 'changelog', EP_PERMALINK );
+		add_rewrite_endpoint( 'faq', EP_PERMALINK );
 	}
 
 	//////////////////////////////////////////////////
