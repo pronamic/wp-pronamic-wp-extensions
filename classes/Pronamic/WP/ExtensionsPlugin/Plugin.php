@@ -39,6 +39,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 		add_action( 'init', array( $this, 'init' ) );
 
 		add_filter( 'posts_where', array( $this, 'posts_where' ), 10, 2 );
+		add_filter( 'pre_get_posts', array( $this, 'posts_order' ), 10, 2 );
 
 		// @see https://github.com/WordPress/WordPress/blob/4.1/wp-includes/comment-template.php#L693-L701
 		add_filter( 'get_comments_link', array( $this, 'get_comments_link' ), 10, 2 );
@@ -185,6 +186,55 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 		}
 
 		return $where;
+	}
+
+	/**
+	 * Change order on archive
+	 *
+	 * @param WP_Query $query
+	 */
+	function posts_order( $query ) {
+		if ( is_admin() ) {
+			return;
+		}
+
+		if ( ! $query->is_main_query() ) {
+			return;
+		}
+
+		if ( ! $query->is_post_type_archive( 'pronamic_plugin' ) ) {
+			return;
+		}
+
+		$orderby = filter_input( INPUT_GET, 'orderby', FILTER_SANITIZE_STRING );
+
+		switch ( $orderby ) {
+			case 'name':
+				$query->set( 'meta_key', '_pronamic_extension_total_downloads' );
+				$query->set( 'orderby', 'name' );
+				$query->set( 'order', 'ASC' );
+
+				break;
+			case 'popularity':
+				$query->set( 'meta_key', '_pronamic_extension_total_downloads' );
+				$query->set( 'orderby', 'meta_value_num' );
+
+				break;
+			case 'sales':
+				$query->set( 'meta_key', '_pronamic_extension_total_sales' );
+				$query->set( 'orderby', 'meta_value_num' );
+
+				break;
+			case 'price':
+				$query->set( 'meta_key', '_pronamic_extension_price' );
+				$query->set( 'orderby', 'meta_value_num' );
+				$query->set( 'order', 'ASC' );
+
+				break;
+			 default :
+				$query->set( 'meta_key', '_pronamic_extension_total_downloads' );
+				$query->set( 'orderby', 'meta_value_num' );
+		}
 	}
 
 	//////////////////////////////////////////////////
