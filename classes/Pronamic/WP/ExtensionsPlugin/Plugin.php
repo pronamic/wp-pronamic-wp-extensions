@@ -202,7 +202,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			return;
 		}
 
-		if ( ! $query->is_post_type_archive( 'pronamic_plugin' ) ) {
+		if ( ! $query->is_post_type_archive( 'pronamic_plugin' ) && ! $query->is_post_type_archive( 'pronamic_theme' ) ) {
 			return;
 		}
 
