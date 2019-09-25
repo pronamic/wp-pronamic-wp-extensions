@@ -231,10 +231,26 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 				$query->set( 'order', 'ASC' );
 
 				break;
-			 default :
-				$query->set( 'meta_key', '_pronamic_extension_total_downloads' );
-				$query->set( 'orderby', 'meta_value_num' );
 		}
+
+		// Hide private extensions
+		$meta_query = $query->get( 'meta_query', array() );
+		$meta_query = is_array( $meta_query ) ? $meta_query : array();
+
+		$meta_query['relation'] = 'OR';
+
+		$meta_query[] = array(
+			'key'     => '_pronamic_extension_is_private',
+			'value'   => 1,
+			'compare' => '!='
+		);
+
+		$meta_query[] = array(
+			'key'     => '_pronamic_extension_is_private',
+			'compare' => 'NOT EXISTS',
+		);
+
+		$query->set( 'meta_query', $meta_query );
 	}
 
 	//////////////////////////////////////////////////
