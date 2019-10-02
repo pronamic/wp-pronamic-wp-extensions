@@ -85,8 +85,18 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'rewrite'            => array( 'slug' => 'plugins' ),
-			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments', 'pronamic-extension' ),
 			'menu_icon'          => 'dashicons-clipboard',
+			'supports'           => array(
+				'title',
+				'editor',
+				'author',
+				'thumbnail',
+				'excerpt',
+				'custom-fields',
+				'comments',
+				'page-attributes',
+				'pronamic-extension',
+			),
 		) );
 
 		register_post_type( 'pronamic_theme', array(
@@ -112,8 +122,18 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'capability_type'    => 'post',
 			'has_archive'        => true,
 			'rewrite'            => array( 'slug' => 'themes' ),
-			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields', 'comments', 'pronamic-extension' ),
 			'menu_icon'          => 'dashicons-clipboard',
+			'supports'           => array(
+				'title',
+				'editor',
+				'author',
+				'thumbnail',
+				'excerpt',
+				'custom-fields',
+				'comments',
+				'page-attributes',
+				'pronamic-extension',
+			),
 		) );
 
 		// Taxonomies
@@ -231,6 +251,8 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 				$query->set( 'order', 'ASC' );
 
 				break;
+			default :
+				$query->set( 'orderby', 'menu_order' );
 		}
 
 		// Hide private extensions
