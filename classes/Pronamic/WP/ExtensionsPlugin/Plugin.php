@@ -84,6 +84,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'query_var'          => true,
 			'capability_type'    => 'post',
 			'has_archive'        => true,
+			'show_in_rest'       => true,
 			'rewrite'            => array( 'slug' => 'plugins' ),
 			'menu_icon'          => 'dashicons-clipboard',
 			'supports'           => array(
@@ -121,6 +122,7 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 			'query_var'          => true,
 			'capability_type'    => 'post',
 			'has_archive'        => true,
+			'show_in_rest'       => true,
 			'rewrite'            => array( 'slug' => 'themes' ),
 			'menu_icon'          => 'dashicons-clipboard',
 			'supports'           => array(
