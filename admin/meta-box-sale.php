@@ -17,6 +17,14 @@ wp_nonce_field( 'pronamic_wp_extension_save_meta_sale', 'pronamic_wp_extensions_
 		</tr>
 		<tr>
 			<th scope="row">
+				<label for="pronamic_extension_license"><?php _e( 'License', 'pronamic_wp_extensions' ); ?></label>
+			</th>
+			<td>
+				<input id="pronamic_extension_license" name="_pronamic_extension_license" value="<?php echo esc_attr( get_post_meta( $post->ID, '_pronamic_extension_license', true ) ); ?>" type="text" size="25" class="regular-text" />
+			</td>
+		</tr>
+		<tr>
+			<th scope="row">
 				<label for="pronamic_extension_total_sales"><?php _e( 'Total Sales', 'pronamic_wp_extensions' ); ?></label>
 			</th>
 			<td>

@@ -313,6 +313,7 @@ class Pronamic_WP_ExtensionsPlugin_Admin {
 
 		$this->save_extension_meta( $post_id, array(
 			'_pronamic_extension_price'       => FILTER_SANITIZE_STRING,
+			'_pronamic_extension_license'     => FILTER_SANITIZE_STRING,
 			'_pronamic_extension_total_sales' => FILTER_SANITIZE_STRING,
 			'_pronamic_extension_buy_url'     => FILTER_SANITIZE_STRING,
 		) );
