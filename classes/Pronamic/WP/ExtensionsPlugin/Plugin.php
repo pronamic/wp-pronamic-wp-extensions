@@ -78,8 +78,8 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 							}
 
 							return [
-								'id'   => $post->ID,
-								'slug' => $slug,
+								'id'      => $post->ID,
+								'slug'    => $slug,
 								'version' => get_post_meta( $post->ID , '_pronamic_extension_stable_version', true ),
 							];
 						},
