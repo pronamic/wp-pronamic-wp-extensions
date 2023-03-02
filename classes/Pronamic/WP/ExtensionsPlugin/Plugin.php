@@ -53,6 +53,65 @@ class Pronamic_WP_ExtensionsPlugin_Plugin {
 		if ( is_admin() ) {
 			Pronamic_WP_ExtensionsPlugin_Admin::get_instance( $this );
 		}
+
+		add_action(
+			'rest_api_init',
+			function() {
+				register_rest_route(
+					'pronamic-wp-extensions/v1',
+					'/plugins/(?P<slug>[\w-]+)',
+					[
+						'methods'             => 'PATCH',
+						'callback'            => function( $request ) {
+							$slug = $request->get_param( 'slug' );
+
+							$post = get_page_by_path( $slug, OBJECT, 'pronamic_plugin' );
+
+							if ( null === $post ) {
+								return new WP_Error( 'Could not find plugin.' );
+							}
+
+							if ( $request->has_param( 'version' ) ) {
+								$version = $request->get_param( 'version' );
+
+								update_post_meta( $post->ID , '_pronamic_extension_stable_version', $version );
+							}
+
+							return [
+								'id'   => $post->ID,
+								'slug' => $slug,
+								'version' => get_post_meta( $post->ID , '_pronamic_extension_stable_version', true ),
+							];
+						},
+						'args'                => [
+							'slug' => [
+								'description' => __( 'Plugin slug.' ),
+								'type'        => 'string',
+								'minLength'   => 1,
+								'maxLength'   => 200,
+								'required'    => true,
+							],
+							'version' => [
+								'description' => __( 'Plugin version.' ),
+								'type'        => 'string',
+								'minLength'   => 1,
+							],
+						],
+						'permission_callback' => function( $request ) {
+							$slug = $request->get_param( 'slug' );
+
+							$post = get_page_by_path( $slug, OBJECT, 'pronamic_plugin' );
+
+							if ( null === $post ) {
+								return false;
+							}
+
+							return current_user_can( 'edit_post', $post->ID );
+						}
+					]
+				);
+			}
+		);
 	}
 
 	//////////////////////////////////////////////////
