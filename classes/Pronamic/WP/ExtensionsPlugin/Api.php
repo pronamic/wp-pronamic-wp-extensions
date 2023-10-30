@@ -118,6 +118,10 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 			$themes = json_decode( $json, true );
 
+			if ( \array_key_exists( 'active', $themes ) && \array_key_exists( 'themes', $themes ) ) {
+				$themes = $themes['themes'];
+			}
+
 			if ( is_array( $themes ) ) {
 				global $wpdb;
 
