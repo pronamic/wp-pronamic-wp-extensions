@@ -1,10 +1,8 @@
-# Deploy
-/deploy/
-
-# Eclipse
-/.buildpath
-/.project
-/.settings/
+# Build
+/build/
 
 # Node.js
 /node_modules/
+
+# Composer
+/vendor/
