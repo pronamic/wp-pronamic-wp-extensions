@@ -1,35 +1,35 @@
 {
-  "name": "pronamic-wp-extensions",
-  "version": "1.0.0",
-  "description": "WordPress plugin wich allows your to create your own WordPress extensions directory.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pronamic/wp-pronamic-wp-extensions.git"
-  },
-  "keywords": [
-    "edd",
-    "downloads",
-    "vat"
-  ],
-  "author": {
-    "name": "Pronamic",
-    "email": "info@pronamic.nl",
-    "url": "http://www.pronamic.nl/"
-  },
-  "contributors": [
-    {
-      "name": "Remco Tolsma",
-      "email": "info@remcotolsma.nl",
-      "url": "http://www.remcotolsma.nl/"
-    }
-  ],
-  "license": "GPL",
-  "bugs": {
-    "url": "https://github.com/pronamic/wp-pronamic-wp-extensions/issues",
-    "email": "support@pronamic.nl"
-  },
-  "homepage": "https://github.com/pronamic/wp-pronamic-wp-extensions",
-  "devDependencies": {
-    "@wordpress/env": "^5.16.0"
-  }
+	"name": "pronamic-wp-extensions",
+	"version": "1.0.0",
+	"description": "WordPress plugin wich allows your to create your own WordPress extensions directory.",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/pronamic/wp-pronamic-wp-extensions.git"
+	},
+	"keywords": [
+		"edd",
+		"downloads",
+		"vat"
+	],
+	"author": {
+		"name": "Pronamic",
+		"email": "info@pronamic.nl",
+		"url": "http://www.pronamic.nl/"
+	},
+	"contributors": [
+		{
+			"name": "Remco Tolsma",
+			"email": "info@remcotolsma.nl",
+			"url": "http://www.remcotolsma.nl/"
+		}
+	],
+	"license": "GPL",
+	"bugs": {
+		"url": "https://github.com/pronamic/wp-pronamic-wp-extensions/issues",
+		"email": "support@pronamic.nl"
+	},
+	"homepage": "https://github.com/pronamic/wp-pronamic-wp-extensions",
+	"devDependencies": {
+		"@wordpress/env": "^5.16.0"
+	}
 }
