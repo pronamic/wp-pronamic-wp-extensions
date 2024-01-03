@@ -15,8 +15,7 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
 	 */
 	private $version;
 
-	//////////////////////////////////////////////////
-
+	
 	/**
 	 * Constructs and initialize an extension info object
 	 *
@@ -28,8 +27,7 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
 		$this->version = get_post_meta( $post->ID, '_pronamic_extension_stable_version', true );
 	}
 
-	//////////////////////////////////////////////////
-
+	
 	/**
 	 * Returns with the required info about this entity
 	 *
@@ -49,8 +47,7 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
 		return $info;
 	}
 
-	//////////////////////////////////////////////////
-
+	
 	/**
 	 * Returns with the required info for updating
 	 * when requesting to update check.
@@ -71,8 +68,7 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
 		return $result;
 	}
 
-	//////////////////////////////////////////////////
-
+	
 	/**
 	 * Returns a full URL to download the passed in version.
 	 * If no version is passed in, will use the latest version.
@@ -94,8 +90,7 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
 		return $url;
 	}
 
-	//////////////////////////////////////////////////
-
+	
 	/**
 	 * Used to determine if this plugin instance has an update
 	 * or not.
@@ -108,8 +103,7 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
 		return version_compare( $this->get_version(), $version_check, '>' );
 	}
 
-	//////////////////////////////////////////////////
-
+	
 	/**
 	 * Get version
 	 *
@@ -119,8 +113,7 @@ class Pronamic_WP_ExtensionsPlugin_ExtensionInfo {
 		return $this->version;
 	}
 
-	//////////////////////////////////////////////////
-
+	
 	/**
 	 * Get downloads path
 	 *

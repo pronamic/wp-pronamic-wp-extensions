@@ -3,7 +3,6 @@
 /**
  * Implement this Interface to have your
  * Entity be findable in the Pronamic_Extension_Finder.
- *
  */
 interface Pronamic_WP_ExtensionsPlugin_Findable {
 

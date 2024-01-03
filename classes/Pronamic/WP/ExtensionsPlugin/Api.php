@@ -10,8 +10,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	 */
 	protected static $instance = null;
 
-	//////////////////////////////////////////////////
-
+	
 	/**
 	 * Extensions plugin
 	 *
@@ -19,23 +18,21 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	 */
 	private $plugin;
 
-	//////////////////////////////////////////////////
-
+	
 	/**
 	 * Constructs and initialize Pronamic WordPress Extensions API object
 	 */
 	private function __construct( Pronamic_WP_ExtensionsPlugin_Plugin $plugin ) {
 		$this->plugin = $plugin;
 
-		add_action( 'init', array( $this, 'init' ) );
+		add_action( 'init', [ $this, 'init' ] );
 
-		add_action( 'query_vars', array( $this, 'query_vars' ) );
+		add_action( 'query_vars', [ $this, 'query_vars' ] );
 
-		add_action( 'template_redirect', array( $this, 'template_redirect' ) );
+		add_action( 'template_redirect', [ $this, 'template_redirect' ] );
 	}
 
-	//////////////////////////////////////////////////
-
+	
 	/**
 	 * Initialize
 	 */
@@ -75,8 +72,8 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 		$is_api = get_query_var( 'pronamic_wp_extensions_api' );
 
 		if ( $is_api ) {
-			$module = get_query_var( 'pronamic_wp_extensions_api_module' );
-			$method = get_query_var( 'pronamic_wp_extensions_api_method' );
+			$module  = get_query_var( 'pronamic_wp_extensions_api_module' );
+			$method  = get_query_var( 'pronamic_wp_extensions_api_method' );
 			$version = get_query_var( 'pronamic_wp_extensions_api_version' );
 
 			switch ( $module ) {
@@ -92,12 +89,11 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 			wp_send_json_error();
 		}
-
 	}
 
-	//////////////////////////////////////////////////
+	// 
 	// Themes API
-	//////////////////////////////////////////////////
+	// 
 
 	public function themes_api( $method ) {
 		switch ( $method ) {
@@ -109,7 +105,6 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	}
 
 	public function themes_api_info() {
-
 	}
 
 	public function themes_api_update_check() {
@@ -125,29 +120,31 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 			if ( is_array( $themes ) ) {
 				global $wpdb;
 
-				$titles = array();
+				$titles = [];
 				foreach ( $themes as $file => $theme ) {
 					$titles[ $file ] = $theme['Title'];
 				}
 
-				$theme_updates = array();
+				$theme_updates = [];
 
 				if ( ! empty( $titles ) ) {
-					$theme_posts = get_posts( array(
-						'post_type'        => 'pronamic_theme',
-						'nopaging'         => true,
-						'post_title__in'   => $titles,
-						'suppress_filters' => false,
-						'meta_query'       => array(
-							array(
-								'key'     => '_pronamic_extension_wp_org_slug',
-								'value'   => 'bug #23268',
-								'compare' => 'NOT EXISTS',
-							),
-						),
-					) );
+					$theme_posts = get_posts(
+						[
+							'post_type'        => 'pronamic_theme',
+							'nopaging'         => true,
+							'post_title__in'   => $titles,
+							'suppress_filters' => false,
+							'meta_query'       => [
+								[
+									'key'     => '_pronamic_extension_wp_org_slug',
+									'value'   => 'bug #23268',
+									'compare' => 'NOT EXISTS',
+								],
+							],
+						] 
+					);
 
-					$theme_names = array();
+					$theme_names = [];
 					foreach ( $theme_posts as $post ) {
 						$theme_names[ $post->post_title ] = $post;
 					}
@@ -176,14 +173,14 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 							$current_version = $theme['Version'];
 
 							if ( version_compare( $stable_version, $current_version, '>' ) ) {
-								$result              = new stdClass();
-								//$result->id          = $post->ID;
-								//$result->slug        = $post->post_name;
+								$result = new stdClass();
+								// $result->id          = $post->ID;
+								// $result->slug        = $post->post_name;
 								$result->theme       = $file;
 								$result->new_version = $stable_version;
 								// $result->upgrade_notice = '';
-								$result->url         = get_permalink( $post );
-								$result->package     = $extension->get_download_link();
+								$result->url     = get_permalink( $post );
+								$result->package = $extension->get_download_link();
 
 								$theme_updates[ $file ] = $result;
 							}
@@ -191,18 +188,18 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 					}
 				}
 
-				$result = array(
+				$result = [
 					'themes' => $theme_updates,
-				);
+				];
 
 				wp_send_json( $result );
 			}
 		}
 	}
 
-	//////////////////////////////////////////////////
+	// 
 	// Plugins API
-	//////////////////////////////////////////////////
+	// 
 
 	public function plugins_api( $method ) {
 		switch ( $method ) {
@@ -236,29 +233,31 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 			if ( is_array( $plugins ) ) {
 				global $wpdb;
 
-				$titles = array();
+				$titles = [];
 				foreach ( $plugins as $file => $plugin ) {
 					$titles[ $file ] = $plugin['Name'];
 				}
 
-				$plugin_updates = array();
+				$plugin_updates = [];
 
 				if ( ! empty( $titles ) ) {
-					$plugin_posts = get_posts( array(
-						'post_type'        => 'pronamic_plugin',
-						'nopaging'         => true,
-						'post_title__in'   => $titles,
-						'suppress_filters' => false,
-						'meta_query'       => array(
-							array(
-								'key'     => '_pronamic_extension_wp_org_slug',
-								'value'   => 'bug #23268',
-								'compare' => 'NOT EXISTS',
-							),
-						),
-					) );
+					$plugin_posts = get_posts(
+						[
+							'post_type'        => 'pronamic_plugin',
+							'nopaging'         => true,
+							'post_title__in'   => $titles,
+							'suppress_filters' => false,
+							'meta_query'       => [
+								[
+									'key'     => '_pronamic_extension_wp_org_slug',
+									'value'   => 'bug #23268',
+									'compare' => 'NOT EXISTS',
+								],
+							],
+						] 
+					);
 
-					$plugin_names = array();
+					$plugin_names = [];
 					foreach ( $plugin_posts as $post ) {
 						$plugin_names[ $post->post_title ] = $post;
 					}
@@ -293,8 +292,8 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 								$result->plugin      = $file;
 								$result->new_version = $stable_version;
 								// $result->upgrade_notice = '';
-								$result->url         = get_permalink( $post );
-								$result->package     = $extension->get_download_link();
+								$result->url     = get_permalink( $post );
+								$result->package = $extension->get_download_link();
 
 								$plugin_updates[ $file ] = $result;
 							}
@@ -302,9 +301,9 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 					}
 				}
 
-				$result = array(
+				$result = [
 					'plugins' => $plugin_updates,
-				);
+				];
 
 				wp_send_json( $result );
 			}
@@ -312,8 +311,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	}
 
 
-	//////////////////////////////////////////////////
-
+	
 	/**
 	 * Return an instance of this class.
 	 *

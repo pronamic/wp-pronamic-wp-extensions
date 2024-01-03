@@ -15,7 +15,7 @@ Domain Path: /languages/
 License: GPL
 */
 
-$dir = dirname( __FILE__ );
+$dir = __DIR__;
 
 require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/Findable.php';
 require_once $dir . '/classes/Pronamic/WP/ExtensionsPlugin/ExtensionInfo.php';

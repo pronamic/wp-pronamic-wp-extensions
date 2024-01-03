@@ -42,10 +42,14 @@ $changelog = get_post_meta( $post->ID, '_pronamic_extension_changelog', true );
 			<td>
 				<?php
 
-				wp_editor( $changelog, '_pronamic_extension_changelog', array(
-					'media_buttons' => false,
-					'textarea_rows' => 5,
-				) );
+				wp_editor(
+					$changelog,
+					'_pronamic_extension_changelog',
+					[
+						'media_buttons' => false,
+						'textarea_rows' => 5,
+					] 
+				);
 
 				?>
 			</td>
