@@ -30,8 +30,65 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 		add_action( 'query_vars', [ $this, 'query_vars' ] );
 
 		add_action( 'template_redirect', [ $this, 'template_redirect' ] );
+
+		add_action( 'rest_api_init', [ $this, 'rest_api_init' ] );
 	}
 
+	/**
+	 * REST API initialize.
+	 * 
+	 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
+	 * @return void
+	 */
+	public function rest_api_init() {
+		register_rest_route(
+			'pronamic-wp-extensions/v1',
+			'/plugins/update-check',
+			[
+				'methods'             => 'POST',
+				'callback'            => [ $this, 'rest_api_plugins_update_check' ],
+				'permission_callback' => '__return_true',
+			]
+		);
+
+		register_rest_route(
+			'pronamic-wp-extensions/v1',
+			'/themes/update-check',
+			[
+				'methods'             => 'POST',
+				'callback'            => [ $this, 'rest_api_themes_update_check' ],
+				'permission_callback' => '__return_true',
+			]
+		);
+	}
+
+	/**
+	 * REST API plugins update check.
+	 * 
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response
+	 */
+	public function rest_api_plugins_update_check( WP_REST_Request $request ) {
+		$plugins = $request->get_param( 'plugins' );
+
+		$result = $this->plugins_api_update_check_handler( $plugins );
+
+		return $result;
+	}
+
+	/**
+	 * REST API themes update check.
+	 * 
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response
+	 */
+	public function rest_api_themes_update_check( WP_REST_Request $request ) {
+		$themes = $request->get_param( 'themes' );
+
+		$result = $this->themes_api_update_check_handler( $themes );
+
+		return $result;
+	}
 	
 	/**
 	 * Initialize
@@ -111,89 +168,95 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 		if ( filter_has_var( INPUT_POST, 'themes' ) ) {
 			$json = filter_input( INPUT_POST, 'themes', FILTER_UNSAFE_RAW );
 
-			$themes = json_decode( $json, true );
+			$result = $this->themes_api_update_check_handler( $json );
 
-			if ( \array_key_exists( 'active', $themes ) && \array_key_exists( 'themes', $themes ) ) {
-				$themes = $themes['themes'];
+			wp_send_json( $result );
+		}
+	}
+
+	private function themes_api_update_check_handler( $json ) {
+		$themes = json_decode( $json, true );
+
+		if ( \array_key_exists( 'active', $themes ) && \array_key_exists( 'themes', $themes ) ) {
+			$themes = $themes['themes'];
+		}
+
+		if ( is_array( $themes ) ) {
+			global $wpdb;
+
+			$titles = [];
+			foreach ( $themes as $file => $theme ) {
+				$titles[ $file ] = $theme['Title'];
 			}
 
-			if ( is_array( $themes ) ) {
-				global $wpdb;
+			$theme_updates = [];
 
-				$titles = [];
-				foreach ( $themes as $file => $theme ) {
-					$titles[ $file ] = $theme['Title'];
+			if ( ! empty( $titles ) ) {
+				$theme_posts = get_posts(
+					[
+						'post_type'        => 'pronamic_theme',
+						'nopaging'         => true,
+						'post_title__in'   => $titles,
+						'suppress_filters' => false,
+						'meta_query'       => [
+							[
+								'key'     => '_pronamic_extension_wp_org_slug',
+								'value'   => 'bug #23268',
+								'compare' => 'NOT EXISTS',
+							],
+						],
+					] 
+				);
+
+				$theme_names = [];
+				foreach ( $theme_posts as $post ) {
+					$theme_names[ $post->post_title ] = $post;
 				}
 
-				$theme_updates = [];
+				/*
+				 * Theme array values
+				* - Name
+				* - PluginURI
+				* - Version
+				* - Description
+				* - Author
+				* - AuthorURI
+				* - TextDomain
+				* - DomainPath
+				* - Network
+				* - Title
+				* - AuthorName
+				*/
+				foreach ( $themes as $file => $theme ) {
+					if ( isset( $theme_names[ $theme['Name'] ] ) ) {
+						$post = $theme_names[ $theme['Name'] ];
 
-				if ( ! empty( $titles ) ) {
-					$theme_posts = get_posts(
-						[
-							'post_type'        => 'pronamic_theme',
-							'nopaging'         => true,
-							'post_title__in'   => $titles,
-							'suppress_filters' => false,
-							'meta_query'       => [
-								[
-									'key'     => '_pronamic_extension_wp_org_slug',
-									'value'   => 'bug #23268',
-									'compare' => 'NOT EXISTS',
-								],
-							],
-						] 
-					);
+						$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $post );
 
-					$theme_names = [];
-					foreach ( $theme_posts as $post ) {
-						$theme_names[ $post->post_title ] = $post;
-					}
+						$stable_version  = $extension->get_version();
+						$current_version = $theme['Version'];
 
-					/*
-					 * Theme array values
-					* - Name
-					* - PluginURI
-					* - Version
-					* - Description
-					* - Author
-					* - AuthorURI
-					* - TextDomain
-					* - DomainPath
-					* - Network
-					* - Title
-					* - AuthorName
-					*/
-					foreach ( $themes as $file => $theme ) {
-						if ( isset( $theme_names[ $theme['Name'] ] ) ) {
-							$post = $theme_names[ $theme['Name'] ];
+						if ( version_compare( $stable_version, $current_version, '>' ) ) {
+							$result = new stdClass();
+							// $result->id          = $post->ID;
+							// $result->slug        = $post->post_name;
+							$result->theme       = $file;
+							$result->new_version = $stable_version;
+							// $result->upgrade_notice = '';
+							$result->url     = get_permalink( $post );
+							$result->package = $extension->get_download_link();
 
-							$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $post );
-
-							$stable_version  = $extension->get_version();
-							$current_version = $theme['Version'];
-
-							if ( version_compare( $stable_version, $current_version, '>' ) ) {
-								$result = new stdClass();
-								// $result->id          = $post->ID;
-								// $result->slug        = $post->post_name;
-								$result->theme       = $file;
-								$result->new_version = $stable_version;
-								// $result->upgrade_notice = '';
-								$result->url     = get_permalink( $post );
-								$result->package = $extension->get_download_link();
-
-								$theme_updates[ $file ] = $result;
-							}
+							$theme_updates[ $file ] = $result;
 						}
 					}
 				}
-
-				$result = [
-					'themes' => $theme_updates,
-				];
-
-				wp_send_json( $result );
 			}
+
+			$result = [
+				'themes' => $theme_updates,
+			];
+
+			return $result;
 		}
 	}
 
@@ -228,85 +291,91 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 		if ( filter_has_var( INPUT_POST, 'plugins' ) ) {
 			$json = filter_input( INPUT_POST, 'plugins', FILTER_UNSAFE_RAW );
 
-			$plugins = json_decode( $json, true );
+			$result = $this->plugins_api_update_check_handler( $json );
 
-			if ( is_array( $plugins ) ) {
-				global $wpdb;
+			wp_send_json( $result );
+		}
+	}
 
-				$titles = [];
-				foreach ( $plugins as $file => $plugin ) {
-					$titles[ $file ] = $plugin['Name'];
+	private function plugins_api_update_check_handler( $json ) {
+		$plugins = json_decode( $json, true );
+
+		if ( is_array( $plugins ) ) {
+			global $wpdb;
+
+			$titles = [];
+			foreach ( $plugins as $file => $plugin ) {
+				$titles[ $file ] = $plugin['Name'];
+			}
+
+			$plugin_updates = [];
+
+			if ( ! empty( $titles ) ) {
+				$plugin_posts = get_posts(
+					[
+						'post_type'        => 'pronamic_plugin',
+						'nopaging'         => true,
+						'post_title__in'   => $titles,
+						'suppress_filters' => false,
+						'meta_query'       => [
+							[
+								'key'     => '_pronamic_extension_wp_org_slug',
+								'value'   => 'bug #23268',
+								'compare' => 'NOT EXISTS',
+							],
+						],
+					] 
+				);
+
+				$plugin_names = [];
+				foreach ( $plugin_posts as $post ) {
+					$plugin_names[ $post->post_title ] = $post;
 				}
 
-				$plugin_updates = [];
+				/*
+				 * Plugin array values
+				 * - Name
+				 * - PluginURI
+				 * - Version
+				 * - Description
+				 * - Author
+				 * - AuthorURI
+				 * - TextDomain
+				 * - DomainPath
+				 * - Network
+				 * - Title
+				 * - AuthorName
+				 */
+				foreach ( $plugins as $file => $plugin ) {
+					if ( isset( $plugin_names[ $plugin['Name'] ] ) ) {
+						$post = $plugin_names[ $plugin['Name'] ];
 
-				if ( ! empty( $titles ) ) {
-					$plugin_posts = get_posts(
-						[
-							'post_type'        => 'pronamic_plugin',
-							'nopaging'         => true,
-							'post_title__in'   => $titles,
-							'suppress_filters' => false,
-							'meta_query'       => [
-								[
-									'key'     => '_pronamic_extension_wp_org_slug',
-									'value'   => 'bug #23268',
-									'compare' => 'NOT EXISTS',
-								],
-							],
-						] 
-					);
+						$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $post );
 
-					$plugin_names = [];
-					foreach ( $plugin_posts as $post ) {
-						$plugin_names[ $post->post_title ] = $post;
-					}
+						$stable_version  = $extension->get_version();
+						$current_version = $plugin['Version'];
 
-					/*
-					 * Plugin array values
-					 * - Name
-					 * - PluginURI
-					 * - Version
-					 * - Description
-					 * - Author
-					 * - AuthorURI
-					 * - TextDomain
-					 * - DomainPath
-					 * - Network
-					 * - Title
-					 * - AuthorName
-					 */
-					foreach ( $plugins as $file => $plugin ) {
-						if ( isset( $plugin_names[ $plugin['Name'] ] ) ) {
-							$post = $plugin_names[ $plugin['Name'] ];
+						if ( version_compare( $stable_version, $current_version, '>' ) ) {
+							$result              = new stdClass();
+							$result->id          = $post->ID;
+							$result->slug        = $post->post_name;
+							$result->plugin      = $file;
+							$result->new_version = $stable_version;
+							// $result->upgrade_notice = '';
+							$result->url     = get_permalink( $post );
+							$result->package = $extension->get_download_link();
 
-							$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $post );
-
-							$stable_version  = $extension->get_version();
-							$current_version = $plugin['Version'];
-
-							if ( version_compare( $stable_version, $current_version, '>' ) ) {
-								$result              = new stdClass();
-								$result->id          = $post->ID;
-								$result->slug        = $post->post_name;
-								$result->plugin      = $file;
-								$result->new_version = $stable_version;
-								// $result->upgrade_notice = '';
-								$result->url     = get_permalink( $post );
-								$result->package = $extension->get_download_link();
-
-								$plugin_updates[ $file ] = $result;
-							}
+							$plugin_updates[ $file ] = $result;
 						}
 					}
 				}
-
-				$result = [
-					'plugins' => $plugin_updates,
-				];
-
-				wp_send_json( $result );
 			}
+
+			$result = [
+				'plugins' => $plugin_updates,
+			];
+
+			return $result;
 		}
 	}
 
