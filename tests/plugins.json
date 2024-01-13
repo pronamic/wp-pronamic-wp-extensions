@@ -1,0 +1,22 @@
+{
+	"pronamic-ideal/pronamic-ideal.php": {
+		"Name"    : "Pronamic iDEAL",
+		"Version" : "1.0.0",
+		"Author"  : "Pronamic"
+	},
+	"pronamic-donations/pronamic-donations.php": {
+		"Name"    : "Pronamic Donations (deprecated)",
+		"Version" : "1.0.0",
+		"Author"  : "Pronamic"
+	},
+	"dm-gravityforms/dm-gravityforms.php": {
+		"Name"    : "Daadkracht Marketing Gravity Forms",
+		"Version" : "1.0.0",
+		"Author"  : "Pronamic"
+	},
+	"wp-gravityforms-nl/gravityforms-nl.php": {
+		"Name"    : "Gravity Forms (nl)",
+		"Version" : "2.0.5",
+		"Author"  : "Pronamic"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"emg": {
+		"Name"       : "Eisma Media Groep",
+		"Title"      : "Eisma Media Groep",
+		"Version"    : "1.0.0",
+		"Author"     : "Pronamic",
+		"Author URI" : "https://www.pronamic.eu/",
+		"Template"   : null,
+		"Stylesheet" : "emg"
+	},
+	"dmb": {
+		"Name"       : "Daadkracht Marketing Bedrijvengids",
+		"Title"      : "Daadkracht Marketing Bedrijvengids",
+		"Version"    : "1.0.0",
+		"Author"     : "Pronamic",
+		"Author URI" : "https://www.pronamic.eu/",
+		"Template"   : null,
+		"Stylesheet" : "dmb"
+	}
+}
