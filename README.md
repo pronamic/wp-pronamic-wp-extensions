@@ -26,6 +26,16 @@ http --follow POST https://api.pronamic.eu/plugins/update-check/1.2/ plugins=@te
 http POST https://wp.pronamic.directory/wp-json/pronamic-wp-extensions/v1/plugins/update-check plugins=@tests/plugins.json
 ```
 
+```
+http POST https://wp.pronamic.directory/wp-json/pronamic-wp-extensions/v1/plugins/update-check plugins=@tests/plugins-2.json
+```
+
+https://github.com/WordPress/WordPress/blob/6.4/wp-includes/update.php#L417-L440
+
+```
+http --form POST https://api.wordpress.org/plugins/update-check/1.1/ plugins=@tests/plugins-2.json
+```
+
 ### Themes
 
 ```
