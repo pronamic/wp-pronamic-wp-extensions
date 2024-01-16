@@ -300,6 +300,10 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	private function plugins_api_update_check_handler( $json ) {
 		$plugins = json_decode( $json, true );
 
+		if ( \array_key_exists( 'active', $plugins ) && \array_key_exists( 'plugins', $plugins ) ) {
+			$plugins = $plugins['plugins'];
+		}
+
 		if ( is_array( $plugins ) ) {
 			global $wpdb;
 

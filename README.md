@@ -45,3 +45,13 @@ http POST https://api.pronamic.eu/themes/update-check/1.2/ themes=@tests/themes.
 ```
 http POST https://wp.pronamic.directory/wp-json/pronamic-wp-extensions/v1/themes/update-check themes=@tests/themes.json
 ```
+
+```
+http POST https://wp.pronamic.directory/wp-json/pronamic-wp-extensions/v1/themes/update-check themes=@tests/themes-2.json
+```
+
+https://github.com/WordPress/WordPress/blob/6.4/wp-includes/update.php#L699-L721
+
+```
+http --form POST https://api.wordpress.org/themes/update-check/1.1/ themes=@tests/themes-2.json
+```

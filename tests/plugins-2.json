@@ -66,6 +66,8 @@
         }
     },
     "active":[
-        
+        "query-monitor\/query-monitor.php",
+        "log-http-requests\/log-http-requests.php",
+        "pronamic-client\/pronamic-client.php"
     ]
 }
