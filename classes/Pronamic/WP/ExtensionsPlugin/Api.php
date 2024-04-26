@@ -10,7 +10,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	 */
 	protected static $instance = null;
 
-	
+
 	/**
 	 * Extensions plugin
 	 *
@@ -18,7 +18,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	 */
 	private $plugin;
 
-	
+
 	/**
 	 * Constructs and initialize Pronamic WordPress Extensions API object
 	 */
@@ -36,7 +36,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 	/**
 	 * REST API initialize.
-	 * 
+	 *
 	 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
 	 * @return void
 	 */
@@ -53,6 +53,16 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 		register_rest_route(
 			'pronamic-wp-extensions/v1',
+			'/plugins/update-info',
+			[
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'rest_api_plugins_update_info' ],
+				'permission_callback' => '__return_true',
+			]
+		);
+
+		register_rest_route(
+			'pronamic-wp-extensions/v1',
 			'/themes/update-check',
 			[
 				'methods'             => 'POST',
@@ -60,11 +70,55 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 				'permission_callback' => '__return_true',
 			]
 		);
+
+		register_rest_route(
+			'pronamic-wp-extensions/v1',
+			'/themes/update-info',
+			[
+				'methods'             => 'GET',
+				'callback'            => [ $this, 'rest_api_themes_update_info' ],
+				'permission_callback' => '__return_true',
+			]
+		);
+	}
+
+	/**
+	 * REST API plugins update info.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response
+	 */
+	public function rest_api_plugins_update_info( WP_REST_Request $request ) {
+		$plugin_posts = \get_posts(
+			[
+				'post_type' => 'pronamic_plugin',
+				'nopaging'  => true,
+			]
+		);
+
+		$info = \array_map(
+			function ( $plugin_post ) {
+				$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $plugin_post );
+
+				$info = $extension->get_update_info();
+
+				$info->name = $extension->get_name();
+
+				return $info;
+			},
+			$plugin_posts
+		);
+
+		$response = new \WP_REST_Response( $info );
+
+		$response->header( 'Cache-Control', 'public, max-age=300' );
+
+		return $response;
 	}
 
 	/**
 	 * REST API plugins update check.
-	 * 
+	 *
 	 * @param WP_REST_Request $request Request.
 	 * @return WP_REST_Response
 	 */
@@ -77,8 +131,42 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	}
 
 	/**
+	 * REST API themes update info.
+	 *
+	 * @param WP_REST_Request $request Request.
+	 * @return WP_REST_Response
+	 */
+	public function rest_api_themes_update_info( WP_REST_Request $request ) {
+		$theme_posts = \get_posts(
+			[
+				'post_type' => 'pronamic_theme',
+				'nopaging'  => true,
+			]
+		);
+
+		$info = \array_map(
+			function ( $theme_post ) {
+				$extension = new Pronamic_WP_ExtensionsPlugin_ExtensionInfo( $theme_post );
+
+				$info = $extension->get_update_info();
+
+				$info->name = $extension->get_name();
+
+				return $info;
+			},
+			$theme_posts
+		);
+
+		$response = new \WP_REST_Response( $info );
+
+		$response->header( 'Cache-Control', 'public, max-age=300' );
+
+		return $response;
+	}
+
+	/**
 	 * REST API themes update check.
-	 * 
+	 *
 	 * @param WP_REST_Request $request Request.
 	 * @return WP_REST_Response
 	 */
@@ -89,7 +177,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 
 		return $result;
 	}
-	
+
 	/**
 	 * Initialize
 	 */
@@ -148,9 +236,9 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 		}
 	}
 
-	// 
+	//
 	// Themes API
-	// 
+	//
 
 	public function themes_api( $method ) {
 		switch ( $method ) {
@@ -205,7 +293,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 								'compare' => 'NOT EXISTS',
 							],
 						],
-					] 
+					]
 				);
 
 				$theme_names = [];
@@ -260,9 +348,9 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 		}
 	}
 
-	// 
+	//
 	// Plugins API
-	// 
+	//
 
 	public function plugins_api( $method ) {
 		switch ( $method ) {
@@ -328,7 +416,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 								'compare' => 'NOT EXISTS',
 							],
 						],
-					] 
+					]
 				);
 
 				$plugin_names = [];
@@ -384,7 +472,7 @@ class Pronamic_WP_ExtensionsPlugin_Api {
 	}
 
 
-	
+
 	/**
 	 * Return an instance of this class.
 	 *
