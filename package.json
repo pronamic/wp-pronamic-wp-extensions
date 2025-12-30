@@ -30,6 +30,6 @@
 	},
 	"homepage": "https://github.com/pronamic/wp-pronamic-wp-extensions",
 	"devDependencies": {
-		"@wordpress/env": "^5.16.0"
+		"@wordpress/env": "^10.35.0"
 	}
 }
